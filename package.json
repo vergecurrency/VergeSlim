@@ -60,7 +60,7 @@
     "keytar": "^5.6.0",
     "moment": "^2.29.1",
     "node-loader": "^0.6.0",
-    "nuxt": "3.16.0",
+    "nuxt": "3.19.0",
     "nuxt-buefy": "^0.4.4",
     "qrcode.vue": "^1.7.0",
     "sudo-prompt": "^9.2.1",
