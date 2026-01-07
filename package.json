@@ -44,7 +44,7 @@
   },
   "main": "background.js",
   "dependencies": {
-    "granax": "git+https://github.com/justinvforvendetta/granax.git#main",
+    "granax": "git+https://github.com/justinvforvendetta/granax.git",
     "@fortawesome/fontawesome-svg-core": "^1.2.32",
     "@fortawesome/free-solid-svg-icons": "^5.15.1",
     "@fortawesome/vue-fontawesome": "^0.1.10",
