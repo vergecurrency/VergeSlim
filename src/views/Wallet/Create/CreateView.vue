@@ -20,7 +20,7 @@
           />
           <router-link
             class="button is-success"
-            :to="{ name: 'wallets.create.restore', params: { restore: true } }"
+            :to="{ name: 'wallets.create.restore' }"
             v-html="$i18n.t('createWallet.restoreAnExistingWallet')"
           />
         </div>

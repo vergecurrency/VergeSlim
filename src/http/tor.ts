@@ -21,18 +21,19 @@ export default function (options: Object = {}, torrcOptions: Object = {}) {
 
   const exe: string = path.basename(getTor(platform()))
   let tor: string = path.join(BIN_PATH, 'Tor', exe)
-  let env: object = { LD_LIBRARY_PATH: path.join(BIN_PATH, 'Tor') }
+  let env: NodeJS.ProcessEnv = { ...process.env, LD_LIBRARY_PATH: path.join(BIN_PATH, 'Tor') }
 
   if (process.env.GRANAX_USE_SYSTEM_TOR && process.platform === 'linux') {
     tor = exe
-    env = {}
+    env = { ...process.env }
   }
 
   const args = process.env.GRANAX_TOR_ARGS
     ? process.env.GRANAX_TOR_ARGS.split(' ')
     : []
   const child = spawn(tor, ['-f', torrcFile].concat(args), {
-    cwd: BIN_PATH
+    cwd: BIN_PATH,
+    env
   })
   let portFileReads = 0
 

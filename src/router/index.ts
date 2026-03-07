@@ -67,6 +67,7 @@ const router = new VueRouter({
       path: '/wallets/create/new',
       name: 'wallets.create.new',
       component: WalletSetupView,
+      props: { restore: false },
       meta: {
         needsAuthentication: true
       }
@@ -75,7 +76,7 @@ const router = new VueRouter({
       path: '/wallets/create/restore',
       name: 'wallets.create.restore',
       component: WalletSetupView,
-      props: true,
+      props: { restore: true },
       meta: {
         needsAuthentication: true
       }
