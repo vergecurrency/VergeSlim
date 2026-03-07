@@ -120,24 +120,7 @@ jobs:
           if [ ! -x /usr/bin/python ] && [ -n "$PY3_BIN" ]; then
             sed -i '' "s#/usr/bin/python#${PY3_BIN}#g" node_modules/dmg-builder/out/dmg.js
             sed -i '' "s#/usr/bin/python#${PY3_BIN}#g" node_modules/dmg-builder/out/dmg.js.map
-            python3 - <<'PY'
-from pathlib import Path
-core = Path("node_modules/dmg-builder/vendor/dmgbuild/core.py")
-text = core.read_text()
-needle = "import sys\\nreload(sys)  # Reload is a hack\\nsys.setdefaultencoding('UTF8')\\n"
-replacement = (
-    "import sys\\n"
-    "from importlib import reload\\n"
-    "try:\\n"
-    "  reload(sys)\\n"
-    "except Exception:\\n"
-    "  pass\\n"
-    "if hasattr(sys, 'setdefaultencoding'):\\n"
-    "  sys.setdefaultencoding('UTF8')\\n"
-)
-if needle in text:
-    core.write_text(text.replace(needle, replacement))
-PY
+            python3 -c "from pathlib import Path; p=Path('node_modules/dmg-builder/vendor/dmgbuild/core.py'); t=p.read_text(); n=\"import sys\\nreload(sys)  # Reload is a hack\\nsys.setdefaultencoding('UTF8')\\n\"; r=\"import sys\\nfrom importlib import reload\\ntry:\\n  reload(sys)\\nexcept Exception:\\n  pass\\nif hasattr(sys, 'setdefaultencoding'):\\n  sys.setdefaultencoding('UTF8')\\n\"; p.write_text(t.replace(n, r) if n in t else t)"
           fi
 
       - name: Build macOS dmg
