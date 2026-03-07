@@ -143,6 +143,56 @@ jobs:
           hdiutil create "$DMG_PATH" -srcfolder "$APP_PATH" -ov -format UDZO
           echo "Created $DMG_PATH"
 
+      - name: Smoke test app launch from DMG (30s)
+        run: |
+          set -euo pipefail
+
+          DMG_PATH="$(find dist_electron -maxdepth 1 -name '*.dmg' -type f | head -n1)"
+          if [ -z "${DMG_PATH:-}" ]; then
+            echo "No DMG found to test"
+            exit 1
+          fi
+
+          MOUNT_OUTPUT="$(hdiutil attach "$DMG_PATH" -nobrowse -readonly)"
+          MOUNT_DEVICE="$(echo "$MOUNT_OUTPUT" | awk '/^\/dev\// {print $1; exit}')"
+          MOUNT_POINT="$(echo "$MOUNT_OUTPUT" | awk '/\/Volumes\// {print substr($0, index($0, "/Volumes/")); exit}')"
+
+          APP_PATH="$(find "$MOUNT_POINT" -maxdepth 1 -name '*.app' -type d | head -n1)"
+          if [ -z "${APP_PATH:-}" ]; then
+            echo "No .app found in mounted DMG"
+            echo "$MOUNT_OUTPUT"
+            exit 1
+          fi
+
+          cleanup() {
+            pkill -f "$APP_PATH/Contents/MacOS" || true
+            if [ -n "${APP_PID:-}" ]; then
+              kill "$APP_PID" >/dev/null 2>&1 || true
+              sleep 2
+              kill -9 "$APP_PID" >/dev/null 2>&1 || true
+            fi
+            hdiutil detach "$MOUNT_DEVICE" -force >/dev/null 2>&1 || true
+          }
+          trap cleanup EXIT
+
+          APP_EXECUTABLE="$(/usr/libexec/PlistBuddy -c "Print :CFBundleExecutable" "$APP_PATH/Contents/Info.plist")"
+          APP_BIN="$APP_PATH/Contents/MacOS/$APP_EXECUTABLE"
+
+          if [ ! -x "$APP_BIN" ]; then
+            echo "App binary not executable at $APP_BIN"
+            exit 1
+          fi
+
+          "$APP_BIN" &
+          APP_PID=$!
+
+          sleep 30
+
+          if ! kill -0 "$APP_PID" >/dev/null 2>&1; then
+            echo "App exited before 30-second smoke window"
+            exit 1
+          fi
+
       - name: Upload macOS artifacts
         uses: actions/upload-artifact@v4
         with:
