@@ -84,7 +84,6 @@ jobs:
           name: windows-build
           path: |
             dist_electron/*.exe
-            dist_electron/win-unpacked/**
           if-no-files-found: error
 
   macos-build:
