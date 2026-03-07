@@ -32,6 +32,9 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      - name: Ensure Electron binary is installed
+        run: node node_modules/electron/install.js
+
       - name: Build AppImage
         run: npm run electron:build:linux
 
@@ -61,6 +64,9 @@ jobs:
 
       - name: Install dependencies
         run: npm ci
+
+      - name: Ensure Electron binary is installed
+        run: node node_modules/electron/install.js
 
       - name: Build Windows exe from Linux
         run: npm run electron:build:win
