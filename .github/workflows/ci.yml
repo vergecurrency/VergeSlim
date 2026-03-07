@@ -1,0 +1,72 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - "**"
+    tags:
+      - "*"
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  linux-build:
+    name: Linux Build
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18.x
+          cache: npm
+          cache-dependency-path: npm-shrinkwrap.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build AppImage
+        run: npm run electron:build:linux
+
+      - name: Upload Linux artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: linux-build
+          path: |
+            dist_electron/*.AppImage
+            dist_electron/latest-linux.yml
+            dist_electron/linux-unpacked/**
+          if-no-files-found: error
+
+  windows-build:
+    name: Windows Build
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18.x
+          cache: npm
+          cache-dependency-path: npm-shrinkwrap.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build Windows exe from Linux
+        run: npm run electron:build:win
+        env:
+          CSC_IDENTITY_AUTO_DISCOVERY: "false"
+
+      - name: Upload Windows artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: windows-build
+          path: |
+            dist_electron/*.exe
+            dist_electron/win-unpacked/**
+          if-no-files-found: error
