@@ -59,7 +59,6 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 18.x
-          architecture: x64
           cache: npm
           cache-dependency-path: npm-shrinkwrap.json
 
@@ -99,14 +98,21 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 18.x
+          architecture: x64
           cache: npm
           cache-dependency-path: npm-shrinkwrap.json
 
       - name: Install dependencies
         run: npm ci
+        env:
+          npm_config_arch: x64
+          npm_config_target_arch: x64
 
       - name: Ensure Electron binary is installed
         run: node node_modules/electron/install.js
+        env:
+          npm_config_arch: x64
+          npm_config_target_arch: x64
 
       - name: Patch legacy python path for dmg tooling
         run: |
@@ -121,6 +127,8 @@ jobs:
         env:
           CSC_IDENTITY_AUTO_DISCOVERY: "false"
           NOTARIZE: "false"
+          npm_config_arch: x64
+          npm_config_target_arch: x64
 
       - name: Upload macOS artifacts
         uses: actions/upload-artifact@v4
