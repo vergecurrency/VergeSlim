@@ -116,10 +116,10 @@ jobs:
 
       - name: Patch legacy python path for dmg tooling
         run: |
-          if [ ! -x /usr/bin/python ] && [ -x /usr/bin/python3 ]; then
-            while IFS= read -r -d '' file; do
-              sed -i '' 's#/usr/bin/python#/usr/bin/python3#g' "$file"
-            done < <(grep -RIlZ "/usr/bin/python" node_modules)
+          PY3_BIN="$(command -v python3 || true)"
+          if [ ! -x /usr/bin/python ] && [ -n "$PY3_BIN" ]; then
+            sed -i '' "s#/usr/bin/python#${PY3_BIN}#g" node_modules/dmg-builder/out/dmg.js
+            sed -i '' "s#/usr/bin/python#${PY3_BIN}#g" node_modules/dmg-builder/out/dmg.js.map
           fi
 
       - name: Build macOS dmg
