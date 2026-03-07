@@ -59,6 +59,7 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 18.x
+          architecture: x64
           cache: npm
           cache-dependency-path: npm-shrinkwrap.json
 
