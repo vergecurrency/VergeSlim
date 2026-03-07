@@ -36,7 +36,7 @@ jobs:
         run: node node_modules/electron/install.js
 
       - name: Build AppImage
-        run: npm run electron:build:linux
+        run: npm run electron:build:linux -- --publish never
 
       - name: Upload Linux artifacts
         uses: actions/upload-artifact@v4
@@ -69,7 +69,7 @@ jobs:
         run: node node_modules/electron/install.js
 
       - name: Build Windows exe from Linux
-        run: npm run electron:build:win
+        run: npm run electron:build:win -- --publish never
         env:
           CSC_IDENTITY_AUTO_DISCOVERY: "false"
 
