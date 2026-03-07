@@ -89,7 +89,7 @@ jobs:
 
   macos-build:
     name: macOS Build
-    runs-on: macos-26
+    runs-on: macos-15-intel
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -108,7 +108,7 @@ jobs:
         run: node node_modules/electron/install.js
 
       - name: Build macOS dmg
-        run: npm run electron:build -- --mac dmg --publish never
+        run: npm run electron:build -- --mac dmg --x64 --publish never
         env:
           CSC_IDENTITY_AUTO_DISCOVERY: "false"
           NOTARIZE: "false"
