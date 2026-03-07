@@ -29,9 +29,9 @@ const en: LocaleDefinition = {
     changeThings: 'Change things',
     changeThingsDesc: 'Within the settings you\'re able to tweak MyVergies into the perfect XVG wallet companion!',
     tweakSettings: 'Tweak settings',
-    helpImprove: 'Help improve',
-    helpImproveDesc: 'MyVergies\'s code is open source and can be downloaded and improved on by anyone out there (after approval). Let\'s build a better world together!',
-    goToGithub: 'Go to GitHub'
+    helpImprove: 'Trade XVG',
+    helpImproveDesc: 'Buy, sell, and swap XVG directly from inside the app.',
+    goToGithub: 'Trade XVG'
   },
   tor: {
     status: {

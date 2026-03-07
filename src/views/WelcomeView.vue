@@ -33,7 +33,7 @@
         :description="$i18n.t('welcome.helpImproveDesc')"
         type="is-info"
       >
-        <b-button :label="$i18n.t('welcome.goToGithub')" type="is-info" @click="openGitHub"/>
+        <router-link class="button is-info" :to="{ name: 'trade' }" v-html="$i18n.t('welcome.goToGithub')"/>
       </form-box>
 
     </div>
@@ -49,13 +49,7 @@ import VersionBlock from '@/components/VersionBlock'
 export default {
   name: 'WelcomeView',
 
-  components: { VersionBlock, FormBox },
-
-  methods: {
-    openGitHub () {
-      this.$electron.shell.openExternal('https://github.com/vergecurrency/MyVergies')
-    }
-  }
+  components: { VersionBlock, FormBox }
 }
 </script>
 

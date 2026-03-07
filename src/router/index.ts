@@ -12,6 +12,7 @@ import WalletSettingsView from '@/views/Wallet/Settings/SettingsView.vue'
 import BlockchainView from '@/views/Blockchain/BlockchainView.vue'
 import ContactsView from '@/views/Contacts/ContactsView.vue'
 import SettingsView from '@/views/Settings/SettingsView.vue'
+import TradeView from '@/views/TradeView.vue'
 
 Vue.use(VueRouter)
 
@@ -103,6 +104,11 @@ const router = new VueRouter({
       path: '/settings',
       name: 'settings',
       component: SettingsView
+    },
+    {
+      path: '/trade',
+      name: 'trade',
+      component: TradeView
     },
     {
       path: '*',

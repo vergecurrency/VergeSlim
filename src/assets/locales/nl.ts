@@ -29,9 +29,9 @@ const nl: LocaleDefinition = {
     changeThings: 'Verander dingen',
     changeThingsDesc: 'Met behulp van de instellingen kun je MyVergies veranderen in de perfecte XVG partner!',
     tweakSettings: 'Verander instellingen',
-    helpImprove: 'Help verbeteren',
-    helpImproveDesc: 'MyVergies\'s code is open source en kan iedereen dus downloaden en verbeteren (na goedkeuring). Laten we samen een betere wereld bouwen!',
-    goToGithub: 'Ga naar GitHub'
+    helpImprove: 'Trade XVG',
+    helpImproveDesc: 'Koop, verkoop en wissel XVG direct in de app.',
+    goToGithub: 'Trade XVG'
   },
   tor: {
     status: {
