@@ -24,6 +24,17 @@ jobs:
           cache: npm
           cache-dependency-path: npm-shrinkwrap.json
 
+      - name: Cache Electron build tools
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cache/electron
+            ~/.cache/electron-builder
+            ~/.npm/_prebuilds
+          key: ${{ runner.os }}-${{ runner.arch }}-electron-tools-linux-${{ hashFiles('npm-shrinkwrap.json') }}
+          restore-keys: |
+            ${{ runner.os }}-${{ runner.arch }}-electron-tools-linux-
+
       - name: Install Linux build dependencies
         run: |
           sudo apt-get update
@@ -61,6 +72,17 @@ jobs:
           node-version: 18.x
           cache: npm
           cache-dependency-path: npm-shrinkwrap.json
+
+      - name: Cache Electron build tools
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cache/electron
+            ~/.cache/electron-builder
+            ~/.npm/_prebuilds
+          key: ${{ runner.os }}-${{ runner.arch }}-electron-tools-win-${{ hashFiles('npm-shrinkwrap.json') }}
+          restore-keys: |
+            ${{ runner.os }}-${{ runner.arch }}-electron-tools-win-
 
       - name: Install Linux build dependencies
         run: |
@@ -100,6 +122,17 @@ jobs:
           architecture: x64
           cache: npm
           cache-dependency-path: npm-shrinkwrap.json
+
+      - name: Cache Electron build tools
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/Library/Caches/electron
+            ~/Library/Caches/electron-builder
+            ~/.npm/_prebuilds
+          key: ${{ runner.os }}-${{ runner.arch }}-electron-tools-macos-${{ hashFiles('npm-shrinkwrap.json') }}
+          restore-keys: |
+            ${{ runner.os }}-${{ runner.arch }}-electron-tools-macos-
 
       - name: Install dependencies
         run: npm ci
