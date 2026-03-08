@@ -262,12 +262,43 @@ app.on('ready', async () => {
       try {
         const torIp = await waitForTorCircuit(window)
         logger.info('Fetching Tor network info from ipinfo.io')
-        const ipInfoData: any = await requestJson(window, 'https://ipinfo.io/json', 20000)
+        try {
+          const ipInfoData: any = await requestJson(window, 'https://ipinfo.io/json', 20000)
+          return {
+            ip: ipInfoData.ip || torIp || 'Unknown',
+            country_name: ipInfoData.country || 'Unknown',
+            city: ipInfoData.city || 'Unknown'
+          }
+        } catch (ipInfoError) {
+          logger.warn('ipinfo.io failed, trying ipapi.co by Tor IP:', ipInfoError)
+        }
+
+        try {
+          const ipApiData: any = await requestJson(window, `https://ipapi.co/${torIp}/json/`, 20000)
+          return {
+            ip: torIp,
+            country_name: ipApiData.country_name || ipApiData.country || 'Unknown',
+            city: ipApiData.city || 'Unknown'
+          }
+        } catch (ipApiError) {
+          logger.warn('ipapi.co failed, trying ipwho.is by Tor IP:', ipApiError)
+        }
+
+        try {
+          const ipWhoData: any = await requestJson(window, `https://ipwho.is/${torIp}`, 20000)
+          return {
+            ip: torIp,
+            country_name: ipWhoData.country || 'Unknown',
+            city: ipWhoData.city || 'Unknown'
+          }
+        } catch (ipWhoError) {
+          logger.warn('ipwho.is failed; returning Tor IP without region details:', ipWhoError)
+        }
 
         return {
-          ip: ipInfoData.ip || torIp || 'Unknown',
-          country_name: ipInfoData.country || 'Unknown',
-          city: ipInfoData.city || 'Unknown'
+          ip: torIp || 'Unknown',
+          country_name: 'Unknown',
+          city: 'Unknown'
         }
       } catch (error) {
         logger.warn('Tor network info lookup failed, returning unknown values:', error)
