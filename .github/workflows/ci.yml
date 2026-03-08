@@ -31,7 +31,7 @@ jobs:
             ~/.cache/electron
             ~/.cache/electron-builder
             ~/.npm/_prebuilds
-          key: ${{ runner.os }}-${{ runner.arch }}-electron-tools-linux-${{ hashFiles('npm-shrinkwrap.json') }}
+          key: ${{ runner.os }}-${{ runner.arch }}-electron-tools-linux-${{ hashFiles('package.json', 'npm-shrinkwrap.json') }}
           restore-keys: |
             ${{ runner.os }}-${{ runner.arch }}-electron-tools-linux-
 
@@ -80,7 +80,7 @@ jobs:
             ~/.cache/electron
             ~/.cache/electron-builder
             ~/.npm/_prebuilds
-          key: ${{ runner.os }}-${{ runner.arch }}-electron-tools-win-${{ hashFiles('npm-shrinkwrap.json') }}
+          key: ${{ runner.os }}-${{ runner.arch }}-electron-tools-win-${{ hashFiles('package.json', 'npm-shrinkwrap.json') }}
           restore-keys: |
             ${{ runner.os }}-${{ runner.arch }}-electron-tools-win-
 
@@ -130,7 +130,7 @@ jobs:
             ~/Library/Caches/electron
             ~/Library/Caches/electron-builder
             ~/.npm/_prebuilds
-          key: ${{ runner.os }}-${{ runner.arch }}-electron-tools-macos-${{ hashFiles('npm-shrinkwrap.json') }}
+          key: ${{ runner.os }}-${{ runner.arch }}-electron-tools-macos-${{ hashFiles('package.json', 'npm-shrinkwrap.json') }}
           restore-keys: |
             ${{ runner.os }}-${{ runner.arch }}-electron-tools-macos-
 
