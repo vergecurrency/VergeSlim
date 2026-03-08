@@ -256,10 +256,13 @@ jobs:
           WAIT_RC=$?
           set -e
 
-          xcrun notarytool info "$SUBMISSION_ID" \
+          INFO_OUTPUT="$(xcrun notarytool info "$SUBMISSION_ID" \
             --apple-id "$APPLE_ID" \
             --password "$APPLE_APP_SPECIFIC_PASSWORD" \
-            --team-id "$APPLE_TEAM_ID" || true
+            --team-id "$APPLE_TEAM_ID" \
+            --output-format json || true)"
+          echo "$INFO_OUTPUT"
+          STATUS="$(echo "$INFO_OUTPUT" | sed -n 's/.*"status"[[:space:]]*:[[:space:]]*"\([^"]*\)".*/\1/p' | head -n1)"
 
           if [ "$WAIT_RC" -ne 0 ]; then
             echo "Notarization failed or timed out; printing Apple notary log for diagnostics"
@@ -268,6 +271,15 @@ jobs:
               --password "$APPLE_APP_SPECIFIC_PASSWORD" \
               --team-id "$APPLE_TEAM_ID" || true
             exit "$WAIT_RC"
+          fi
+
+          if [ "${STATUS:-}" != "Accepted" ]; then
+            echo "Notarization did not return Accepted status (status=${STATUS:-unknown}); printing Apple notary log"
+            xcrun notarytool log "$SUBMISSION_ID" \
+              --apple-id "$APPLE_ID" \
+              --password "$APPLE_APP_SPECIFIC_PASSWORD" \
+              --team-id "$APPLE_TEAM_ID" || true
+            exit 1
           fi
 
           xcrun stapler staple "$DMG_PATH"
