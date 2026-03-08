@@ -21,7 +21,7 @@
         {{ this.connectionStatusName }}
       </b-field>
     </b-dropdown-item>
-    <div v-if="!loading && !error">
+    <div v-if="torActivated && !loading && !error">
       <b-dropdown-item aria-role="listitem" :focusable="false" custom>
         <b-field :label="$i18n.t('tor.status.ip')">
           {{ networkData.ip }}
@@ -42,7 +42,7 @@ import LoadingOnion from '@/assets/tor-icons/onion-loading'
 import DisconnectedOnion from '@/assets/tor-icons/onion-disconnected'
 import ConnectedOnion from '@/assets/tor-icons/onion-connected'
 import ErrorOnion from '@/assets/tor-icons/onion-error'
-import constants, { eventConstants } from '@/utils/constants'
+import { eventConstants } from '@/utils/constants'
 import Log from 'electron-log'
 
 export default {
@@ -60,7 +60,11 @@ export default {
   },
 
   mounted () {
-    this.fetchIpAddress()
+    if (typeof this.$store.getters.isTorEnabled === 'boolean') {
+      this.torActivated = this.$store.getters.isTorEnabled
+    }
+
+    this.applyTorState()
   },
 
   computed: {
@@ -98,33 +102,75 @@ export default {
   },
 
   methods: {
-    fetchIpAddress () {
+    delay (ms) {
+      return new Promise(resolve => setTimeout(resolve, ms))
+    },
+
+    async applyTorState () {
+      try {
+        await ipcRenderer.invoke(eventConstants.toggleTor, { activate: this.torActivated })
+
+        if (!this.torActivated) {
+          this.error = null
+          this.networkData = null
+          this.loading = false
+          return
+        }
+
+        return this.fetchIpAddress()
+      } catch (err) {
+        Log.error("Couldn't apply tor state. Reason:", err)
+        this.error = err
+        this.networkData = null
+        this.loading = false
+      }
+    },
+
+    async fetchIpAddress () {
       this.error = null
       this.ip = null
       this.loading = true
 
-      return fetch(constants.ipApi)
-        .then(res => res.ok && res.json())
-        .then(networkData => {
-          Log.info('Fetched IP address')
+      const maxAttempts = 6
+      const retryDelayMs = 7000
 
+      for (let attempt = 1; attempt <= maxAttempts; attempt++) {
+        try {
+          if (attempt > 1) {
+            await this.delay(retryDelayMs)
+          } else {
+            await this.delay(500)
+          }
+
+          const networkData = await ipcRenderer.invoke(eventConstants.getTorNetworkInfo)
+          if (!networkData || !networkData.ip) {
+            throw new Error('Empty tor network data')
+          }
+
+          Log.info('Fetched Tor IP address')
           this.networkData = networkData
           this.loading = false
-        })
-        .catch(err => {
-          Log.error("Couldn't load ip data. Reason:", err)
-
-          this.error = err
-          this.networkData = null
-          this.loading = false
-        })
+          return
+        } catch (err) {
+          Log.warn(`Tor IP lookup attempt ${attempt}/${maxAttempts} failed`, err)
+          if (attempt === maxAttempts) {
+            // Tor can still be usable even if geo/IP lookup is blocked by the exit relay.
+            this.error = null
+            this.networkData = {
+              ip: 'Unknown',
+              country_name: 'Unknown',
+              city: 'Unknown'
+            }
+            this.loading = false
+            return
+          }
+        }
+      }
     },
 
-    changed () {
-      ipcRenderer.sendSync(eventConstants.toggleTor, { activate: this.torActivated })
-      ipcRenderer.once(eventConstants.toggledTor, () => {
-        this.fetchIpAddress()
-      })
+    async changed () {
+      this.$store.dispatch('updateTorEnabled', this.torActivated)
+      await this.applyTorState()
     }
   }
 }
