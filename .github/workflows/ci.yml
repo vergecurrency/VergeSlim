@@ -303,6 +303,13 @@ jobs:
     needs:
       - macos-build
     steps:
+      - name: Download previous notary state (if present)
+        uses: actions/download-artifact@v4
+        continue-on-error: true
+        with:
+          name: macos-notary-state
+          path: notary_state
+
       - name: Download macOS artifacts
         uses: actions/download-artifact@v4
         with:
@@ -324,26 +331,32 @@ jobs:
             exit 1
           fi
 
-          SUBMIT_OUTPUT="$(xcrun notarytool submit "$DMG_PATH" \
-            --apple-id "$APPLE_ID" \
-            --password "$APPLE_APP_SPECIFIC_PASSWORD" \
-            --team-id "$APPLE_TEAM_ID" \
-            --output-format json)"
-          echo "$SUBMIT_OUTPUT"
-
-          SUBMISSION_ID="$(echo "$SUBMIT_OUTPUT" | sed -n 's/.*"id"[[:space:]]*:[[:space:]]*"\([^"]*\)".*/\1/p' | head -n1)"
-          if [ -z "${SUBMISSION_ID:-}" ]; then
-            echo "Failed to parse notarization submission id"
-            exit 1
+          if [ -f "notary_state/notary_submission_id.txt" ]; then
+            SUBMISSION_ID="$(cat notary_state/notary_submission_id.txt)"
+            echo "Reusing prior notary submission id: $SUBMISSION_ID"
+          else
+            SUBMIT_OUTPUT="$(xcrun notarytool submit "$DMG_PATH" \
+              --apple-id "$APPLE_ID" \
+              --password "$APPLE_APP_SPECIFIC_PASSWORD" \
+              --team-id "$APPLE_TEAM_ID" \
+              --output-format json)"
+            echo "$SUBMIT_OUTPUT"
+            SUBMISSION_ID="$(echo "$SUBMIT_OUTPUT" | sed -n 's/.*"id"[[:space:]]*:[[:space:]]*"\([^"]*\)".*/\1/p' | head -n1)"
+            if [ -z "${SUBMISSION_ID:-}" ]; then
+              echo "Failed to parse notarization submission id"
+              exit 1
+            fi
           fi
           echo "Notary submission id: $SUBMISSION_ID"
+          mkdir -p notary_state
+          echo "$SUBMISSION_ID" > notary_state/notary_submission_id.txt
 
           set +e
           xcrun notarytool wait "$SUBMISSION_ID" \
             --apple-id "$APPLE_ID" \
             --password "$APPLE_APP_SPECIFIC_PASSWORD" \
             --team-id "$APPLE_TEAM_ID" \
-            --timeout 60m
+            --timeout 90m
           WAIT_RC=$?
           set -e
 
@@ -356,7 +369,8 @@ jobs:
           STATUS="$(echo "$INFO_OUTPUT" | sed -n 's/.*"status"[[:space:]]*:[[:space:]]*"\([^"]*\)".*/\1/p' | head -n1)"
 
           if [ "$WAIT_RC" -ne 0 ]; then
-            echo "Notarization failed or timed out; printing Apple notary log for diagnostics"
+            echo "Notarization failed or timed out. Submission id: $SUBMISSION_ID"
+            echo "Printing Apple notary log for diagnostics"
             xcrun notarytool log "$SUBMISSION_ID" \
               --apple-id "$APPLE_ID" \
               --password "$APPLE_APP_SPECIFIC_PASSWORD" \
@@ -380,6 +394,14 @@ jobs:
           APPLE_ID: ${{ secrets.APPLE_ID }}
           APPLE_APP_SPECIFIC_PASSWORD: ${{ secrets.APPLE_APP_SPECIFIC_PASSWORD }}
           APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
+
+      - name: Upload notary state
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: macos-notary-state
+          path: notary_state/notary_submission_id.txt
+          if-no-files-found: ignore
 
       - name: Upload notarized macOS DMG
         uses: actions/upload-artifact@v4
