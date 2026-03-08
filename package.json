@@ -117,5 +117,9 @@
     "vue-cli-plugin-electron-builder": "^1.4.6",
     "vue-jest": "^3.0.7",
     "vue-template-compiler": "^2.6.12"
+  },
+  "overrides": {
+    "@babel/traverse": "^7.29.0",
+    "url-parse": "^1.5.10"
   }
 }

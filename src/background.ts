@@ -39,8 +39,8 @@ function createWindow () {
   }
 
   const mainWindowState = ElectronWindowState({
-    defaultWidth: 1100,
-    defaultHeight: 700
+    defaultWidth: 1030,
+    defaultHeight: 560
   })
 
   // Create the browser window.
