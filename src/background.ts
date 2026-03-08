@@ -10,7 +10,7 @@ import ExportImportManager from '@/walletManager/ExportImportManager'
 import '@/utils/keytar/main'
 import '@/utils/ipcMainEvents'
 import * as Utils from '@/utils'
-import constants, { eventConstants } from '@/utils/constants'
+import { eventConstants } from '@/utils/constants'
 
 // Install MyVergies components
 Installer.install()
@@ -70,6 +70,28 @@ const requestJson = (window: BrowserWindow, url: string, timeoutMs = 25000) => n
   })
   request.end()
 })
+
+const waitForTorCircuit = async (window: BrowserWindow, maxAttempts = 8, delayMs = 5000) => {
+  for (let attempt = 1; attempt <= maxAttempts; attempt++) {
+    try {
+      logger.info(`Waiting for Tor circuit (${attempt}/${maxAttempts})`)
+      const torCheckData: any = await requestJson(window, 'https://check.torproject.org/api/ip', 15000)
+      if (torCheckData && torCheckData.IsTor === true && torCheckData.IP) {
+        logger.info('Tor circuit is ready')
+        return torCheckData.IP
+      }
+      logger.warn('Tor circuit check returned non-Tor result')
+    } catch (error) {
+      logger.warn('Tor circuit check failed:', error)
+    }
+
+    if (attempt < maxAttempts) {
+      await new Promise(resolve => setTimeout(resolve, delayMs))
+    }
+  }
+
+  throw new Error('Tor circuit did not become ready in time')
+}
 
 function createWindow () {
   Menu.setApplicationMenu(Menu.buildFromTemplate(generateMenuTemplate()))
@@ -238,48 +260,21 @@ app.on('ready', async () => {
 
     ipcMain.handle(eventConstants.getTorNetworkInfo, async () => {
       try {
-        logger.info('Fetching Tor network info from check.torproject.org')
-        const torCheckData: any = await requestJson(window, 'https://check.torproject.org/api/ip')
-        if (!torCheckData || torCheckData.IsTor !== true || !torCheckData.IP) {
-          throw new Error('Tor check did not confirm Tor IP')
-        }
-        logger.info('Tor network confirmed by check.torproject.org')
+        const torIp = await waitForTorCircuit(window)
+        logger.info('Fetching Tor network info from ipinfo.io')
+        const ipInfoData: any = await requestJson(window, 'https://ipinfo.io/json', 20000)
 
-        try {
-          const regionData: any = await requestJson(window, `https://ipapi.co/${torCheckData.IP}/json/`)
-          return {
-            ip: torCheckData.IP,
-            country_name: regionData.country_name || 'Unknown',
-            city: regionData.city || 'Unknown'
-          }
-        } catch (regionError) {
-          logger.warn('Region lookup failed for Tor IP, returning IP only:', regionError)
-          return {
-            ip: torCheckData.IP,
-            country_name: 'Unknown',
-            city: 'Unknown'
-          }
-        }
-      } catch (torCheckError) {
-        logger.warn('Tor check endpoint failed, trying primary and fallback endpoints:', torCheckError)
-        try {
-          const data: any = await requestJson(window, constants.ipApi)
-          logger.info('Fetched Tor network info from primary endpoint')
-          return {
-            ip: data.ip,
-            country_name: data.country_name || 'Unknown',
-            city: data.city || 'Unknown'
-          }
-        } catch (primaryError) {
-          logger.warn('Primary Tor network info endpoint failed, using fallback:', primaryError)
-        }
-
-        const fallbackData: any = await requestJson(window, 'https://ipapi.co/json/')
-        logger.info('Fetched Tor network info from fallback endpoint')
         return {
-          ip: fallbackData.ip || 'Unknown',
-          country_name: fallbackData.country_name || 'Unknown',
-          city: fallbackData.city || 'Unknown'
+          ip: ipInfoData.ip || torIp || 'Unknown',
+          country_name: ipInfoData.country || 'Unknown',
+          city: ipInfoData.city || 'Unknown'
+        }
+      } catch (error) {
+        logger.warn('Tor network info lookup failed, returning unknown values:', error)
+        return {
+          ip: 'Unknown',
+          country_name: 'Unknown',
+          city: 'Unknown'
         }
       }
     })
