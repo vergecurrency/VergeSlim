@@ -144,6 +144,7 @@ jobs:
           fi
 
           echo "SIGN_IDENTITY=$SIGN_IDENTITY" >> "$GITHUB_ENV"
+          echo "CSC_KEYCHAIN=$KEYCHAIN_PATH" >> "$GITHUB_ENV"
         env:
           MACOS_CERT_P12_BASE64: ${{ secrets.MACOS_CERT_P12_BASE64 }}
           MACOS_CERT_PASSWORD: ${{ secrets.MACOS_CERT_PASSWORD }}
@@ -152,11 +153,13 @@ jobs:
         run: npm run electron:build -- --mac dir --x64 --publish never
         env:
           CSC_IDENTITY_AUTO_DISCOVERY: "false"
+          CSC_NAME: ${{ env.SIGN_IDENTITY }}
+          CSC_KEYCHAIN: ${{ env.CSC_KEYCHAIN }}
           NOTARIZE: "false"
           npm_config_arch: x64
           npm_config_target_arch: x64
 
-      - name: Sign app bundle
+      - name: Sign nested binaries and app bundle
         run: |
           set -euo pipefail
           APP_PATH="$(find dist_electron/mac -maxdepth 1 -name '*.app' -type d | head -n1)"
@@ -164,8 +167,22 @@ jobs:
             echo "No .app found in dist_electron/mac"
             exit 1
           fi
+
           xattr -cr "$APP_PATH" || true
-          codesign --force --deep --options runtime --sign "$SIGN_IDENTITY" "$APP_PATH"
+
+          # Sign every Mach-O file (executables, dylibs, helper binaries, bundled Tor files).
+          while IFS= read -r -d '' f; do
+            if file "$f" | grep -q "Mach-O"; then
+              codesign --force --timestamp --options runtime --sign "$SIGN_IDENTITY" "$f"
+            fi
+          done < <(find "$APP_PATH" -type f -print0)
+
+          # Sign nested code bundles from deepest to shallowest, then the root app.
+          while IFS= read -r -d '' bundle; do
+            codesign --force --timestamp --options runtime --sign "$SIGN_IDENTITY" "$bundle"
+          done < <(find "$APP_PATH" -depth -type d \( -name "*.framework" -o -name "*.app" -o -name "*.xpc" -o -name "*.appex" \) -print0)
+
+          codesign --force --timestamp --options runtime --sign "$SIGN_IDENTITY" "$APP_PATH"
           codesign --verify --deep --strict "$APP_PATH"
           codesign --display --verbose=2 "$APP_PATH"
         env:
