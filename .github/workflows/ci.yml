@@ -143,7 +143,10 @@ jobs:
             exit 1
           fi
 
+          SIGN_IDENTITY_NO_PREFIX="${SIGN_IDENTITY#Developer ID Application: }"
+
           echo "SIGN_IDENTITY=$SIGN_IDENTITY" >> "$GITHUB_ENV"
+          echo "SIGN_IDENTITY_NO_PREFIX=$SIGN_IDENTITY_NO_PREFIX" >> "$GITHUB_ENV"
           echo "CSC_KEYCHAIN=$KEYCHAIN_PATH" >> "$GITHUB_ENV"
         env:
           MACOS_CERT_P12_BASE64: ${{ secrets.MACOS_CERT_P12_BASE64 }}
@@ -153,7 +156,7 @@ jobs:
         run: npm run electron:build -- --mac dir --x64 --publish never
         env:
           CSC_IDENTITY_AUTO_DISCOVERY: "false"
-          CSC_NAME: ${{ env.SIGN_IDENTITY }}
+          CSC_NAME: ${{ env.SIGN_IDENTITY_NO_PREFIX }}
           CSC_KEYCHAIN: ${{ env.CSC_KEYCHAIN }}
           NOTARIZE: "false"
           npm_config_arch: x64
