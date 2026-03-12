@@ -10,19 +10,19 @@ export default class Keytar {
   static async setCredentials (service: string, account: string, credentials: string) {
     Log.info(`set credentials for service "${service}" and account "${account}"`)
 
-    return await this.request('set-password', service, account, credentials)
+    return this.request('set-password', service, account, credentials)
   }
 
   static async getCredentials (service: string, account: string) {
     Log.info(`get credentials for service "${service}" and account "${account}"`)
 
-    return await this.request('get-password', service, account)
+    return this.request('get-password', service, account)
   }
 
   static async deleteCredentials (service: string, account: string) {
     Log.info(`delete credentials for service "${service}" and account "${account}"`)
 
-    return await this.request('delete-password', service, account)
+    return this.request('delete-password', service, account)
   }
 
   static isAccessError (error: any): boolean {
