@@ -199,8 +199,13 @@ jobs:
         run: |
           set -euo pipefail
           APP_PATH="$(find dist_electron/mac -maxdepth 1 -name '*.app' -type d | head -n1)"
+          ENTITLEMENTS_PATH="dist_electron/entitlements.mac.plist"
           if [ -z "${APP_PATH:-}" ]; then
             echo "No .app found in dist_electron/mac"
+            exit 1
+          fi
+          if [ ! -f "$ENTITLEMENTS_PATH" ]; then
+            echo "Missing entitlements file at $ENTITLEMENTS_PATH"
             exit 1
           fi
 
@@ -215,12 +220,13 @@ jobs:
 
           # Sign nested code bundles from deepest to shallowest, then the root app.
           while IFS= read -r -d '' bundle; do
-            codesign --force --timestamp --options runtime --sign "$SIGN_IDENTITY" "$bundle"
+            codesign --force --timestamp --options runtime --entitlements "$ENTITLEMENTS_PATH" --sign "$SIGN_IDENTITY" "$bundle"
           done < <(find "$APP_PATH" -depth -type d \( -name "*.framework" -o -name "*.app" -o -name "*.xpc" -o -name "*.appex" \) -print0)
 
-          codesign --force --timestamp --options runtime --sign "$SIGN_IDENTITY" "$APP_PATH"
+          codesign --force --timestamp --options runtime --entitlements "$ENTITLEMENTS_PATH" --sign "$SIGN_IDENTITY" "$APP_PATH"
           codesign --verify --deep --strict "$APP_PATH"
           codesign --display --verbose=2 "$APP_PATH"
+          codesign -d --entitlements :- "$APP_PATH"
         env:
           SIGN_IDENTITY: ${{ env.SIGN_IDENTITY }}
 
