@@ -125,6 +125,8 @@ export default {
           message: this.$i18n.t('settings.pinChanged'),
           type: 'is-success'
         })
+      }).catch(error => {
+        this.$authManager.showKeychainAccessError(error, 'Could Not Change PIN')
       })
     },
 
@@ -135,6 +137,8 @@ export default {
         } else {
           this.stage = 1
         }
+      }).catch(error => {
+        this.$authManager.showKeychainAccessError(error, 'Could Not Read PIN')
       })
     },
 

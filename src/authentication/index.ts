@@ -24,6 +24,19 @@ class AuthManager {
     this.$buefy = vue.$buefy
   }
 
+  public showKeychainAccessError (error: any, title: string = Keytar.accessErrorTitle): void {
+    const details = error && error.originalMessage ? `<br/><br/><small>${error.originalMessage}</small>` : ''
+
+    this.$buefy.dialog.alert({
+      title,
+      message: `${Keytar.accessErrorMessage}${details}`,
+      type: 'is-danger',
+      hasIcon: true,
+      ariaRole: 'alertdialog',
+      ariaModal: true
+    })
+  }
+
   public async authenticate (pin: string): Promise<boolean> {
     this.authenticated = await this.validateAuthentication(pin)
 
@@ -134,7 +147,7 @@ class AuthManager {
   }
 
   public async changePin (pin: string): Promise<boolean> {
-    Keytar.setCredentials(Keytar.appService, 'application', pin)
+    await Keytar.setCredentials(Keytar.appService, 'application', pin)
 
     this.authenticated = true
 

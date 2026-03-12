@@ -98,6 +98,8 @@ export default {
           message: this.$i18n.t('settings.pinAdded'),
           type: 'is-success'
         })
+      }).catch(error => {
+        this.$authManager.showKeychainAccessError(error, 'Could Not Save PIN')
       })
     },
 

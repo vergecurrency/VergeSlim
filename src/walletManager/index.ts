@@ -9,6 +9,26 @@ const walletManager: PluginFunction<any> = function (vue: typeof Vue, options: a
 
   loadWallets(options.store).then((wallets: WalletConfigItem[]) => {
     vue.prototype.$walletManager.boot(new ManagerConfig(wallets))
+  }).catch((error: any) => {
+    if (Keytar.isAccessError(error)) {
+      const details = error && error.originalMessage ? `<br/><br/><small>${error.originalMessage}</small>` : ''
+
+      vue.prototype.$buefy.dialog.alert({
+        title: 'Could Not Load Wallets',
+        message: `${Keytar.accessErrorMessage}${details}`,
+        type: 'is-danger',
+        hasIcon: true
+      })
+
+      return
+    }
+
+    vue.prototype.$buefy.dialog.alert({
+      title: 'Could Not Load Wallets',
+      message: error.toString(),
+      type: 'is-danger',
+      hasIcon: true
+    })
   })
 }
 

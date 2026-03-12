@@ -79,6 +79,8 @@ export default {
         } else {
           this.$emit('authenticated')
         }
+      }).catch(error => {
+        this.$authManager.showKeychainAccessError(error, 'Could Not Unlock Wallet')
       })
     },
 

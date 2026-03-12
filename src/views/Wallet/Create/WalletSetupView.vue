@@ -90,6 +90,12 @@ export default {
 
         this.createdWallet = wallet
       }).catch(error => {
+        if (this.$authManager && this.$authManager.showKeychainAccessError && error && error.isKeytarAccessError) {
+          this.$authManager.showKeychainAccessError(error, 'Could Not Save Wallet')
+
+          return
+        }
+
         this.$buefy.dialog.alert({
           message: error.toString(),
           onConfirm: () => {

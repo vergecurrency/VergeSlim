@@ -56,6 +56,8 @@ export default {
           trapFocus: true
         })
       }
+    }).catch(error => {
+      this.$authManager.showKeychainAccessError(error, 'Keychain Access Needed')
     })
 
     ipcRenderer.on('open-settings', () => {
