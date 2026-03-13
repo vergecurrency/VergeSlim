@@ -22,6 +22,7 @@ This desktop wallet provides an easy and secure wallet on your personal computer
 * Price statistics in different fiat currencies
 * Private keys are yours
 * Possibility to choose your own wallet service
+* Uses No-KYC Stealth Ex over Tor
 
 ## Local Development
 
@@ -107,9 +108,9 @@ npm run nuxt:serve
 
 ### Community
 
-* [Telegram](https://t.me/VERGExvg)
+* [Telegram](https://t.me/officialxvg)
 * [Discord](https://discord.gg/vergecurrency)
-* [Twitter](https://www.twitter.com/vergecurrency)
+* [Twitter](https://x.com/vergecurrency)
 * [Facebook](https://www.facebook.com/VERGEcurrency/)
 * [Reddit](https://www.reddit.com/r/vergecurrency/)
 
