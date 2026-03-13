@@ -10,6 +10,7 @@
 </p>
 
 #  MyVergies
+## created by: Swen Van Zanten
 
 This desktop wallet provides an easy and secure wallet on your personal computer. With **Tor** integrated you can be sure your http communication is private. Sending and receiving XVG in a secure and easy to use wallet will actually change the way you use Verge Currency. 💪
 
