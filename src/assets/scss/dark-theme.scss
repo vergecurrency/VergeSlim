@@ -1,0 +1,211 @@
+@media (prefers-color-scheme: dark) {
+  html,
+  body,
+  #app,
+  .app-container {
+    background: #1f2329;
+    color: #e6edf3;
+  }
+
+  a {
+    color: #56c8ff;
+  }
+
+  a:hover {
+    color: #84d8ff;
+  }
+
+  .title,
+  .subtitle,
+  .label,
+  .content,
+  .has-text-grey,
+  .has-text-grey-dark,
+  .has-text-dark,
+  .has-text-black,
+  .has-text-black-bis,
+  .has-text-black-ter {
+    color: #d8e0e8 !important;
+  }
+
+  .has-text-weight-semibold,
+  .has-text-weight-bold,
+  .has-text-weight-dark,
+  .has-text-weight-darker {
+    color: #f5f8fb !important;
+  }
+
+  .box,
+  .card,
+  .message,
+  .modal-card,
+  .app-content-box,
+  .dropdown-content,
+  .menu,
+  .b-tabs .tab-content {
+    background: #2b3038;
+    color: #e6edf3;
+    border-color: #3d444d;
+  }
+
+  .dropdown-content,
+  .dropdown-menu {
+    box-shadow: 0 14px 32px rgba(0, 0, 0, 0.38);
+  }
+
+  .dropdown-item,
+  .dropdown .dropdown-menu .has-link a {
+    color: #dbe5ee;
+  }
+
+  .dropdown-item.is-hoverable:hover,
+  a.dropdown-item:hover,
+  button.dropdown-item:hover,
+  .dropdown .dropdown-menu .has-link a:hover {
+    background: #343a44;
+    color: #ffffff;
+  }
+
+  .main-menu {
+    background: #252a31 !important;
+    border-right-color: #39404a !important;
+  }
+
+  .menu-list a,
+  .menu-list a.is-active {
+    color: #d6dee7;
+  }
+
+  .menu-list a:hover {
+    background: #323844 !important;
+    color: #ffffff !important;
+  }
+
+  .menu-list-wallet a.router-link-active::after {
+    color: #56c8ff !important;
+  }
+
+  .navbar.is-app-navbar {
+    background: #262b33 !important;
+  }
+
+  .navbar,
+  .table td,
+  .table th,
+  .box,
+  .card,
+  .input,
+  .select select,
+  .textarea,
+  .taginput,
+  .taginput-container.is-focusable {
+    border-color: #414954 !important;
+  }
+
+  .input,
+  .textarea,
+  .select select,
+  .taginput,
+  .taginput-container.is-focusable {
+    background: #1f242b !important;
+    color: #eef4fb !important;
+    box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.24);
+  }
+
+  .input:focus,
+  .textarea:focus,
+  .select select:focus,
+  .taginput-container.is-focusable:focus-within {
+    border-color: #56c8ff !important;
+    box-shadow: 0 0 0 0.125em rgba(86, 200, 255, 0.18);
+  }
+
+  .input::placeholder,
+  .textarea::placeholder {
+    color: #8e9aa8 !important;
+  }
+
+  .button {
+    border-color: #454d58;
+    transition: background-color 120ms ease, border-color 120ms ease, color 120ms ease;
+  }
+
+  .button:not(.is-primary):not(.is-info):not(.is-success):not(.is-warning):not(.is-danger) {
+    background: #313740;
+    color: #edf3f9;
+  }
+
+  .button:not(.is-primary):not(.is-info):not(.is-success):not(.is-warning):not(.is-danger):hover {
+    background: #3a414b;
+    color: #ffffff;
+  }
+
+  .button.is-primary {
+    background: #2b9ed8;
+    border-color: #2b9ed8;
+    color: #08131b;
+    box-shadow: 0px 3px 0px #1e6f98 !important;
+  }
+
+  .button.is-primary:hover {
+    background: #43b5ed;
+    border-color: #43b5ed;
+  }
+
+  .button.is-info {
+    background: #3f7ae0;
+    border-color: #3f7ae0;
+    box-shadow: 0px 3px 0px #274d8d !important;
+  }
+
+  .button.is-success {
+    background: #35b67a;
+    border-color: #35b67a;
+    box-shadow: 0px 3px 0px #1f6847 !important;
+  }
+
+  .button.is-warning {
+    background: #d9b24c;
+    border-color: #d9b24c;
+    color: #201708;
+    box-shadow: 0px 3px 0px #8c7130 !important;
+  }
+
+  .button.is-danger {
+    background: #d75f5f;
+    border-color: #d75f5f;
+    box-shadow: 0px 3px 0px #8b3535 !important;
+  }
+
+  .quick-nav-link {
+    background: #2e343d;
+    border-color: #474f5a;
+    color: #dce4ed;
+  }
+
+  .quick-nav-link:hover,
+  .quick-nav-link.router-link-exact-active {
+    background: #343b46;
+    border-color: #56c8ff;
+    color: #56c8ff;
+  }
+
+  .table {
+    background: #2a2f37 !important;
+    color: #e5edf5 !important;
+  }
+
+  .table thead td,
+  .table thead th {
+    color: #f4f8fb !important;
+    background: #303641;
+  }
+
+  .modal-background {
+    background: rgba(10, 12, 16, 0.74) !important;
+  }
+
+  hr {
+    background: #3b424c;
+  }
+}
