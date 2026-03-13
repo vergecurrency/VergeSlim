@@ -36,6 +36,7 @@ export interface LocaleDefinition {
       title: string
       region: string
       ip: string
+      version?: string
       unableToConnect: string
       loading: string
       connected: string

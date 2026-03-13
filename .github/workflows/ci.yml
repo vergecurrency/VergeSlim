@@ -24,6 +24,17 @@ jobs:
           cache: npm
           cache-dependency-path: npm-shrinkwrap.json
 
+      - name: Cache Electron build tools
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cache/electron
+            ~/.cache/electron-builder
+            ~/.npm/_prebuilds
+          key: ${{ runner.os }}-${{ runner.arch }}-electron-tools-linux-${{ hashFiles('package.json', 'npm-shrinkwrap.json') }}
+          restore-keys: |
+            ${{ runner.os }}-${{ runner.arch }}-electron-tools-linux-
+
       - name: Install Linux build dependencies
         run: |
           sudo apt-get update
@@ -61,6 +72,17 @@ jobs:
           node-version: 18.x
           cache: npm
           cache-dependency-path: npm-shrinkwrap.json
+
+      - name: Cache Electron build tools
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cache/electron
+            ~/.cache/electron-builder
+            ~/.npm/_prebuilds
+          key: ${{ runner.os }}-${{ runner.arch }}-electron-tools-win-${{ hashFiles('package.json', 'npm-shrinkwrap.json') }}
+          restore-keys: |
+            ${{ runner.os }}-${{ runner.arch }}-electron-tools-win-
 
       - name: Install Linux build dependencies
         run: |
@@ -100,6 +122,17 @@ jobs:
           architecture: x64
           cache: npm
           cache-dependency-path: npm-shrinkwrap.json
+
+      - name: Cache Electron build tools
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/Library/Caches/electron
+            ~/Library/Caches/electron-builder
+            ~/.npm/_prebuilds
+          key: ${{ runner.os }}-${{ runner.arch }}-electron-tools-macos-${{ hashFiles('package.json', 'npm-shrinkwrap.json') }}
+          restore-keys: |
+            ${{ runner.os }}-${{ runner.arch }}-electron-tools-macos-
 
       - name: Install dependencies
         run: npm ci
@@ -143,7 +176,11 @@ jobs:
             exit 1
           fi
 
+          SIGN_IDENTITY_NO_PREFIX="${SIGN_IDENTITY#Developer ID Application: }"
+
           echo "SIGN_IDENTITY=$SIGN_IDENTITY" >> "$GITHUB_ENV"
+          echo "SIGN_IDENTITY_NO_PREFIX=$SIGN_IDENTITY_NO_PREFIX" >> "$GITHUB_ENV"
+          echo "CSC_KEYCHAIN=$KEYCHAIN_PATH" >> "$GITHUB_ENV"
         env:
           MACOS_CERT_P12_BASE64: ${{ secrets.MACOS_CERT_P12_BASE64 }}
           MACOS_CERT_PASSWORD: ${{ secrets.MACOS_CERT_PASSWORD }}
@@ -152,22 +189,44 @@ jobs:
         run: npm run electron:build -- --mac dir --x64 --publish never
         env:
           CSC_IDENTITY_AUTO_DISCOVERY: "false"
+          CSC_NAME: ${{ env.SIGN_IDENTITY_NO_PREFIX }}
+          CSC_KEYCHAIN: ${{ env.CSC_KEYCHAIN }}
           NOTARIZE: "false"
           npm_config_arch: x64
           npm_config_target_arch: x64
 
-      - name: Sign app bundle
+      - name: Sign nested binaries and app bundle
         run: |
           set -euo pipefail
           APP_PATH="$(find dist_electron/mac -maxdepth 1 -name '*.app' -type d | head -n1)"
+          ENTITLEMENTS_PATH="dist_electron/entitlements.mac.plist"
           if [ -z "${APP_PATH:-}" ]; then
             echo "No .app found in dist_electron/mac"
             exit 1
           fi
+          if [ ! -f "$ENTITLEMENTS_PATH" ]; then
+            echo "Missing entitlements file at $ENTITLEMENTS_PATH"
+            exit 1
+          fi
+
           xattr -cr "$APP_PATH" || true
-          codesign --force --deep --options runtime --sign "$SIGN_IDENTITY" "$APP_PATH"
+
+          # Sign every Mach-O file (executables, dylibs, helper binaries, bundled Tor files).
+          while IFS= read -r -d '' f; do
+            if file "$f" | grep -q "Mach-O"; then
+              codesign --force --timestamp --options runtime --sign "$SIGN_IDENTITY" "$f"
+            fi
+          done < <(find "$APP_PATH" -type f -print0)
+
+          # Sign nested code bundles from deepest to shallowest, then the root app.
+          while IFS= read -r -d '' bundle; do
+            codesign --force --timestamp --options runtime --entitlements "$ENTITLEMENTS_PATH" --sign "$SIGN_IDENTITY" "$bundle"
+          done < <(find "$APP_PATH" -depth -type d \( -name "*.framework" -o -name "*.app" -o -name "*.xpc" -o -name "*.appex" \) -print0)
+
+          codesign --force --timestamp --options runtime --entitlements "$ENTITLEMENTS_PATH" --sign "$SIGN_IDENTITY" "$APP_PATH"
           codesign --verify --deep --strict "$APP_PATH"
           codesign --display --verbose=2 "$APP_PATH"
+          codesign -d --entitlements :- "$APP_PATH"
         env:
           SIGN_IDENTITY: ${{ env.SIGN_IDENTITY }}
 
@@ -217,35 +276,6 @@ jobs:
           codesign --display --verbose=2 "$DMG_PATH"
         env:
           SIGN_IDENTITY: ${{ env.SIGN_IDENTITY }}
-
-      - name: Notarize and staple DMG
-        run: |
-          set -euo pipefail
-
-          if [ -z "${APPLE_ID:-}" ] || [ -z "${APPLE_APP_SPECIFIC_PASSWORD:-}" ] || [ -z "${APPLE_TEAM_ID:-}" ]; then
-            echo "Missing one or more required Apple notarization secrets: APPLE_ID, APPLE_APP_SPECIFIC_PASSWORD, APPLE_TEAM_ID"
-            exit 1
-          fi
-
-          DMG_PATH="$(find dist_electron -maxdepth 1 -name '*.dmg' -type f | head -n1)"
-          if [ -z "${DMG_PATH:-}" ]; then
-            echo "No DMG found to notarize"
-            exit 1
-          fi
-
-          xcrun notarytool submit "$DMG_PATH" \
-            --apple-id "$APPLE_ID" \
-            --password "$APPLE_APP_SPECIFIC_PASSWORD" \
-            --team-id "$APPLE_TEAM_ID" \
-            --wait
-
-          xcrun stapler staple "$DMG_PATH"
-          xcrun stapler validate "$DMG_PATH"
-          spctl --assess --type open --verbose "$DMG_PATH"
-        env:
-          APPLE_ID: ${{ secrets.APPLE_ID }}
-          APPLE_APP_SPECIFIC_PASSWORD: ${{ secrets.APPLE_APP_SPECIFIC_PASSWORD }}
-          APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
 
       - name: Smoke test app launch from DMG (30s)
         run: |
@@ -304,4 +334,123 @@ jobs:
           path: |
             dist_electron/*.dmg
             dist_electron/mac/**
+          if-no-files-found: error
+
+  macos-notarize:
+    name: macOS Notarize
+    runs-on: macos-15
+    needs:
+      - macos-build
+    steps:
+      - name: Download previous notary state (if present)
+        uses: actions/download-artifact@v4
+        continue-on-error: true
+        with:
+          name: macos-notary-state
+          path: notary_state
+
+      - name: Download macOS artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: macos-build
+          path: notarize_input
+
+      - name: Notarize and staple DMG
+        run: |
+          set -euo pipefail
+
+          if [ -z "${APPLE_ID:-}" ] || [ -z "${APPLE_APP_SPECIFIC_PASSWORD:-}" ] || [ -z "${APPLE_TEAM_ID:-}" ]; then
+            echo "Missing one or more required Apple notarization secrets: APPLE_ID, APPLE_APP_SPECIFIC_PASSWORD, APPLE_TEAM_ID"
+            exit 1
+          fi
+
+          DMG_PATH="$(find notarize_input -name '*.dmg' -type f | head -n1)"
+          if [ -z "${DMG_PATH:-}" ]; then
+            echo "No DMG found to notarize"
+            exit 1
+          fi
+
+          if [ -f "notary_state/notary_submission_id.txt" ]; then
+            SUBMISSION_ID="$(cat notary_state/notary_submission_id.txt)"
+            echo "Reusing prior notary submission id: $SUBMISSION_ID"
+          else
+            SUBMIT_OUTPUT="$(xcrun notarytool submit "$DMG_PATH" \
+              --apple-id "$APPLE_ID" \
+              --password "$APPLE_APP_SPECIFIC_PASSWORD" \
+              --team-id "$APPLE_TEAM_ID" \
+              --output-format json)"
+            echo "$SUBMIT_OUTPUT"
+            SUBMISSION_ID="$(echo "$SUBMIT_OUTPUT" | sed -n 's/.*"id"[[:space:]]*:[[:space:]]*"\([^"]*\)".*/\1/p' | head -n1)"
+            if [ -z "${SUBMISSION_ID:-}" ]; then
+              echo "Failed to parse notarization submission id"
+              exit 1
+            fi
+          fi
+          echo "Notary submission id: $SUBMISSION_ID"
+          mkdir -p notary_state
+          echo "$SUBMISSION_ID" > notary_state/notary_submission_id.txt
+
+          set +e
+          xcrun notarytool wait "$SUBMISSION_ID" \
+            --apple-id "$APPLE_ID" \
+            --password "$APPLE_APP_SPECIFIC_PASSWORD" \
+            --team-id "$APPLE_TEAM_ID" \
+            --timeout 90m
+          WAIT_RC=$?
+          set -e
+
+          INFO_OUTPUT="$(xcrun notarytool info "$SUBMISSION_ID" \
+            --apple-id "$APPLE_ID" \
+            --password "$APPLE_APP_SPECIFIC_PASSWORD" \
+            --team-id "$APPLE_TEAM_ID" \
+            --output-format json || true)"
+          echo "$INFO_OUTPUT"
+          STATUS="$(echo "$INFO_OUTPUT" | sed -n 's/.*"status"[[:space:]]*:[[:space:]]*"\([^"]*\)".*/\1/p' | head -n1)"
+
+          if [ "$WAIT_RC" -ne 0 ]; then
+            echo "Notarization failed or timed out. Submission id: $SUBMISSION_ID"
+            echo "Printing Apple notary log for diagnostics"
+            xcrun notarytool log "$SUBMISSION_ID" \
+              --apple-id "$APPLE_ID" \
+              --password "$APPLE_APP_SPECIFIC_PASSWORD" \
+              --team-id "$APPLE_TEAM_ID" || true
+            exit "$WAIT_RC"
+          fi
+
+          if [ "${STATUS:-}" != "Accepted" ]; then
+            echo "Notarization did not return Accepted status (status=${STATUS:-unknown}); printing Apple notary log"
+            xcrun notarytool log "$SUBMISSION_ID" \
+              --apple-id "$APPLE_ID" \
+              --password "$APPLE_APP_SPECIFIC_PASSWORD" \
+              --team-id "$APPLE_TEAM_ID" || true
+            exit 1
+          fi
+
+          xcrun stapler staple "$DMG_PATH"
+          xcrun stapler validate "$DMG_PATH"
+          set +e
+          spctl --assess --type open --verbose "$DMG_PATH"
+          SPCTL_RC=$?
+          set -e
+          if [ "$SPCTL_RC" -ne 0 ]; then
+            echo "::warning::spctl assessment rejected the DMG in CI (often \"source=Insufficient Context\") despite successful notarization/stapling."
+          fi
+        env:
+          APPLE_ID: ${{ secrets.APPLE_ID }}
+          APPLE_APP_SPECIFIC_PASSWORD: ${{ secrets.APPLE_APP_SPECIFIC_PASSWORD }}
+          APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
+
+      - name: Upload notary state
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: macos-notary-state
+          path: notary_state/notary_submission_id.txt
+          if-no-files-found: ignore
+
+      - name: Upload notarized macOS DMG
+        uses: actions/upload-artifact@v4
+        with:
+          name: macos-notarized
+          path: notarize_input/*.dmg
           if-no-files-found: error
