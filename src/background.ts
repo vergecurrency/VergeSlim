@@ -21,7 +21,7 @@ logger.transports.file.level = 'debug'
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
-let win: BrowserWindow | null
+let win: BrowserWindow | null = null
 const TOR_SOCKS_PORT = 9999
 const TOR_BIN_PATH = path.join(app.getPath('appData'), 'MyVergies', 'bin', 'Tor')
 // Scheme must be registered before the app is ready
@@ -222,7 +222,7 @@ app.on('window-all-closed', () => {
 app.on('activate', () => {
   // On macOS it's common to re-create a window in the app when the
   // dock icon is clicked and there are no other windows open.
-  if (win === null) {
+  if (!win || win.isDestroyed()) {
     createWindow()
   } else {
     win.show()
