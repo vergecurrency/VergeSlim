@@ -3,6 +3,8 @@ import { createProtocol, installVueDevtools } from 'vue-cli-plugin-electron-buil
 import logger from 'electron-log'
 import ElectronWindowState from 'electron-window-state'
 import * as ElectronUtils from 'electron-util'
+import path from 'path'
+import { execFile } from 'child_process'
 import Installer from '@/setup/installer'
 import { generateMenuTemplate, dockTemplate } from '@/toolbar/menu'
 import Tor from '@/http/tor'
@@ -21,6 +23,7 @@ logger.transports.file.level = 'debug'
 // be closed automatically when the JavaScript object is garbage collected.
 let win: BrowserWindow | null
 const TOR_SOCKS_PORT = 9999
+const TOR_BIN_PATH = path.join(app.getPath('appData'), 'MyVergies', 'bin', 'Tor')
 // Scheme must be registered before the app is ready
 protocol.registerSchemesAsPrivileged([{ scheme: 'app', privileges: { secure: true, standard: true } }])
 
@@ -92,6 +95,30 @@ const waitForTorCircuit = async (window: BrowserWindow, maxAttempts = 8, delayMs
 
   throw new Error('Tor circuit did not become ready in time')
 }
+
+const getTorBinaryPath = () => {
+  if (process.platform === 'darwin') {
+    return path.join(TOR_BIN_PATH, 'tor.real')
+  }
+
+  return path.join(TOR_BIN_PATH, 'tor')
+}
+
+const getTorVersion = () => new Promise((resolve) => {
+  const torBinaryPath = getTorBinaryPath()
+
+  execFile(torBinaryPath, ['--version'], (error, stdout = '', stderr = '') => {
+    if (error) {
+      logger.warn('Failed to read Tor version:', error)
+      resolve('Unknown')
+      return
+    }
+
+    const output = `${stdout}\n${stderr}`
+    const match = output.match(/Tor version ([^\s]+)\./i)
+    resolve(match ? match[1] : 'Unknown')
+  })
+})
 
 function createWindow () {
   Menu.setApplicationMenu(Menu.buildFromTemplate(generateMenuTemplate()))
@@ -260,6 +287,7 @@ app.on('ready', async () => {
 
     ipcMain.handle(eventConstants.getTorNetworkInfo, async () => {
       try {
+        const torVersion = await getTorVersion()
         const torIp = await waitForTorCircuit(window)
         logger.info('Fetching Tor network info from ipinfo.io')
         try {
@@ -267,7 +295,8 @@ app.on('ready', async () => {
           return {
             ip: ipInfoData.ip || torIp || 'Unknown',
             country_name: ipInfoData.country || 'Unknown',
-            city: ipInfoData.city || 'Unknown'
+            city: ipInfoData.city || 'Unknown',
+            torVersion
           }
         } catch (ipInfoError) {
           logger.warn('ipinfo.io failed, trying ipapi.co by Tor IP:', ipInfoError)
@@ -278,7 +307,8 @@ app.on('ready', async () => {
           return {
             ip: torIp,
             country_name: ipApiData.country_name || ipApiData.country || 'Unknown',
-            city: ipApiData.city || 'Unknown'
+            city: ipApiData.city || 'Unknown',
+            torVersion
           }
         } catch (ipApiError) {
           logger.warn('ipapi.co failed, trying ipwho.is by Tor IP:', ipApiError)
@@ -289,7 +319,8 @@ app.on('ready', async () => {
           return {
             ip: torIp,
             country_name: ipWhoData.country || 'Unknown',
-            city: ipWhoData.city || 'Unknown'
+            city: ipWhoData.city || 'Unknown',
+            torVersion
           }
         } catch (ipWhoError) {
           logger.warn('ipwho.is failed; returning Tor IP without region details:', ipWhoError)
@@ -298,14 +329,16 @@ app.on('ready', async () => {
         return {
           ip: torIp || 'Unknown',
           country_name: 'Unknown',
-          city: 'Unknown'
+          city: 'Unknown',
+          torVersion
         }
       } catch (error) {
         logger.warn('Tor network info lookup failed, returning unknown values:', error)
         return {
           ip: 'Unknown',
           country_name: 'Unknown',
-          city: 'Unknown'
+          city: 'Unknown',
+          torVersion: await getTorVersion()
         }
       }
     })

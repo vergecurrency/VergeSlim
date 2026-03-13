@@ -38,6 +38,7 @@ const en: LocaleDefinition = {
       title: 'Tor Status',
       ip: 'IP Address',
       region: 'Location',
+      version: 'Tor Version',
       unableToConnect: 'Unable to connect',
       loading: 'Loading ...',
       connected: 'Connected',

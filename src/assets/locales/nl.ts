@@ -38,6 +38,7 @@ const nl: LocaleDefinition = {
       title: 'Tor status',
       ip: 'IP adres',
       region: 'Locatie',
+      version: 'Tor versie',
       unableToConnect: 'verbinding verbroken',
       loading: 'Laden ...',
       connected: 'Verbonden',
