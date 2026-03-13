@@ -61,7 +61,7 @@ export default {
   .wallet-menu-card {
     position: relative;
     background: white;
-    border-radius: 10px;
+    border-radius: 16px;
     color: white;
     height: 120px;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1), 0 3px 0 #111111;

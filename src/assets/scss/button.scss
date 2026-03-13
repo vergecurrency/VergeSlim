@@ -54,6 +54,10 @@
 
 @media (prefers-color-scheme: dark) {
   .button {
+    transition: box-shadow 160ms ease, transform 160ms ease, background-color 160ms ease, border-color 160ms ease;
+  }
+
+  .button {
     background: #363636;
     border-color: transparent;
     color: whitesmoke;
@@ -76,6 +80,18 @@
   .button.is-white {
     background: #0a0a0a;
     color: white;
+  }
+
+  .button:hover,
+  .button.is-hovered,
+  .button:focus-visible,
+  .button.is-focused {
+    animation: dark-button-glow 1.8s ease-in-out infinite;
+  }
+
+  .button:active,
+  .button.is-active {
+    animation: none;
   }
 
   .button.is-primary {
@@ -116,5 +132,20 @@
 
   .button.is-warning:hover {
     box-shadow: 0px 2px 0px #6e6417;
+  }
+
+  @keyframes dark-button-glow {
+    0%, 100% {
+      box-shadow:
+        0px 3px 0px rgba(0, 0, 0, 0.35),
+        0 0 0 rgba(255, 255, 255, 0);
+    }
+
+    50% {
+      box-shadow:
+        0px 3px 0px rgba(0, 0, 0, 0.35),
+        0 0 16px rgba(255, 255, 255, 0.16),
+        0 0 28px rgba(173, 230, 255, 0.08);
+    }
   }
 }

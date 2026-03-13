@@ -51,18 +51,38 @@ export default {
     padding: 30px;
     overflow-y: auto;
     margin: auto;
+    border-radius: 20px;
   }
 
   @media (prefers-color-scheme: dark) {
     .quick-nav-link {
+      background: #2e343d;
       border-color: #3b3e44;
       color: #f5f5f5;
+      transition: box-shadow 160ms ease, border-color 160ms ease, color 160ms ease, background-color 160ms ease;
     }
 
     .quick-nav-link:hover,
+    .quick-nav-link:focus-visible,
     .quick-nav-link.router-link-exact-active {
+      animation: dark-quick-nav-glow 1.8s ease-in-out infinite;
+      background: #343b46;
       border-color: #2ad6c1;
       color: #2ad6c1;
+    }
+
+    @keyframes dark-quick-nav-glow {
+      0%, 100% {
+        box-shadow:
+          0 0 0 rgba(255, 255, 255, 0),
+          0 0 0 rgba(173, 230, 255, 0);
+      }
+
+      50% {
+        box-shadow:
+          0 0 16px rgba(255, 255, 255, 0.14),
+          0 0 28px rgba(173, 230, 255, 0.08);
+      }
     }
   }
 </style>

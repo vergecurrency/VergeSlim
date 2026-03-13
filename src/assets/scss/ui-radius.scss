@@ -1,0 +1,34 @@
+$radius-soft: 12px;
+$radius-medium: 16px;
+$radius-large: 20px;
+
+.box,
+.card,
+.message,
+.notification,
+.dropdown-content,
+.menu-list .menu-wallets-card,
+.button,
+.tag,
+.tabs li a,
+.input,
+.textarea,
+.select select,
+.taginput,
+.taginput-container.is-focusable {
+  border-radius: $radius-soft;
+}
+
+.modal-card,
+.app-content-box {
+  border-radius: $radius-large;
+}
+
+.table-container {
+  border-radius: $radius-medium;
+  overflow: hidden;
+}
+
+.dropdown-content {
+  overflow: hidden;
+}
