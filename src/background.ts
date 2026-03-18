@@ -24,6 +24,8 @@ logger.transports.file.level = 'debug'
 let win: BrowserWindow | null = null
 const TOR_SOCKS_PORT = 9999
 const TOR_BIN_PATH = path.join(app.getPath('appData'), 'MyVergies', 'bin', 'Tor')
+let torController: any = null
+let torBootstrapPromise: Promise<void> | null = null
 // Scheme must be registered before the app is ready
 protocol.registerSchemesAsPrivileged([{ scheme: 'app', privileges: { secure: true, standard: true } }])
 
@@ -73,6 +75,65 @@ const requestJson = (window: BrowserWindow, url: string, timeoutMs = 25000) => n
   })
   request.end()
 })
+
+const getTorInfo = (controller: any, keyword: string) => new Promise<string>((resolve, reject) => {
+  controller.getInfo(keyword, (error: Error | null, result: string) => {
+    if (error) {
+      reject(error)
+      return
+    }
+
+    resolve(result)
+  })
+})
+
+const parseBootstrapStatus = (status: string) => {
+  const progressMatch = status.match(/PROGRESS=(\d+)/)
+  const summaryMatch = status.match(/SUMMARY="([^"]+)"/)
+
+  return {
+    progress: progressMatch ? Number(progressMatch[1]) : 0,
+    summary: summaryMatch ? summaryMatch[1] : status
+  }
+}
+
+const waitForTorBootstrap = async (controller: any, maxAttempts = 24, delayMs = 2500) => {
+  if (!controller) {
+    throw new Error('Tor controller is not ready')
+  }
+
+  for (let attempt = 1; attempt <= maxAttempts; attempt++) {
+    try {
+      const bootstrapStatus = await getTorInfo(controller, 'status/bootstrap-phase')
+      const { progress, summary } = parseBootstrapStatus(bootstrapStatus)
+
+      logger.info(`Waiting for Tor bootstrap (${attempt}/${maxAttempts}) progress=${progress} summary="${summary}"`)
+
+      if (progress >= 100) {
+        logger.info('Tor bootstrap completed')
+        return
+      }
+    } catch (error) {
+      logger.warn('Tor bootstrap status check failed:', error)
+    }
+
+    if (attempt < maxAttempts) {
+      await new Promise(resolve => setTimeout(resolve, delayMs))
+    }
+  }
+
+  throw new Error('Tor bootstrap did not complete in time')
+}
+
+const ensureTorBootstrapped = (controller: any) => {
+  if (!torBootstrapPromise) {
+    torBootstrapPromise = waitForTorBootstrap(controller).finally(() => {
+      torBootstrapPromise = null
+    })
+  }
+
+  return torBootstrapPromise
+}
 
 const waitForTorCircuit = async (window: BrowserWindow, maxAttempts = 8, delayMs = 5000) => {
   for (let attempt = 1; attempt <= maxAttempts; attempt++) {
@@ -236,6 +297,7 @@ app.on('activate', () => {
 const startUpTorOnPort = (port: number) => {
   return new Promise((resolve, reject) => {
     const tor = Tor()
+    torController = tor
 
     tor.on('ready', async () => {
       tor.setConfig('SocksPort', `${port}`, () => {
@@ -288,6 +350,7 @@ app.on('ready', async () => {
     ipcMain.handle(eventConstants.getTorNetworkInfo, async () => {
       try {
         const torVersion = await getTorVersion()
+        await ensureTorBootstrapped(torController)
         const torIp = await waitForTorCircuit(window)
         logger.info('Fetching Tor network info from ipinfo.io')
         try {
