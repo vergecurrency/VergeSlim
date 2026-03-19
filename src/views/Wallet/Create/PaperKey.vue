@@ -19,7 +19,7 @@
           <span v-if="restore" class="tag expand-word">
             <input v-model="paperkey[i]" class="word-input"/>
           </span>
-          <span v-else class="tag is-family-code has-text-weight-semibold expand-word" v-html="word"/>
+          <span v-else class="tag word-tag is-family-code has-text-weight-semibold expand-word" v-html="word"/>
         </div>
       </div>
     </div>
@@ -29,7 +29,7 @@
         <div class="tags are-medium">
           <span
             v-for="(word, i) in randomWords" :key="i+word" v-html="word"
-            class="tag is-family-code has-text-weight-semibold is-clickable"
+            class="tag selectable-word-tag is-family-code has-text-weight-semibold is-clickable"
             @click="selectedPaperkey.push(word)"
           />
         </div>
@@ -212,5 +212,18 @@ input.word-input {
 
 .expand-word {
   flex-grow: 1;
+}
+
+.word-tag,
+.selectable-word-tag {
+  color: #0a0a0a !important;
+}
+
+@media (prefers-color-scheme: dark) {
+  .word-tag,
+  .selectable-word-tag {
+    background: #d8dee6;
+    color: #10161d !important;
+  }
 }
 </style>
