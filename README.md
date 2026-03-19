@@ -7,6 +7,7 @@
   <img src="https://img.shields.io/badge/Windows-^10-lightblue.svg">
   <img src="https://img.shields.io/badge/Ubuntu-24.04-orange.svg">
   <img src="https://img.shields.io/badge/license-MIT-blue.svg">
+  <img src="https://img.shields.io/badge/node.js-24-blue.svg">
 </p>
 
 #  MyVergies
@@ -30,7 +31,7 @@ If you want to help with development, use this setup:
 
 1. Fork the project, and clone it to your local machine.
 
-2. Use Node 18 and npm 10 (recommended).
+2. Use Node 24 and npm 10 (recommended).
 ```bash
 node -v
 npm -v
