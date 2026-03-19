@@ -3,11 +3,13 @@ import WalletManager from '@/walletManager/WalletManager'
 import ManagerConfig, { WalletConfigItem } from '@/walletManager/ManagerConfig'
 import Keytar from '@/utils/keytar'
 import { Store } from 'vuex'
+import { ensureTorProxyState } from '@/utils/torStartup'
 
 const walletManager: PluginFunction<any> = function (vue: typeof Vue, options: any): void {
   vue.prototype.$walletManager = new WalletManager()
 
-  loadWallets(options.store).then((wallets: WalletConfigItem[]) => {
+  loadWallets(options.store).then(async (wallets: WalletConfigItem[]) => {
+    await ensureTorProxyState(options.store.getters.isTorEnabled)
     vue.prototype.$walletManager.boot(new ManagerConfig(wallets))
   }).catch((error: any) => {
     if (Keytar.isAccessError(error)) {

@@ -12,6 +12,10 @@ import { mapActions, mapGetters } from 'vuex'
 import constants from './utils/constants'
 import walletManager from '@/walletManager'
 import authManager from '@/authentication'
+import { applyNodeProxyState } from '@/utils/nodeProxy'
+import { ensureTorProxyState, markPrimaryApiReady } from '@/utils/torStartup'
+
+applyNodeProxyState(store.getters.isTorEnabled)
 
 Vue.use(walletManager, { store })
 Vue.use(authManager)
@@ -30,18 +34,25 @@ new Vue({
   methods: {
     ...mapActions(['updatePriceRate']),
     loadData () {
-      axios.get(`${constants.priceApi}/${this.currentCurrencyCode}`)
+      return axios.get(`${constants.priceApi}/${this.currentCurrencyCode}`)
         .then(response => {
           // @ts-ignore
           this.updatePriceRate(response.data.price)
         })
     }
   },
-  mounted () {
-    this.loadData()
-    setInterval(() => {
-      this.loadData()
-    }, 30000)
+  async mounted () {
+    try {
+      await ensureTorProxyState(this.$store.getters.isTorEnabled)
+
+      setInterval(() => {
+        this.loadData()
+      }, 30000)
+
+      await this.loadData()
+    } finally {
+      markPrimaryApiReady()
+    }
 
     this.$i18n.locale = this.currentLanguageCode
   }

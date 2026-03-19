@@ -49,6 +49,7 @@ import ConnectedOnion from '@/assets/tor-icons/onion-connected'
 import ErrorOnion from '@/assets/tor-icons/onion-error'
 import { eventConstants } from '@/utils/constants'
 import Log from 'electron-log'
+import { ensureTorProxyState, waitForPrimaryApiReady } from '@/utils/torStartup'
 
 export default {
   name: 'tor-status',
@@ -113,7 +114,7 @@ export default {
 
     async applyTorState () {
       try {
-        await ipcRenderer.invoke(eventConstants.toggleTor, { activate: this.torActivated })
+        await ensureTorProxyState(this.torActivated)
 
         if (!this.torActivated) {
           this.error = null
@@ -121,6 +122,8 @@ export default {
           this.loading = false
           return
         }
+
+        await waitForPrimaryApiReady()
 
         return this.fetchIpAddress()
       } catch (err) {

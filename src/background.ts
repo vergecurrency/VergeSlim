@@ -13,6 +13,7 @@ import '@/utils/keytar/main'
 import '@/utils/ipcMainEvents'
 import * as Utils from '@/utils'
 import { eventConstants } from '@/utils/constants'
+import { applyNodeProxyState } from '@/utils/nodeProxy'
 
 // Install MyVergies components
 Installer.install()
@@ -23,6 +24,7 @@ logger.transports.file.level = 'debug'
 // be closed automatically when the JavaScript object is garbage collected.
 let win: BrowserWindow | null = null
 const TOR_SOCKS_PORT = 9999
+const TOR_HTTP_TUNNEL_PORT = 9998
 const TOR_BIN_PATH = path.join(app.getPath('appData'), 'MyVergies', 'bin', 'Tor')
 let torController: any = null
 let torBootstrapPromise: Promise<void> | null = null
@@ -296,7 +298,10 @@ app.on('activate', () => {
 
 const startUpTorOnPort = (port: number) => {
   return new Promise((resolve, reject) => {
-    const tor = Tor()
+    const tor = Tor({}, {
+      SocksPort: `${port}`,
+      HTTPTunnelPort: `${TOR_HTTP_TUNNEL_PORT}`
+    })
     torController = tor
 
     tor.on('ready', async () => {
@@ -318,6 +323,7 @@ const startUpTorOnPort = (port: number) => {
 // Some APIs can only be used after this event occurs.
 app.on('ready', async () => {
   ElectronUtils.enforceMacOSAppLocation()
+  applyNodeProxyState(true)
 
   startUpTorOnPort(TOR_SOCKS_PORT).then(async port => {
     console.log(`TorSocks listening on ${port}!`)
@@ -338,6 +344,7 @@ app.on('ready', async () => {
     const window = createWindow()
     ipcMain.handle(eventConstants.toggleTor, async (_event, arg: any) => {
       logger.info(`Tor toggle requested: activate=${arg.activate}`)
+      applyNodeProxyState(arg.activate === true)
       if (arg.activate === true) {
         await activateTorProxy(window)
       } else {
