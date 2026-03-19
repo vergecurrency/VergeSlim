@@ -83,6 +83,16 @@ npm run electron:build:win
 
 Artifacts are written to `dist_electron/`.
 
+### Linux Runtime Note
+
+Some Linux environments require launching the wallet with `--no-sandbox`.
+
+Example:
+
+```bash
+./MyVergies-1.1.0.AppImage --no-sandbox
+```
+
 Please setup your own local VWS instance to test your changes against. You can checkout [the bitcore repository](https://github.com/vergecurrency/bitcore) and setup an instance [using docker](https://github.com/vergecurrency/bitcore/blob/main/Docker.md).
 
 ## Tor Notes
