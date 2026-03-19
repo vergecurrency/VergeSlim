@@ -89,6 +89,25 @@ const getTorInfo = (controller: any, keyword: string) => new Promise<string>((re
   })
 })
 
+const getCountryName = (countryCode: string) => {
+  if (!countryCode || countryCode === '??') {
+    return 'Unknown'
+  }
+
+  try {
+    // Prefer a readable country name, but fall back to the ISO code if unsupported.
+    const displayNamesCtor = (Intl as any).DisplayNames
+    if (!displayNamesCtor) {
+      return countryCode
+    }
+
+    const displayNames = new displayNamesCtor(['en'], { type: 'region' })
+    return displayNames.of(countryCode) || countryCode
+  } catch (_error) {
+    return countryCode
+  }
+}
+
 const parseBootstrapStatus = (status: string) => {
   const progressMatch = status.match(/PROGRESS=(\d+)/)
   const summaryMatch = status.match(/SUMMARY="([^"]+)"/)
@@ -357,49 +376,20 @@ app.on('ready', async () => {
     ipcMain.handle(eventConstants.getTorNetworkInfo, async () => {
       try {
         const torVersion = await getTorVersion()
-        await ensureTorBootstrapped(torController)
         const torIp = await waitForTorCircuit(window)
-        logger.info('Fetching Tor network info from ipinfo.io')
-        try {
-          const ipInfoData: any = await requestJson(window, 'https://ipinfo.io/json', 20000)
-          return {
-            ip: ipInfoData.ip || torIp || 'Unknown',
-            country_name: ipInfoData.country || 'Unknown',
-            city: ipInfoData.city || 'Unknown',
-            torVersion
-          }
-        } catch (ipInfoError) {
-          logger.warn('ipinfo.io failed, trying ipapi.co by Tor IP:', ipInfoError)
-        }
+        let countryCode = 'Unknown'
 
         try {
-          const ipApiData: any = await requestJson(window, `https://ipapi.co/${torIp}/json/`, 20000)
-          return {
-            ip: torIp,
-            country_name: ipApiData.country_name || ipApiData.country || 'Unknown',
-            city: ipApiData.city || 'Unknown',
-            torVersion
-          }
-        } catch (ipApiError) {
-          logger.warn('ipapi.co failed, trying ipwho.is by Tor IP:', ipApiError)
-        }
-
-        try {
-          const ipWhoData: any = await requestJson(window, `https://ipwho.is/${torIp}`, 20000)
-          return {
-            ip: torIp,
-            country_name: ipWhoData.country || 'Unknown',
-            city: ipWhoData.city || 'Unknown',
-            torVersion
-          }
-        } catch (ipWhoError) {
-          logger.warn('ipwho.is failed; returning Tor IP without region details:', ipWhoError)
+          countryCode = (await getTorInfo(torController, `ip-to-country/${torIp}`)).trim().toUpperCase()
+        } catch (countryError) {
+          const message = countryError instanceof Error ? countryError.message : String(countryError)
+          logger.debug(`Tor country lookup unavailable; continuing with verified Tor IP only: ${message}`)
         }
 
         return {
           ip: torIp || 'Unknown',
-          country_name: 'Unknown',
-          city: 'Unknown',
+          country_name: getCountryName(countryCode),
+          country_code: countryCode || 'Unknown',
           torVersion
         }
       } catch (error) {
@@ -407,7 +397,7 @@ app.on('ready', async () => {
         return {
           ip: 'Unknown',
           country_name: 'Unknown',
-          city: 'Unknown',
+          country_code: 'Unknown',
           torVersion: await getTorVersion()
         }
       }

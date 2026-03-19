@@ -29,7 +29,7 @@
       </b-dropdown-item>
       <b-dropdown-item aria-role="listitem" :focusable="false" custom>
         <b-field :label="$i18n.t('tor.status.region')">
-          {{ networkData.country_name }}, {{ networkData.city }}
+          {{ networkData.country_name }}
         </b-field>
       </b-dropdown-item>
       <b-dropdown-item aria-role="listitem" :focusable="false" custom>
@@ -167,7 +167,7 @@ export default {
             this.networkData = {
               ip: 'Unknown',
               country_name: 'Unknown',
-              city: 'Unknown',
+              country_code: 'Unknown',
               torVersion: this.networkData && this.networkData.torVersion ? this.networkData.torVersion : 'Unknown'
             }
             this.loading = false
