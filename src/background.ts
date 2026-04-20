@@ -186,10 +186,25 @@ const getTorBinaryPath = () => {
   return path.join(TOR_BIN_PATH, 'tor')
 }
 
+const getTorVersionEnv = () => {
+  if (process.env.GRANAX_USE_SYSTEM_TOR && process.platform === 'linux') {
+    return { ...process.env }
+  }
+
+  if (process.platform === 'linux') {
+    return {
+      ...process.env,
+      LD_LIBRARY_PATH: TOR_BIN_PATH
+    }
+  }
+
+  return { ...process.env }
+}
+
 const getTorVersion = () => new Promise((resolve) => {
   const torBinaryPath = getTorBinaryPath()
 
-  execFile(torBinaryPath, ['--version'], (error, stdout = '', stderr = '') => {
+  execFile(torBinaryPath, ['--version'], { env: getTorVersionEnv() }, (error, stdout = '', stderr = '') => {
     if (error) {
       logger.warn('Failed to read Tor version:', error)
       resolve('Unknown')
