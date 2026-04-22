@@ -18,6 +18,23 @@ const pl: LocaleDefinition = {
       purple: 'Fioletowy',
       orange: 'Pomarańczowy'
     },
+    status: {
+      bootstrappingTor: 'Uruchamianie Tor',
+      bootstrappingTorDetail: 'Negocjowanie bezpiecznego obwodu',
+      torBootstrapped: 'Tor gotowy',
+      torBootstrappedDetail: 'Bezpieczna trasa jest aktywna',
+      torDisabled: 'Tor wyÅ‚Ä…czony',
+      torDisabledDetail: 'Aktywny jest tryb clearnet',
+      torError: 'Problem z poÅ‚Ä…czeniem Tor',
+      torErrorDetail: 'Ruch nie mÃ³gÅ‚ zostaÄ‡ skierowany przez Tor',
+      connectingWallet: 'ÅÄ…czenie portfela',
+      connectingWalletDetail: 'Otwieranie sesji usÅ‚ugi portfela',
+      syncingWallet: 'Synchronizacja portfela',
+      syncingWalletDetail: 'OdÅ›wieÅ¼anie sald i transakcji',
+      walletReady: 'Portfel gotowy',
+      walletReadyDetail: 'Saldo i historia sÄ… aktualne',
+      readyForWallet: 'Gotowe do dodania lub importu portfela'
+    },
     version: 'wersja'
   },
   welcome: {
@@ -70,6 +87,7 @@ const pl: LocaleDefinition = {
   },
   transaction: {
     transaction: 'Transakcja',
+    web3Domain: 'Domena Web3',
     sent: 'Wysłano',
     sending: 'Wysyłanie',
     received: 'Odebrano',
@@ -98,6 +116,9 @@ const pl: LocaleDefinition = {
     amountDetails: 'Wpisz kwotę; opłata transakcyjna zostanie obliczona automatycznie.',
     internalMemo: 'Notatka wewnętrzna',
     internalMemoDetails: 'Opcjonalna notatka własna',
+    recipientPlaceholder: 'Adres XVG odbiorcy lub domena Web3',
+    resolveRecipient: 'Rozwiąż',
+    recipientResolved: 'Rozwiązano <b>{domain}</b> na adres XVG.',
     sendMax: 'Wyślij wszystko',
     reset: 'Resetuj',
     confirmTransaction: 'Potwierdź transakcję',
@@ -125,7 +146,13 @@ const pl: LocaleDefinition = {
       'INVALID_ADDRESS: Invalid address': 'Podany adres XVG jest nieprawidłowy',
       'Insufficient funds': 'Niewystarczające środki na koncie',
       'BADREQUEST: Invalid amount': 'Podana kwota jest nieprawidłowa',
-      'Amount below dust threshold': 'Kwota jest poniżej progu minimalnego (dust)'
+      'Amount below dust threshold': 'Kwota jest poniżej progu minimalnego (dust)',
+      INVALID_WEB3_DOMAIN: 'Podana domena Web3 jest nieprawidłowa.',
+      UNSTOPPABLE_DOMAIN_NOT_FOUND: 'Nie znaleziono domeny Web3.',
+      UNSTOPPABLE_DOMAIN_MISSING_XVG_ADDRESS: 'Ta domena Web3 nie ma rekordu adresu XVG.',
+      UNSTOPPABLE_AUTH_FAILED: 'Klucz API Unstoppable Domains został odrzucony.',
+      UNSTOPPABLE_LOOKUP_TIMEOUT: 'Rozwiązywanie domeny Web3 przez Tor przekroczyło limit czasu. Spróbuj ponownie.',
+      UNSTOPPABLE_LOOKUP_FAILED: 'Nie udało się teraz rozwiązać domeny Web3.'
     }
   },
   receive: {
