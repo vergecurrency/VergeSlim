@@ -10,6 +10,11 @@ const en: LocaleDefinition = {
       settings: 'Settings',
       about: 'About'
     },
+    quickNav: {
+      overview: 'Overview',
+      games: 'Games',
+      trade: 'Trade'
+    },
     copiedSuccessfully: 'Yes, copied successfully!',
     colors: {
       blue: 'Blue',
@@ -51,6 +56,35 @@ const en: LocaleDefinition = {
     helpImprove: 'Trade XVG',
     helpImproveDesc: 'Buy, sell, and swap XVG directly from inside the app.',
     goToGithub: 'Trade XVG'
+  },
+  games: {
+    games: 'Games',
+    subtitle: 'A built-in arcade corner for when you want to stay inside MyVergies.',
+    tetris: 'Tetris',
+    tetrisDescription: 'Stack clean lines, survive the speed curve, and keep the board under control.',
+    inspiredBy: 'Inspired by the MIT-licensed vue-tetris-demo project.',
+    best: 'Best',
+    score: 'Score',
+    lines: 'Lines',
+    level: 'Level',
+    next: 'Next',
+    status: 'Status',
+    ready: 'Ready',
+    playing: 'Playing',
+    paused: 'Paused',
+    gameOver: 'Game Over',
+    start: 'Start game',
+    pause: 'Pause',
+    resume: 'Resume',
+    restart: 'Restart',
+    rotate: 'Rotate',
+    moveLeft: 'Left',
+    moveRight: 'Right',
+    softDrop: 'Down',
+    hardDrop: 'Drop',
+    controls: 'Controls',
+    controlsHint: 'Arrow keys move, Up rotates, Space drops hard, and P pauses.',
+    mobileControls: 'On-screen controls are available below the board.'
   },
   tor: {
     status: {

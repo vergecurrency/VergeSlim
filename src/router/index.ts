@@ -13,6 +13,7 @@ import BlockchainView from '@/views/Blockchain/BlockchainView.vue'
 import ContactsView from '@/views/Contacts/ContactsView.vue'
 import SettingsView from '@/views/Settings/SettingsView.vue'
 import TradeView from '@/views/TradeView.vue'
+import GamesView from '@/views/GamesView.vue'
 
 Vue.use(VueRouter)
 
@@ -109,6 +110,11 @@ const router = new VueRouter({
       path: '/trade',
       name: 'trade',
       component: TradeView
+    },
+    {
+      path: '/games',
+      name: 'games',
+      component: GamesView
     },
     {
       path: '*',

@@ -10,6 +10,11 @@ const nl: LocaleDefinition = {
       settings: 'Instellingen',
       about: 'Over'
     },
+    quickNav: {
+      overview: 'Overzicht',
+      games: 'Games',
+      trade: 'Trade'
+    },
     copiedSuccessfully: 'Yeah, succesvol gekopieerd!',
     colors: {
       blue: 'Blauw',
@@ -51,6 +56,35 @@ const nl: LocaleDefinition = {
     helpImprove: 'Trade XVG',
     helpImproveDesc: 'Koop, verkoop en wissel XVG direct in de app.',
     goToGithub: 'Trade XVG'
+  },
+  games: {
+    games: 'Games',
+    subtitle: 'Een ingebouwde arcadehoek voor wanneer je even in MyVergies wilt blijven.',
+    tetris: 'Tetris',
+    tetrisDescription: 'Stapel strakke lijnen, overleef de snelheid en houd het veld schoon.',
+    inspiredBy: 'Geinspireerd door het MIT-gelicentieerde vue-tetris-demo project.',
+    best: 'Beste',
+    score: 'Score',
+    lines: 'Lijnen',
+    level: 'Level',
+    next: 'Volgende',
+    status: 'Status',
+    ready: 'Klaar',
+    playing: 'Spelen',
+    paused: 'Gepauzeerd',
+    gameOver: 'Game over',
+    start: 'Start game',
+    pause: 'Pauze',
+    resume: 'Hervat',
+    restart: 'Opnieuw',
+    rotate: 'Draai',
+    moveLeft: 'Links',
+    moveRight: 'Rechts',
+    softDrop: 'Omlaag',
+    hardDrop: 'Drop',
+    controls: 'Bediening',
+    controlsHint: 'Pijltjes bewegen, Omhoog draait, Spatie dropt direct en P pauzeert.',
+    mobileControls: 'Onder het speelveld staan ook schermknoppen.'
   },
   tor: {
     status: {

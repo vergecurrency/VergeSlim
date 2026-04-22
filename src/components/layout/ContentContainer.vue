@@ -3,10 +3,13 @@
     <div ref="appContentBox" class="app-content-box">
       <div class="quick-nav">
         <router-link class="quick-nav-link" :to="{ name: 'welcome' }">
-          Overview
+          {{ $i18n.t('main.quickNav.overview') }}
+        </router-link>
+        <router-link class="quick-nav-link" :to="{ name: 'games' }">
+          {{ $i18n.t('main.quickNav.games') }}
         </router-link>
         <router-link class="quick-nav-link" :to="{ name: 'trade' }">
-          Trade
+          {{ $i18n.t('main.quickNav.trade') }}
         </router-link>
       </div>
       <slot/>

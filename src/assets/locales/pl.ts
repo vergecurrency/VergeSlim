@@ -37,6 +37,11 @@ const pl: LocaleDefinition = {
       walletReadyDetail: 'Saldo i historia sÄ… aktualne',
       readyForWallet: 'Gotowe do dodania lub importu portfela'
     },
+    quickNav: {
+      overview: 'Przeglad',
+      games: 'Gry',
+      trade: 'Trade'
+    },
     version: 'wersja'
   },
   welcome: {
@@ -51,6 +56,35 @@ const pl: LocaleDefinition = {
     helpImprove: 'Handluj XVG',
     helpImproveDesc: 'Kupuj, sprzedawaj i wymieniaj XVG bezpośrednio z poziomu aplikacji.',
     goToGithub: 'Handluj XVG'
+  },
+  games: {
+    games: 'Gry',
+    subtitle: 'Wbudowany arcade room, kiedy chcesz zostac w MyVergies.',
+    tetris: 'Tetris',
+    tetrisDescription: 'Ukladaj linie, pilnuj planszy i przetrwaj rosnaca predkosc.',
+    inspiredBy: 'Inspiracja: projekt vue-tetris-demo na licencji MIT.',
+    best: 'Best',
+    score: 'Wynik',
+    lines: 'Linie',
+    level: 'Poziom',
+    next: 'Nastepny',
+    status: 'Status',
+    ready: 'Gotowe',
+    playing: 'Gra',
+    paused: 'Pauza',
+    gameOver: 'Koniec gry',
+    start: 'Start',
+    pause: 'Pauza',
+    resume: 'Wznow',
+    restart: 'Restart',
+    rotate: 'Obrot',
+    moveLeft: 'Lewo',
+    moveRight: 'Prawo',
+    softDrop: 'Dol',
+    hardDrop: 'Drop',
+    controls: 'Sterowanie',
+    controlsHint: 'Strzalki poruszaja, Gora obraca, Spacja robi hard drop, a P pauzuje.',
+    mobileControls: 'Pod plansza sa tez przyciski ekranowe.'
   },
   tor: {
     status: {

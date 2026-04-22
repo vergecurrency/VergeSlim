@@ -8,6 +8,11 @@ export interface LocaleDefinition {
       settings: string
       about: string
     }
+    quickNav: {
+      overview: string
+      games: string
+      trade: string
+    }
     copiedSuccessfully: string
     colors: {
       blue: string
@@ -49,6 +54,35 @@ export interface LocaleDefinition {
     helpImprove: string
     helpImproveDesc: string
     goToGithub: string
+  }
+  games: {
+    games: string
+    subtitle: string
+    tetris: string
+    tetrisDescription: string
+    inspiredBy: string
+    best: string
+    score: string
+    lines: string
+    level: string
+    next: string
+    status: string
+    ready: string
+    playing: string
+    paused: string
+    gameOver: string
+    start: string
+    pause: string
+    resume: string
+    restart: string
+    rotate: string
+    moveLeft: string
+    moveRight: string
+    softDrop: string
+    hardDrop: string
+    controls: string
+    controlsHint: string
+    mobileControls: string
   }
   tor: {
     status: {
