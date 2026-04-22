@@ -11,7 +11,7 @@
           </router-link>
         </div>
         <div class="column">
-          <p class="navigation-header-title is-size-3 is-family-handwritten" v-html="title"/>
+          <p class="navigation-header-title is-size-3" v-html="title"/>
         </div>
         <div class="column is-narrow">
           <slot name="right"/>
@@ -108,6 +108,10 @@ export default {
 }
 
 .navigation-header-title {
+  font-family: inherit;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
   color: var(--rv-text);
   text-shadow: 0 0 18px rgba(83, 243, 255, 0.14);
 }

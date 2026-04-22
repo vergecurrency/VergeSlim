@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="welcome-view">
     <div class="columns">
       <div class="column welcome-header">
         <div class="header-logo">
@@ -86,6 +86,15 @@ export default {
 
   .welcome-action-button {
     min-width: 15.5rem;
+  }
+
+  .welcome-view .form-box h4 {
+    font-family: inherit;
+    font-size: 0.9rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--rv-text);
   }
 
   @media (max-width: 768px) {

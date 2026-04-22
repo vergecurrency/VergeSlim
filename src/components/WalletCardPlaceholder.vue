@@ -1,6 +1,6 @@
 <template>
   <div class="wallet-card-placeholder">
-    <p class="is-family-handwritten" v-t="'createWallet.addYourFirstWallet'"/>
+    <p class="wallet-card-placeholder-title" v-t="'createWallet.addYourFirstWallet'"/>
     <small v-t="'createWallet.itsReallyEasy'"/>
   </div>
 </template>
@@ -31,6 +31,15 @@ export default {
     font-size: .72rem;
     color: var(--rv-text-muted);
   }
+
+  .wallet-card-placeholder-title {
+    font-family: inherit;
+    font-size: 0.86rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+  }
+
   .wallet-card-placeholder:hover {
     transform: translateY(-2px);
     border-color: rgba(83, 243, 255, 0.42);
