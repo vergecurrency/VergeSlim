@@ -30,6 +30,12 @@ module.exports = {
         asarUnpack: [
           'bin/**/*'
         ],
+        extraResources: [
+          {
+            from: 'dist_electron/icons/icon.ico',
+            to: 'icon.ico'
+          }
+        ],
         dmg: {
           sign: false,
           icon: null,

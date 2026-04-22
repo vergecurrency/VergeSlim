@@ -48,7 +48,7 @@ const en: LocaleDefinition = {
     welcomeToMyVergies: 'Welcome to MyVergies',
     createdBy: 'Created by <b>Swen van Zanten</b>',
     addAWallet: 'Add a wallet',
-    addAWalletDesc: 'You are able to add multiple wallets... this is awesome because I can think of a ton of reasons to have more than one!',
+    addAWalletDesc: 'Here you can import a new wallet, create another wallet, or restore another wallet from seedphrase.',
     addWallet: 'Add wallet',
     changeThings: 'Settings',
     changeThingsDesc: 'Here you can change your PIN, Local currency, or language!',

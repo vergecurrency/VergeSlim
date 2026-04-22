@@ -1,4 +1,4 @@
-import { app, protocol, nativeTheme, BrowserWindow, Menu, ipcMain, powerMonitor, net } from 'electron'
+import { app, protocol, nativeTheme, BrowserWindow, Menu, ipcMain, powerMonitor, net, screen } from 'electron'
 import { createProtocol, installVueDevtools } from 'vue-cli-plugin-electron-builder/lib'
 import logger from 'electron-log'
 import ElectronWindowState from 'electron-window-state'
@@ -7,7 +7,7 @@ import path from 'path'
 import fs from 'fs'
 import { execFile } from 'child_process'
 import Installer from '@/setup/installer'
-import { generateMenuTemplate, dockTemplate } from '@/toolbar/menu'
+import { dockTemplate } from '@/toolbar/menu'
 import Tor from '@/http/tor'
 import ExportImportManager from '@/walletManager/ExportImportManager'
 import '@/utils/keytar/main'
@@ -38,8 +38,23 @@ const TOR_DATA_DIRECTORY = path.join(app.getPath('appData'), 'MyVergies', 'tor-d
 const TOR_DATA_LOCK_FILE = path.join(TOR_DATA_DIRECTORY, 'lock')
 let torController: any = null
 let torStartupPromise: Promise<void> | null = null
+const MAIN_WINDOW_BASE_WIDTH = 1030
+const MAIN_WINDOW_DEFAULT_WIDTH = Math.round(MAIN_WINDOW_BASE_WIDTH * 1.15)
+const MAIN_WINDOW_DEFAULT_HEIGHT = 500
+const MAIN_WINDOW_MIN_WIDTH = MAIN_WINDOW_DEFAULT_WIDTH
+const MAIN_WINDOW_MIN_HEIGHT = 440
 // Scheme must be registered before the app is ready
 protocol.registerSchemesAsPrivileged([{ scheme: 'app', privileges: { secure: true, standard: true } }])
+
+const getWindowsWindowIconPath = () => {
+  const iconPathCandidates = [
+    path.join(process.resourcesPath, 'icon.ico'),
+    path.join(process.cwd(), 'dist_electron', 'icons', 'icon.ico'),
+    path.join(app.getAppPath(), 'dist_electron', 'icons', 'icon.ico')
+  ]
+
+  return iconPathCandidates.find(iconPath => fs.existsSync(iconPath))
+}
 
 const activateTorProxy = (win: BrowserWindow) => win.webContents.session.setProxy({
   proxyRules: `socks5://127.0.0.1:${TOR_SOCKS_PORT}`,
@@ -404,19 +419,45 @@ const registerIpcHandlers = () => {
       }
     }
   })
+
+  ipcMain.handle(eventConstants.fitWindowToContent, async (_event, arg: any) => {
+    const window = getMainWindowOrThrow()
+    const requestedHeight = Number(arg && arg.height)
+
+    if (!Number.isFinite(requestedHeight) || requestedHeight <= 0) {
+      return { success: false, error: 'INVALID_HEIGHT' }
+    }
+
+    const currentContentWidth = window.getContentSize()[0]
+    const display = screen.getDisplayMatching(window.getBounds())
+    const maxContentHeight = Math.max(
+      MAIN_WINDOW_MIN_HEIGHT,
+      display.workAreaSize.height - 32
+    )
+    const targetHeight = Math.max(
+      MAIN_WINDOW_MIN_HEIGHT,
+      Math.min(Math.ceil(requestedHeight), maxContentHeight)
+    )
+
+    window.setMinimumSize(MAIN_WINDOW_MIN_WIDTH, MAIN_WINDOW_MIN_HEIGHT)
+    window.setContentSize(currentContentWidth, targetHeight)
+
+    return { success: true, height: targetHeight }
+  })
 }
 
 function createWindow () {
-  Menu.setApplicationMenu(Menu.buildFromTemplate(generateMenuTemplate()))
+  Menu.setApplicationMenu(null)
 
   if (process.platform === 'darwin') {
     app.dock.setMenu(Menu.buildFromTemplate(dockTemplate))
   }
 
   const mainWindowState = ElectronWindowState({
-    defaultWidth: 1030,
-    defaultHeight: 560
+    defaultWidth: MAIN_WINDOW_DEFAULT_WIDTH,
+    defaultHeight: MAIN_WINDOW_DEFAULT_HEIGHT
   })
+  const windowIcon = Utils.isWinOSEnvironment() ? getWindowsWindowIconPath() : null
 
   // Create the browser window.
   win = new BrowserWindow({
@@ -425,10 +466,14 @@ function createWindow () {
     height: mainWindowState.height,
     width: mainWindowState.width,
     title: 'MyVergies',
-    minHeight: 560,
-    minWidth: 1030,
+    minHeight: MAIN_WINDOW_MIN_HEIGHT,
+    minWidth: MAIN_WINDOW_MIN_WIDTH,
     show: true,
     useContentSize: true,
+    autoHideMenuBar: true,
+    ...(windowIcon
+      ? { icon: windowIcon }
+      : {}),
     backgroundColor: nativeTheme.shouldUseDarkColors ? '#1b1c1f' : '#e0e0e0',
     titleBarStyle: 'hidden',
     trafficLightPosition: {
@@ -441,6 +486,9 @@ function createWindow () {
       contextIsolation: false
     }
   })
+
+  win.setMenuBarVisibility(false)
+  win.removeMenu()
 
   mainWindowState.manage(win)
 
