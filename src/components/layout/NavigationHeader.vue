@@ -11,7 +11,7 @@
           </router-link>
         </div>
         <div class="column">
-          <p class="is-size-3 is-family-handwritten" v-html="title"/>
+          <p class="navigation-header-title is-size-3 is-family-handwritten" v-html="title"/>
         </div>
         <div class="column is-narrow">
           <slot name="right"/>
@@ -38,7 +38,7 @@ export default {
 
   mounted () {
     const header = this.$refs.header
-    const sticky = header.offsetTop - this.hasUpdateNotification ? 101 : 52
+    const sticky = header.offsetTop - (this.hasUpdateNotification ? 101 : 52)
 
     let appContentBox = null
     let parent = this.$parent
@@ -75,17 +75,15 @@ export default {
 
 <style>
 .navigation-header {
-  transition-property: all;
-  transition-duration: .5s;
-  transition-timing-function: cubic-bezier(0, 1, 0.5, 1);
-  padding-bottom: 30px;
+  transition: transform 0.3s ease, opacity 0.3s ease;
+  padding-bottom: 28px;
 }
 
 .navigation-header.sticky {
   position: fixed;
-  width: 100%;
+  width: calc(100% - 68px);
   top: 52px;
-  margin: 0 -31px;
+  margin: 0 -34px;
   z-index: 10;
 }
 
@@ -95,11 +93,29 @@ export default {
 
 .navigation-header.sticky .box {
   width: 100%;
-  padding: 10px 30px;
-  border-radius: 0;
+  padding: 12px 22px;
+  border-radius: 22px;
+  box-shadow: 0 18px 40px rgba(1, 4, 18, 0.36), 0 0 22px rgba(83, 243, 255, 0.08);
 }
 
 .has-sticky {
   padding-top: 120px;
+}
+
+.navigation-header .box {
+  background: linear-gradient(135deg, rgba(13, 19, 46, 0.9), rgba(20, 12, 42, 0.86));
+  border: 1px solid rgba(83, 243, 255, 0.14);
+}
+
+.navigation-header-title {
+  color: var(--rv-text);
+  text-shadow: 0 0 18px rgba(83, 243, 255, 0.14);
+}
+
+@media (max-width: 768px) {
+  .navigation-header.sticky {
+    width: calc(100% - 36px);
+    margin: 0 -18px;
+  }
 }
 </style>

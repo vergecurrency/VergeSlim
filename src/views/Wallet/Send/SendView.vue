@@ -53,6 +53,9 @@ export default {
       activeStep: 0,
       transaction: {
         toAddress: '',
+        recipientLabel: '',
+        resolvedDomain: '',
+        resolvedAddress: '',
         amount: 0,
         message: '',
         txp: null
@@ -115,6 +118,8 @@ export default {
       }).then(txp => {
         this.$refs.sendingView.animate()
 
+        this.persistResolvedRecipient(txp)
+
         this.fetchTransaction()
 
         this.transaction.txp = txp
@@ -132,6 +137,9 @@ export default {
       this.activeStep = 0
       this.transaction = {
         toAddress: '',
+        recipientLabel: '',
+        resolvedDomain: '',
+        resolvedAddress: '',
         amount: 0,
         message: '',
         txp: null
@@ -158,6 +166,18 @@ export default {
         await this.wallet.status()
         await this.wallet.fetchTxHistory()
       }, 2500)
+    },
+
+    persistResolvedRecipient (txp) {
+      if (!txp || !txp.txid || !this.transaction.resolvedDomain) {
+        return
+      }
+
+      this.$store.dispatch('saveResolvedRecipient', {
+        txid: txp.txid,
+        domain: this.transaction.resolvedDomain,
+        address: this.transaction.resolvedAddress || this.transaction.toAddress
+      })
     }
   }
 }

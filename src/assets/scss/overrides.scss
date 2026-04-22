@@ -1,10 +1,33 @@
-// Set your colors
-$primary: #16C1E3;
+// Retrowave palette and Bulma base tokens
+$primary: #53f3ff;
 $primary-invert: findColorInvert($primary);
 $primary-light: findLightColor($primary);
 $primary-dark: findDarkColor($primary);
-$success: #0fb569;
+$link: $primary;
+$info: #5b7dff;
+$success: #4df6b2;
+$warning: #ffb04d;
+$danger: #ff5ba4;
 $success-invert: findColorInvert($success);
+$info-invert: findColorInvert($info);
+$warning-invert: findColorInvert($warning);
+$danger-invert: findColorInvert($danger);
+$body-background-color: #060814;
+$scheme-main: #090d1d;
+$scheme-main-bis: #0d1230;
+$scheme-main-ter: #131a3f;
+$background: #080b1a;
+$border: rgba(83, 243, 255, 0.18);
+$border-light: rgba(83, 243, 255, 0.12);
+$text: #f7f4ff;
+$text-strong: #ffffff;
+$text-light: #cbd1ff;
+$text-lighter: #9197c8;
+$box-background-color: rgba(10, 16, 38, 0.88);
+$card-background-color: rgba(10, 16, 38, 0.88);
+$radius: 18px;
+$radius-large: 24px;
+$box-radius: 22px;
 
 // Setup $colors to use as bulma classes (e.g. 'is-twitter')
 $colors: mergeColorMaps(
@@ -23,30 +46,20 @@ $custom-colors
 );
 
 // Links
-$link: $primary;
 $link-invert: $primary-invert;
 $link-focus-border: $primary;
 
 $family-primary:
-        BlinkMacSystemFont,
-        -apple-system,
+        "Bahnschrift",
+        "Trebuchet MS",
         "Segoe UI",
-        "Roboto",
-        "Oxygen",
-        "Ubuntu",
-        "Cantarell",
-        "Fira Sans",
-        "Droid Sans",
-        "Helvetica Neue",
-        "Helvetica",
-        "Arial",
         sans-serif
 ;
 
-$menu-item-active-background-color: #d4e8ef;
+$menu-item-active-background-color: rgba(83, 243, 255, 0.12);
 $menu-item-active-color: $text-strong;
-$menu-item-radius: 0;
+$menu-item-radius: 16px;
 
-$box-shadow: 0px 0px 15px 0px rgba(0,0,0,0.05);
+$box-shadow: 0 24px 60px rgba(1, 4, 18, 0.42);
 
-$modal-background-background-color: rgba($black, 0.1);
+$modal-background-background-color: rgba(#02030a, 0.8);

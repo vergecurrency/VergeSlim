@@ -1,13 +1,20 @@
-@media (prefers-color-scheme: dark) {
-  body, html {
-    background-color: #2c2e30;
-  }
+html,
+body {
+  background-color: var(--rv-bg);
+}
 
-  .has-background-light {
-    background-color: #131313 !important;
-  }
+.has-background-light {
+  background-color: rgba(14, 19, 43, 0.76) !important;
+}
 
-  .has-background-white {
-    background-color: #1c1c1c !important;
-  }
+.has-background-white {
+  background-color: rgba(10, 16, 38, 0.88) !important;
+}
+
+.has-background-info-light {
+  background-color: rgba(72, 119, 255, 0.18) !important;
+}
+
+.has-background-warning {
+  background: linear-gradient(135deg, rgba(255, 154, 61, 0.24), rgba(255, 216, 107, 0.18)) !important;
 }

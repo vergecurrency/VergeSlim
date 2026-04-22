@@ -1,6 +1,5 @@
-@media (prefers-color-scheme: dark) {
-  .card {
-    background-color: #2c2e30;
-    color: white;
-  }
+.card {
+  background: linear-gradient(180deg, rgba(16, 23, 53, 0.94), rgba(10, 16, 38, 0.9));
+  color: var(--rv-text);
+  border: 1px solid var(--rv-border);
 }

@@ -1,5 +1,5 @@
 <template>
-  <div class="modal-card box">
+  <div class="modal-card box modal-panel">
     <div class="columns">
       <div class="column">
         <p class="is-size-3 is-family-handwritten" v-html="$i18n.t('settings.addPin')"/>

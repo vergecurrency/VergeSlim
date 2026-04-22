@@ -18,6 +18,23 @@ const en: LocaleDefinition = {
       purple: 'Purple',
       orange: 'Orange'
     },
+    status: {
+      bootstrappingTor: 'Bootstrapping Tor',
+      bootstrappingTorDetail: 'Negotiating a secure circuit',
+      torBootstrapped: 'Tor bootstrapped',
+      torBootstrappedDetail: 'Secure route is live',
+      torDisabled: 'Tor disabled',
+      torDisabledDetail: 'Clearnet mode is active',
+      torError: 'Tor connection issue',
+      torErrorDetail: 'Traffic could not route over Tor',
+      connectingWallet: 'Connecting wallet',
+      connectingWalletDetail: 'Opening your wallet service session',
+      syncingWallet: 'Syncing wallet',
+      syncingWalletDetail: 'Refreshing balances and transactions',
+      walletReady: 'Wallet live',
+      walletReadyDetail: 'Balances and history are up to date',
+      readyForWallet: 'Ready to add or import a wallet'
+    },
     version: 'version'
   },
   welcome: {
@@ -70,6 +87,7 @@ const en: LocaleDefinition = {
   },
   transaction: {
     transaction: 'Transaction',
+    web3Domain: 'Web3 Domain',
     sent: 'Sent',
     sending: 'Sending',
     received: 'Received',
@@ -93,7 +111,10 @@ const en: LocaleDefinition = {
     sending: 'Sending',
     sent: 'Sent',
     recipient: 'Recipient',
-    recipientDetails: 'Insert a valid XVG address or stealth address',
+    recipientPlaceholder: 'Recipient XVG address or Web3 domain',
+    recipientDetails: 'Insert a valid XVG address, stealth address, or supported Web3 domain',
+    resolveRecipient: 'Resolve',
+    recipientResolved: 'Resolved <b>{domain}</b> to an XVG address.',
     amount: 'Amount',
     amountDetails: 'Fillin the amount you want to send, transaction fee will be calculated automatically',
     internalMemo: 'Internal memo',
@@ -125,7 +146,13 @@ const en: LocaleDefinition = {
       'INVALID_ADDRESS: Invalid address': 'The provided XVG address is invalid',
       'Insufficient funds': 'Insufficient funds for the given amount',
       'BADREQUEST: Invalid amount': 'The given amount is invalid',
-      'Amount below dust threshold': 'The given amount is below the dust threshold'
+      'Amount below dust threshold': 'The given amount is below the dust threshold',
+      INVALID_WEB3_DOMAIN: 'The provided Web3 domain is invalid.',
+      UNSTOPPABLE_DOMAIN_NOT_FOUND: 'The Web3 domain could not be found.',
+      UNSTOPPABLE_DOMAIN_MISSING_XVG_ADDRESS: 'This Web3 domain does not have an XVG address record.',
+      UNSTOPPABLE_AUTH_FAILED: 'The Unstoppable Domains API key was rejected.',
+      UNSTOPPABLE_LOOKUP_TIMEOUT: 'The Web3 domain lookup timed out over Tor. Please try again.',
+      UNSTOPPABLE_LOOKUP_FAILED: 'The Web3 domain could not be resolved right now.'
     }
   },
   receive: {

@@ -3,27 +3,13 @@
 }
 
 .has-shadow-danger {
-  box-shadow: 0 3px 30px rgba(115, 0, 0, 0.5);
+  box-shadow: 0 10px 32px rgba(255, 91, 164, 0.24);
 }
 
 .has-shadow-success {
-  box-shadow: 0 3px 30px rgba(0, 123, 101, 0.7);
+  box-shadow: 0 10px 32px rgba(77, 246, 178, 0.24);
 }
 
 .has-shadow-dark {
-  box-shadow: 0 3px 30px rgba(0, 68, 111, 0.5);
-}
-
-@media (prefers-color-scheme: dark) {
-  .has-shadow-danger {
-    box-shadow: 0 3px 30px rgba(255, 0, 36, 0.3);
-  }
-
-  .has-shadow-success {
-    box-shadow: 0 3px 30px rgba(0, 255, 208, 0.3);
-  }
-
-  .has-shadow-dark {
-    box-shadow: 0 3px 30px rgba(0, 156, 255, 0.3);
-  }
+  box-shadow: 0 10px 32px rgba(41, 199, 255, 0.24);
 }

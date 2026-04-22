@@ -1,9 +1,15 @@
-@media (prefers-color-scheme: dark) {
-  .menu-list a {
-    color: #9f9f9f;
-  }
+.menu-list a {
+  color: var(--rv-text-soft);
+  border-radius: 16px;
+  transition: background-color 140ms ease, color 140ms ease, box-shadow 140ms ease;
+}
 
-  .menu-list a.is-active {
-    color: #a7a7a7;
-  }
+.menu-list a:hover {
+  background: rgba(83, 243, 255, 0.08);
+  color: var(--rv-text);
+}
+
+.menu-list a.is-active {
+  color: var(--rv-text);
+  background: linear-gradient(90deg, rgba(83, 243, 255, 0.12), rgba(255, 87, 210, 0.08));
 }

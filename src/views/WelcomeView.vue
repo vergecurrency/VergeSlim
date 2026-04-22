@@ -3,7 +3,7 @@
     <div class="columns">
       <div class="column welcome-header">
         <div class="welcome-copy has-text-right">
-          <h1 class="welcome-title" v-html="$i18n.t('welcome.welcomeToMyVergies')"/>
+          <h1 class="welcome-title is-family-display" v-html="$i18n.t('welcome.welcomeToMyVergies')"/>
         </div>
         <div class="header-logo">
           <img src="@/assets/headers/logo@2x.png"/>
@@ -17,14 +17,14 @@
         :title="$i18n.t('welcome.addAWallet')"
         :description="$i18n.t('welcome.addAWalletDesc')"
       >
-        <router-link class="button is-success" :to="{ name: 'wallets.create' }" v-html="$i18n.t('welcome.addWallet')"/>
+        <router-link class="button is-success is-cta welcome-action-button" :to="{ name: 'wallets.create' }" v-html="$i18n.t('welcome.addWallet')"/>
       </form-box>
 
       <form-box
         :title="$i18n.t('welcome.changeThings')"
         :description="$i18n.t('welcome.changeThingsDesc')"
       >
-        <router-link class="button is-primary" :to="{ name: 'settings' }" v-html="$i18n.t('welcome.tweakSettings')"/>
+        <router-link class="button is-primary is-cta welcome-action-button" :to="{ name: 'settings' }" v-html="$i18n.t('welcome.tweakSettings')"/>
       </form-box>
 
       <form-box
@@ -32,7 +32,7 @@
         :description="$i18n.t('welcome.helpImproveDesc')"
         type="is-info"
       >
-        <router-link class="button is-info" :to="{ name: 'trade' }" v-html="$i18n.t('welcome.goToGithub')"/>
+        <router-link class="button is-info is-cta welcome-action-button" :to="{ name: 'trade' }" v-html="$i18n.t('welcome.goToGithub')"/>
       </form-box>
 
     </div>
@@ -58,10 +58,13 @@ export default {
     justify-content: center;
     align-items: center;
     gap: 2rem;
+    margin-bottom: 0.75rem;
   }
 
   .header-logo > img {
     width: 200px;
+    filter: drop-shadow(0 0 28px rgba(83, 243, 255, 0.18));
+    animation: rv-drift 9s ease-in-out infinite;
   }
 
   .welcome-copy {
@@ -69,13 +72,19 @@ export default {
   }
 
   .welcome-title {
-    font-family: "Avenir Next", Futura, "Trebuchet MS", sans-serif;
     font-size: 3.5rem;
     font-weight: 800;
-    letter-spacing: -0.04em;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
     line-height: 0.95;
-    color: #2f3a44;
+    color: var(--rv-text);
     text-wrap: balance;
+    text-shadow: 0 0 22px rgba(83, 243, 255, 0.18), 0 0 38px rgba(255, 87, 210, 0.08);
+    animation: rv-glow-breathe 5.8s ease-in-out infinite;
+  }
+
+  .welcome-action-button {
+    min-width: 15.5rem;
   }
 
   @media (max-width: 768px) {
@@ -87,16 +96,15 @@ export default {
     .welcome-title {
       font-size: 2.75rem;
       text-align: center;
+      letter-spacing: 0.06em;
     }
 
     .welcome-copy {
       min-width: 0;
     }
-  }
 
-  @media (prefers-color-scheme: dark) {
-    .welcome-title {
-      color: #f4f6f8;
+    .welcome-action-button {
+      min-width: 100%;
     }
   }
 </style>

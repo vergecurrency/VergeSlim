@@ -11,12 +11,18 @@ export default {
   name: 'VersionBlock',
 
   created () {
-    this.version = this.$electron.ipcRenderer.sendSync('get-version')
+    this.version = this.formatVersion(this.$electron.ipcRenderer.sendSync('get-version'))
   },
 
   data () {
     return {
       version: ''
+    }
+  },
+
+  methods: {
+    formatVersion (version) {
+      return version.replace(/\.0$/, '')
     }
   }
 }

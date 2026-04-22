@@ -1,33 +1,30 @@
-@media (prefers-color-scheme: dark) {
-  .message {
-    background-color: darken($message-background-color, 70%);
+.message {
+  background: linear-gradient(180deg, rgba(16, 23, 53, 0.94), rgba(10, 16, 38, 0.9));
+  border: 1px solid var(--rv-border);
+  box-shadow: var(--rv-shadow-soft);
+}
 
-    @each $name, $pair in ($message-colors) {
-      $color: nth($pair, 1);
-      $color-invert: nth($pair, 2);
-      $color-lightning: max((100% - lightness($color)) - 2%, 0%);
-      $color-luminance: colorLuminance($color);
-      $darken-percentage: $color-luminance * 70%;
-      $desaturate-percentage: $color-luminance * 30%;
+.message-header {
+  background: linear-gradient(135deg, rgba(255, 87, 210, 0.82), rgba(83, 243, 255, 0.72));
+  color: #14061f;
+}
 
-      &.is-#{$name} {
-        background-color: darken(lighten($color, $color-lightning), 92%);
+.message-body {
+  border-color: rgba(83, 243, 255, 0.18);
+  color: var(--rv-text-soft);
+}
 
-        .message-header {
-          background-color: $color;
-          color: $color-invert;
-        }
+.message.is-warning .message-header {
+  background: linear-gradient(135deg, var(--rv-orange), #ffd66f);
+  color: #261103;
+}
 
-        .message-body {
-          border-color: darken($color, 20%);
-          color: lighten(desaturate(darken($color, $darken-percentage), $desaturate-percentage), 20%);
-        }
-      }
-    }
-  }
+.message.is-danger .message-header {
+  background: linear-gradient(135deg, #ff5ba4, #ff9066);
+  color: #fff6fb;
+}
 
-  .message-body {
-    border-color: darken($message-body-border-color, 50%);
-    color: lighten($message-body-color, 40%);
-  }
+.message.is-success .message-header {
+  background: linear-gradient(135deg, #24dc8f, var(--rv-lime));
+  color: #06140f;
 }

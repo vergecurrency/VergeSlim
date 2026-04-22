@@ -1,5 +1,5 @@
 <template>
-  <div class="modal-card">
+  <div class="modal-card modal-panel">
     <div class="modal-card-head is-warning">
       <h3 class="modal-card-title" v-html="$i18n.t('createWallet.exportWallet')"/>
     </div>
@@ -111,5 +111,6 @@ export default {
     padding-inline-start: 30px;
     margin: 30px 0px;
     line-height: 30px;
+    color: var(--rv-text-soft);
   }
 </style>

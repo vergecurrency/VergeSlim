@@ -1,5 +1,5 @@
 <template>
-  <div class="modal-card" style="width: auto">
+  <div class="modal-card modal-panel modal-panel-compact">
     <div class="modal-card-body">
       <p class="has-text-grey pb-4">Copy one of the following to your clipboard</p>
       <div class="box is-paddingless is-clipped">
@@ -17,7 +17,9 @@
 .list-option {
   display: flex;
   padding: 1em;
-  border-bottom: 1px solid #e8e8e8;
+  border-bottom: 1px solid rgba(83, 243, 255, 0.12);
+  color: var(--rv-text-soft);
+  transition: background-color 140ms ease, color 140ms ease;
 }
 
 a:last-child.list-option {
@@ -25,18 +27,8 @@ a:last-child.list-option {
 }
 
 .list-option:hover {
-  background-color: #f6f6f6;
-}
-
-@media (prefers-color-scheme: dark) {
-  .list-option {
-    border-bottom: 1px solid #373737;
-  }
-
-  .list-option:hover {
-    background-color: #252627;
-    color: inherit;
-  }
+  background: linear-gradient(90deg, rgba(83, 243, 255, 0.08), rgba(255, 87, 210, 0.06));
+  color: var(--rv-text);
 }
 </style>
 

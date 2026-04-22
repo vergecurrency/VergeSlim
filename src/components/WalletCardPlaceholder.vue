@@ -13,24 +13,27 @@ export default {
 
 <style scoped>
   .wallet-card-placeholder {
-    border: 2px dashed #e8e8e8;
-    border-radius: 10px;
+    border: 2px dashed rgba(83, 243, 255, 0.28);
+    border-radius: 22px;
     padding: 10px;
-    height: 120px;
+    height: 90px;
     cursor: pointer;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    font-size: 1.5rem;
-    color: #a2a2a2;
-    transition: all 0.5s ease-in-out;
+    font-size: 1.2rem;
+    color: var(--rv-text-soft);
+    background: linear-gradient(180deg, rgba(13, 19, 46, 0.78), rgba(10, 16, 38, 0.72));
+    transition: transform 160ms ease, box-shadow 160ms ease, border-color 160ms ease;
   }
   .wallet-card-placeholder > small {
-    font-size: .8rem;
-    color: #727272;
+    font-size: .72rem;
+    color: var(--rv-text-muted);
   }
   .wallet-card-placeholder:hover {
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    transform: translateY(-2px);
+    border-color: rgba(83, 243, 255, 0.42);
+    box-shadow: 0 18px 36px rgba(1, 4, 18, 0.28), 0 0 28px rgba(83, 243, 255, 0.1);
   }
 </style>

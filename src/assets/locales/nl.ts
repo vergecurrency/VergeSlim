@@ -18,6 +18,23 @@ const nl: LocaleDefinition = {
       purple: 'Paars',
       orange: 'Oranje'
     },
+    status: {
+      bootstrappingTor: 'Tor wordt opgestart',
+      bootstrappingTorDetail: 'Beveiligde route wordt opgebouwd',
+      torBootstrapped: 'Tor staat klaar',
+      torBootstrappedDetail: 'Beveiligde route is actief',
+      torDisabled: 'Tor uitgeschakeld',
+      torDisabledDetail: 'Clearnet-modus is actief',
+      torError: 'Tor-verbindingsprobleem',
+      torErrorDetail: 'Verkeer kon niet via Tor lopen',
+      connectingWallet: 'Wallet verbinden',
+      connectingWalletDetail: 'Walletservicesessie wordt geopend',
+      syncingWallet: 'Wallet synchroniseren',
+      syncingWalletDetail: 'Saldo en transacties worden vernieuwd',
+      walletReady: 'Wallet live',
+      walletReadyDetail: 'Saldo en geschiedenis zijn bijgewerkt',
+      readyForWallet: 'Klaar om een wallet toe te voegen of te importeren'
+    },
     version: 'versie'
   },
   welcome: {
@@ -70,6 +87,7 @@ const nl: LocaleDefinition = {
   },
   transaction: {
     transaction: 'Transactie',
+    web3Domain: 'Web3-domein',
     sent: 'Verzonden',
     sending: 'Verzenden',
     received: 'Ontvangen',
@@ -93,7 +111,10 @@ const nl: LocaleDefinition = {
     sending: 'Verzenden',
     sent: 'Verzonden',
     recipient: 'Ontvanger',
-    recipientDetails: 'Vul een geldig XVG adres of stealth adres in',
+    recipientPlaceholder: 'XVG adres of Web3-domein van ontvanger',
+    recipientDetails: 'Vul een geldig XVG-adres, stealth-adres of ondersteund Web3-domein in',
+    resolveRecipient: 'Los op',
+    recipientResolved: '<b>{domain}</b> is omgezet naar een XVG-adres.',
     amount: 'Bedrag',
     amountDetails: 'Vul het bedrag dat u wilt versturen in. Transactiekosten worden automatisch berekend',
     internalMemo: 'Interne memo',
@@ -125,7 +146,13 @@ const nl: LocaleDefinition = {
       'INVALID_ADDRESS: Invalid address': 'Het opgegeven XVG adres is ongeldig',
       'Insufficient funds': 'Onvoldoende saldo voor het opgegeven bedrag',
       'BADREQUEST: Invalid amount': 'Het opgegeven bedrag is ongeldig',
-      'Amount below dust threshold': 'Het opgegeven bedrag is te laag'
+      'Amount below dust threshold': 'Het opgegeven bedrag is te laag',
+      INVALID_WEB3_DOMAIN: 'Het opgegeven Web3-domein is ongeldig.',
+      UNSTOPPABLE_DOMAIN_NOT_FOUND: 'Het Web3-domein kon niet worden gevonden.',
+      UNSTOPPABLE_DOMAIN_MISSING_XVG_ADDRESS: 'Dit Web3-domein heeft geen XVG-adresrecord.',
+      UNSTOPPABLE_AUTH_FAILED: 'De Unstoppable Domains API-sleutel is geweigerd.',
+      UNSTOPPABLE_LOOKUP_TIMEOUT: 'De Web3-domeinlookup via Tor duurde te lang. Probeer het opnieuw.',
+      UNSTOPPABLE_LOOKUP_FAILED: 'Het Web3-domein kon nu niet worden opgelost.'
     }
   },
   receive: {

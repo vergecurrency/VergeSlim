@@ -1,5 +1,4 @@
-@media (prefers-color-scheme: dark) {
-  .footer {
-    background-color: #2c2e30;
-  }
+.footer {
+  background-color: transparent;
+  color: var(--rv-text-muted);
 }

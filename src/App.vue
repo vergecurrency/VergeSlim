@@ -90,12 +90,52 @@ export default {
   @import '~@/assets/scss/main';
 
   .app-container {
+    position: relative;
     height: 100%;
-    background: #fbfbfb;
+    background: linear-gradient(180deg, rgba(18, 12, 38, 0.94), rgba(6, 8, 20, 1));
     cursor: default;
+    overflow: hidden;
+  }
+
+  .app-container::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+    background:
+      radial-gradient(circle at 12% 18%, rgba(83, 243, 255, 0.18), transparent 24%),
+      radial-gradient(circle at 78% 12%, rgba(255, 87, 210, 0.18), transparent 22%),
+      radial-gradient(circle at 50% 70%, rgba(255, 154, 61, 0.1), transparent 32%);
+    animation: rv-drift 14s ease-in-out infinite;
+  }
+
+  .app-container::after {
+    content: "";
+    position: fixed;
+    left: -10%;
+    right: -10%;
+    bottom: -18vh;
+    height: 42vh;
+    pointer-events: none;
+    z-index: 0;
+    opacity: 0.38;
+    background:
+      linear-gradient(to top, rgba(255, 96, 180, 0.18), transparent 55%),
+      repeating-linear-gradient(90deg, rgba(83, 243, 255, 0.2) 0 1px, transparent 1px 52px),
+      repeating-linear-gradient(180deg, rgba(83, 243, 255, 0.22) 0 1px, transparent 1px 26px);
+    transform: perspective(420px) rotateX(78deg);
+    transform-origin: bottom;
+    animation: rv-grid-pulse 7s ease-in-out infinite;
+  }
+
+  .app-container > * {
+    position: relative;
+    z-index: 1;
   }
 
   .app-content-container {
+    position: relative;
     height: calc(100% - 53px);
   }
 
@@ -104,14 +144,18 @@ export default {
   }
 
   .app-content-box-container {
-    max-width: 1024px;
+    max-width: 1120px;
     margin: auto;
   }
 
-  @media (prefers-color-scheme: dark) {
-    .app-container {
-      color: white;
-      background: #1f2123;
+  @media (max-width: 1023px) {
+    .app-container::after {
+      opacity: 0.24;
+      bottom: -24vh;
+    }
+
+    .app-content-box-container {
+      max-width: 100%;
     }
   }
 </style>

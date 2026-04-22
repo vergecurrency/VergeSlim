@@ -1,3 +1,11 @@
+@font-face {
+  font-family: 'Orbitron';
+  font-style: normal;
+  font-weight: 400 900;
+  font-display: swap;
+  src: url(~@/assets/fonts/Orbitron-latin-wght-normal.woff2) format('woff2');
+}
+
 /* cyrillic-ext */
 @font-face {
   font-family: 'Caveat';
@@ -36,5 +44,11 @@
 }
 
 .is-family-handwritten {
-  font-family: "Avenir Next", Futura, "Trebuchet MS", sans-serif;
+  font-family: "Caveat", "Trebuchet MS", sans-serif;
+  font-weight: 400;
+  letter-spacing: 0.04em;
+}
+
+.is-family-display {
+  font-family: "Orbitron", "Bahnschrift", "Trebuchet MS", sans-serif;
 }

@@ -1,15 +1,22 @@
-@media (prefers-color-scheme: dark) {
-  .table {
-    background-color: #2c2e30;
-    color: #ffffff;
-  }
+.table {
+  background: transparent;
+  color: var(--rv-text);
+}
 
-  .table thead td, .table thead th {
-    color: #ffffff;
-  }
+.table thead td,
+.table thead th {
+  color: var(--rv-text-muted);
+  background: rgba(14, 20, 48, 0.72);
+  font-size: 0.72rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
 
-  .table td, .table th {
-    border: 1px solid #585858;
-    border-width: 0 0 1px;
-  }
+.table td,
+.table th {
+  border-color: rgba(83, 243, 255, 0.12);
+}
+
+.table.is-hoverable tbody tr:hover {
+  background: rgba(83, 243, 255, 0.06);
 }

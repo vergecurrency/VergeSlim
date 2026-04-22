@@ -39,6 +39,15 @@
 
       <div class="box">
 
+        <div v-if="resolvedRecipient" class="columns is-vcentered is-gapless">
+          <div class="column">
+            <p class="has-text-weight-semibold" v-html="$i18n.t('transaction.web3Domain')"/>
+            <p v-html="resolvedRecipient.domain"/>
+          </div>
+        </div>
+
+        <hr v-if="resolvedRecipient && address"/>
+
         <div v-if="address" class="columns is-vcentered is-gapless">
           <div class="column">
             <p class="has-text-weight-semibold" v-html="$i18n.t('transaction.address')"/>
@@ -136,6 +145,14 @@ export default {
       return this.wallet.transactions.find(tx => tx.txid === this.txid) || null
     },
 
+    resolvedRecipient () {
+      if (!this.$store || !this.$store.getters || !this.$store.getters.resolvedRecipientByTxid) {
+        return null
+      }
+
+      return this.$store.getters.resolvedRecipientByTxid(this.txid)
+    },
+
     address () {
       const outputsWithAddress = this.transaction.outputs.filter(output => output.address !== 'false') || []
 
@@ -146,6 +163,10 @@ export default {
       const fallback = this.transaction.action
 
       if (this.transaction.action === 'sent') {
+        if (this.resolvedRecipient && this.resolvedRecipient.domain) {
+          return this.resolvedRecipient.domain
+        }
+
         return this.address || fallback
       }
 

@@ -14,6 +14,13 @@ import '@/utils/ipcMainEvents'
 import * as Utils from '@/utils'
 import { eventConstants } from '@/utils/constants'
 import { applyNodeProxyState } from '@/utils/nodeProxy'
+import {
+  UNSTOPPABLE_DOMAINS_API_KEY,
+  buildUnstoppableDomainLookupUrl,
+  extractUnstoppableXvgAddress,
+  looksLikeWeb3Domain,
+  normalizeWeb3Domain
+} from '@/utils/unstoppableDomains'
 
 // Install MyVergies components
 Installer.install()
@@ -38,12 +45,22 @@ const activateTorProxy = (win: BrowserWindow) => win.webContents.session.setProx
 
 const deactivateTorProxy = (win: BrowserWindow) => win.webContents.session.setProxy({ proxyRules: undefined })
 
-const requestJson = (window: BrowserWindow, url: string, timeoutMs = 25000) => new Promise((resolve, reject) => {
+const requestJsonForSession = (
+  targetSession: Electron.Session,
+  url: string,
+  timeoutMs = 25000,
+  headers: Record<string, string> = {}
+) => new Promise((resolve, reject) => {
   const request = net.request({
     method: 'GET',
-    session: window.webContents.session,
+    session: targetSession,
     url
   })
+
+  Object.entries(headers).forEach(([headerName, headerValue]) => {
+    request.setHeader(headerName, headerValue)
+  })
+
   const timeout = setTimeout(() => {
     request.abort()
     reject(new Error(`Timeout fetching ${url}`))
@@ -59,7 +76,18 @@ const requestJson = (window: BrowserWindow, url: string, timeoutMs = 25000) => n
     response.on('end', () => {
       clearTimeout(timeout)
       if (response.statusCode < 200 || response.statusCode >= 300) {
-        reject(new Error(`Failed to fetch ${url} with status ${response.statusCode}`))
+        let errorMessage = `Failed to fetch ${url} with status ${response.statusCode}`
+
+        try {
+          const errorPayload = JSON.parse(data)
+          if (errorPayload && typeof errorPayload.message === 'string') {
+            errorMessage = `${errorMessage}: ${errorPayload.message}`
+          }
+        } catch (_error) {
+          // Ignore non-JSON error bodies and keep the HTTP status error.
+        }
+
+        reject(new Error(errorMessage))
         return
       }
 
@@ -154,6 +182,67 @@ const ensureTorBootstrapped = (controller: any) => {
   }
 
   return torBootstrapPromise
+}
+
+const requestJson = (
+  window: BrowserWindow,
+  url: string,
+  timeoutMs = 25000,
+  headers: Record<string, string> = {}
+) => {
+  return requestJsonForSession(window.webContents.session, url, timeoutMs, headers)
+}
+
+const resolveUnstoppableDomain = async (window: BrowserWindow, domainName: string) => {
+  const normalizedDomain = normalizeWeb3Domain(domainName)
+
+  if (!looksLikeWeb3Domain(normalizedDomain)) {
+    throw new Error('INVALID_WEB3_DOMAIN')
+  }
+
+  try {
+    const payload: any = await requestJson(
+      window,
+      buildUnstoppableDomainLookupUrl(normalizedDomain),
+      20000,
+      {
+        Authorization: UNSTOPPABLE_DOMAINS_API_KEY,
+        Accept: 'application/json'
+      }
+    )
+
+    const address = extractUnstoppableXvgAddress(payload)
+
+    if (!address) {
+      throw new Error('UNSTOPPABLE_DOMAIN_MISSING_XVG_ADDRESS')
+    }
+
+    return {
+      domain: normalizedDomain,
+      address
+    }
+  } catch (error: any) {
+    const message = error instanceof Error ? error.message : ''
+
+    if (message.includes('status 404')) {
+      throw new Error('UNSTOPPABLE_DOMAIN_NOT_FOUND')
+    }
+
+    if (message.includes('status 401') || message.includes('status 403')) {
+      throw new Error('UNSTOPPABLE_AUTH_FAILED')
+    }
+
+    if (message.includes('Timeout fetching')) {
+      throw new Error('UNSTOPPABLE_LOOKUP_TIMEOUT')
+    }
+
+    if (message === 'UNSTOPPABLE_DOMAIN_MISSING_XVG_ADDRESS') {
+      throw error
+    }
+
+    logger.warn(`Unstoppable Domains lookup failed for ${normalizedDomain}:`, error)
+    throw new Error('UNSTOPPABLE_LOOKUP_FAILED')
+  }
 }
 
 const waitForTorCircuit = async (window: BrowserWindow, maxAttempts = 8, delayMs = 5000) => {
@@ -390,6 +479,7 @@ app.on('ready', async () => {
 
     ipcMain.handle(eventConstants.getTorNetworkInfo, async () => {
       try {
+        await ensureTorBootstrapped(torController)
         const torVersion = await getTorVersion()
         const torIp = await waitForTorCircuit(window)
         let countryCode = 'Unknown'
@@ -414,6 +504,25 @@ app.on('ready', async () => {
           country_name: 'Unknown',
           country_code: 'Unknown',
           torVersion: await getTorVersion()
+        }
+      }
+    })
+
+    ipcMain.handle(eventConstants.resolveUnstoppableDomain, async (_event, arg: any) => {
+      try {
+        const domain = arg && typeof arg.domain === 'string' ? arg.domain : ''
+        const result = await resolveUnstoppableDomain(window, domain)
+
+        return {
+          success: true,
+          ...result
+        }
+      } catch (error: any) {
+        logger.warn('Unstoppable Domains IPC resolution failed:', error)
+
+        return {
+          success: false,
+          error: error instanceof Error ? error.message : 'UNSTOPPABLE_LOOKUP_FAILED'
         }
       }
     })

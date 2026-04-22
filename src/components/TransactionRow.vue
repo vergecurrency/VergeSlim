@@ -1,7 +1,7 @@
 <template>
   <router-link :to="{ name: 'wallets.transactions', params: { walletIdentifier: wallet.identifier, txid: transaction.txid, transaction, wallet }}">
     <div class="transaction-container">
-      <div class="transaction-icon">
+      <div :class="['transaction-icon', `is-${transaction.action}`]">
         <b-icon v-if="transaction.action === 'received'" icon="plus-circle" type="is-success" class="fa-fw"/>
         <b-icon v-else-if="transaction.action === 'sent'" icon="minus-circle" type="is-danger"/>
         <b-icon v-else-if="transaction.action === 'moved'" icon="truck" class="has-text-grey-light fa-fw"/>
@@ -49,11 +49,23 @@ export default {
       return this.wallet.transactions.find(tx => tx.txid === this.txid)
     },
 
+    resolvedRecipient () {
+      if (!this.$store || !this.$store.getters || !this.$store.getters.resolvedRecipientByTxid) {
+        return null
+      }
+
+      return this.$store.getters.resolvedRecipientByTxid(this.txid)
+    },
+
     label () {
       const fallback = this.$i18n.t(`transaction.${this.transaction.action}`)
       const outputsWithAddress = this.transaction.outputs.filter(output => output.address !== 'false') || []
 
       if (this.transaction.action === 'sent' || this.transaction.action === 'sending') {
+        if (this.resolvedRecipient && this.resolvedRecipient.domain) {
+          return this.resolvedRecipient.domain
+        }
+
         return outputsWithAddress.shift().address || fallback
       }
 
@@ -70,11 +82,11 @@ export default {
 <style scoped>
   .transaction-container {
     display: flex;
-    padding: 1em;
-    border-bottom: 1px solid #e8e8e8;
+    padding: 1.1em 1.25em;
+    border-bottom: 1px solid rgba(83, 243, 255, 0.12);
     align-items: center;
-    background-color: white;
-    transition: background-color 0.5s ease;
+    background: rgba(11, 17, 40, 0.28);
+    transition: background-color 140ms ease, transform 140ms ease, box-shadow 140ms ease;
     cursor: pointer;
   }
 
@@ -83,14 +95,35 @@ export default {
   }
 
   .transaction-container:hover {
-    background-color: #f6f6f6;
+    background: linear-gradient(90deg, rgba(83, 243, 255, 0.08), rgba(255, 87, 210, 0.06));
+    transform: translateY(-1px);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04);
   }
 
   .transaction-icon {
-    width: 2rem;
+    width: 2.6rem;
+    height: 2.6rem;
+    border-radius: 999px;
     display: flex;
     align-items: center;
     justify-content: center;
+    background: rgba(15, 22, 48, 0.9);
+    border: 1px solid rgba(83, 243, 255, 0.12);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04);
+  }
+
+  .transaction-icon.is-received {
+    color: #76ffba;
+  }
+
+  .transaction-icon.is-sent {
+    color: #ff89b8;
+  }
+
+  .transaction-icon.is-moved,
+  .transaction-icon.is-receiving,
+  .transaction-icon.is-sending {
+    color: var(--rv-text-muted);
   }
 
   .transaction-content {
@@ -99,28 +132,18 @@ export default {
   }
 
   .transaction-label {
-    font-weight: 600;
-    color: #9f9f9f;
+    font-weight: 700;
+    color: var(--rv-text);
   }
 
   .transaction-timestamp {
-    font-size: 0.75em;
+    font-size: 0.74em;
     font-weight: 500;
-    color: grey;
+    color: var(--rv-text-muted);
   }
 
   .transaction-amount {
     font-weight: 500;
-  }
-
-  @media (prefers-color-scheme: dark) {
-    .transaction-container {
-      background-color: #2c2e30;
-      border-bottom: 1px solid #373737;
-    }
-
-    .transaction-container:hover {
-      background-color: #252627;
-    }
+    text-shadow: 0 0 12px rgba(83, 243, 255, 0.08);
   }
 </style>

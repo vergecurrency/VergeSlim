@@ -93,7 +93,28 @@ export default {
   .box[disabled] {
     pointer-events: none;
     opacity: 0.8;
-    background: #f1f1f1;
+    background: rgba(18, 22, 42, 0.74);
+  }
+
+  .form-box {
+    overflow: hidden;
+    transition: transform 160ms ease, box-shadow 160ms ease, border-color 160ms ease;
+  }
+
+  .form-box::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background:
+      linear-gradient(180deg, rgba(255, 255, 255, 0.04), transparent 40%),
+      radial-gradient(circle at top right, rgba(83, 243, 255, 0.08), transparent 30%);
+    opacity: 0.9;
+    pointer-events: none;
+  }
+
+  .form-box:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 22px 40px rgba(1, 4, 18, 0.28), 0 0 26px rgba(83, 243, 255, 0.08);
   }
 
   .form-box.is-grouped:not(:first-child) {
@@ -111,5 +132,6 @@ export default {
   .form-box-toggle {
     position: absolute;
     right: 0;
+    z-index: 1;
   }
 </style>

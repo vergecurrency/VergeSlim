@@ -19,6 +19,48 @@ html {
    cursor: pointer;
  }
 
+@keyframes rv-surface-fade {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes rv-glow-breathe {
+  0%, 100% {
+    box-shadow: 0 16px 30px rgba(1, 4, 18, 0.28), 0 0 20px rgba(83, 243, 255, 0.06);
+  }
+
+  50% {
+    box-shadow: 0 20px 38px rgba(1, 4, 18, 0.34), 0 0 28px rgba(83, 243, 255, 0.14);
+  }
+}
+
+@keyframes rv-drift {
+  0%, 100% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+
+  50% {
+    transform: translate3d(0, -10px, 0) scale(1.04);
+  }
+}
+
+@keyframes rv-grid-pulse {
+  0%, 100% {
+    opacity: 0.24;
+  }
+
+  50% {
+    opacity: 0.38;
+  }
+}
+
 @media (prefers-color-scheme: dark) {
   hr {
     background-color: #262626;
@@ -31,4 +73,154 @@ html {
   code {
     background-color: #1a1f25;
   }
+}
+:root {
+  --rv-bg: #060814;
+  --rv-bg-alt: #0c1230;
+  --rv-bg-deep: #1c0c2f;
+  --rv-surface: rgba(10, 16, 38, 0.82);
+  --rv-surface-strong: rgba(12, 18, 45, 0.94);
+  --rv-surface-soft: rgba(17, 25, 56, 0.72);
+  --rv-border: rgba(83, 243, 255, 0.2);
+  --rv-border-strong: rgba(255, 91, 164, 0.34);
+  --rv-text: #f7f4ff;
+  --rv-text-soft: #ccd1ff;
+  --rv-text-muted: #8e95c8;
+  --rv-cyan: #53f3ff;
+  --rv-cyan-deep: #29c7ff;
+  --rv-pink: #ff57d2;
+  --rv-orange: #ff9a3d;
+  --rv-lime: #d9ff61;
+  --rv-shadow: 0 26px 70px rgba(1, 4, 18, 0.56);
+  --rv-shadow-soft: 0 18px 45px rgba(1, 4, 18, 0.36);
+  --rv-glow: 0 0 35px rgba(83, 243, 255, 0.16), 0 0 55px rgba(255, 87, 210, 0.12);
+  --rv-grid: rgba(83, 243, 255, 0.18);
+  color-scheme: dark;
+}
+
+html,
+body,
+#app {
+  min-height: 100%;
+  background-color: var(--rv-bg);
+  color: var(--rv-text);
+}
+
+body {
+  background-image:
+    radial-gradient(circle at top, rgba(80, 244, 255, 0.14), transparent 28%),
+    radial-gradient(circle at 78% 12%, rgba(255, 87, 210, 0.16), transparent 24%),
+    radial-gradient(circle at 35% 100%, rgba(255, 154, 61, 0.12), transparent 35%),
+    linear-gradient(180deg, #1c0c2f 0%, #0a0f21 28%, #060814 100%);
+  font-kerning: normal;
+}
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(83, 243, 255, 0.35) transparent;
+}
+
+*::-webkit-scrollbar {
+  width: 12px;
+  height: 12px;
+}
+
+*::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, rgba(83, 243, 255, 0.36), rgba(255, 87, 210, 0.32));
+  border: 3px solid transparent;
+  border-radius: 999px;
+  background-clip: padding-box;
+}
+
+*::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::selection {
+  background: rgba(83, 243, 255, 0.28);
+  color: #ffffff;
+}
+
+a {
+  color: var(--rv-cyan);
+  transition: color 140ms ease, text-shadow 140ms ease;
+}
+
+a:hover {
+  color: #ffffff;
+  text-shadow: 0 0 18px rgba(83, 243, 255, 0.28);
+}
+
+.title,
+.subtitle,
+.label,
+.content,
+.has-text-grey,
+.has-text-grey-dark,
+.has-text-dark,
+.has-text-black,
+.has-text-black-bis,
+.has-text-black-ter {
+  color: var(--rv-text-soft) !important;
+}
+
+strong,
+.title strong,
+.subtitle strong,
+.has-text-weight-semibold,
+.has-text-weight-bold,
+.has-text-weight-dark,
+.has-text-weight-darker {
+  color: var(--rv-text) !important;
+}
+
+.label,
+.help {
+  color: var(--rv-text-muted) !important;
+}
+
+.box,
+.card,
+.notification,
+.message,
+.modal-card,
+.dropdown-content,
+.menu,
+.b-tabs .tab-content {
+  background: linear-gradient(180deg, rgba(16, 23, 53, 0.92), rgba(10, 16, 38, 0.88));
+  border: 1px solid var(--rv-border);
+  box-shadow: var(--rv-shadow-soft);
+  color: var(--rv-text);
+  backdrop-filter: blur(18px);
+  animation: rv-surface-fade 420ms ease both;
+}
+
+.dropdown-content {
+  padding: 0.5rem;
+}
+
+.dropdown-item,
+.dropdown .dropdown-menu .has-link a {
+  color: var(--rv-text-soft);
+  border-radius: 14px;
+}
+
+.dropdown-item.is-hoverable:hover,
+a.dropdown-item:hover,
+button.dropdown-item:hover,
+.dropdown .dropdown-menu .has-link a:hover {
+  background: rgba(83, 243, 255, 0.12);
+  color: var(--rv-text);
+}
+
+.tag:not(body) {
+  background: rgba(83, 243, 255, 0.12);
+  border: 1px solid rgba(83, 243, 255, 0.18);
+  color: var(--rv-text-soft);
+}
+
+hr {
+  height: 1px;
+  border: 0;
+  background: linear-gradient(90deg, transparent, rgba(83, 243, 255, 0.45), transparent);
 }

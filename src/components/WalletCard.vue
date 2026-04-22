@@ -10,7 +10,7 @@
         style="opacity: 0.5"
       />
       <p>
-        <Money class="is-size-5 has-text-weight-bold" :amount="wallet.info.balance.totalAmount || 0" crypto/>
+        <Money class="is-size-6 has-text-weight-bold" :amount="wallet.info.balance.totalAmount || 0" crypto/>
       </p>
       <p>
         <Money class="is-size-7" :amount="wallet.info.balance.totalAmount || 0" convert/>
@@ -60,16 +60,46 @@ export default {
 <style scoped lang="scss">
   .wallet-menu-card {
     position: relative;
-    background: white;
-    border-radius: 16px;
+    border-radius: 22px;
     color: white;
-    height: 120px;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1), 0 3px 0 #111111;
-    transition: all 0.5s ease-in-out;
+    height: 90px;
+    overflow: hidden;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    box-shadow: 0 18px 38px rgba(1, 4, 18, 0.34), 0 0 28px rgba(83, 243, 255, 0.08);
+    transition: transform 160ms ease, box-shadow 160ms ease;
+  }
+
+  .wallet-menu-card::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background:
+      linear-gradient(180deg, rgba(255, 255, 255, 0.14), transparent 42%),
+      repeating-linear-gradient(90deg, rgba(255, 255, 255, 0.08) 0 1px, transparent 1px 30px);
+    mix-blend-mode: screen;
+    opacity: 0.18;
+    pointer-events: none;
+  }
+
+  .wallet-menu-card::after {
+    content: "";
+    position: absolute;
+    top: -20px;
+    right: -20px;
+    width: 84px;
+    height: 84px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(255, 255, 255, 0.62) 0, rgba(255, 255, 255, 0.14) 34%, transparent 72%);
+    opacity: 0.45;
+    pointer-events: none;
   }
 
   .wallet-menu-card.is-clickable {
     cursor: pointer;
+  }
+
+  .wallet-menu-card.is-clickable:hover {
+    transform: translateY(-2px);
   }
 
   .wallet-menu-card-background {
@@ -79,61 +109,58 @@ export default {
   }
 
   .wallet-menu-card-background.xvg {
-    background: url('~@/assets/coins/xvg.svg') no-repeat right;
+    background: url('~@/assets/coins/xvg.svg') no-repeat calc(100% + 6px) center;
+    background-size: auto 82%;
   }
 
   .wallet-menu-card-background.btc {
-    background: url('~@/assets/coins/btc.svg') no-repeat right;
+    background: url('~@/assets/coins/btc.svg') no-repeat calc(100% + 6px) center;
+    background-size: auto 82%;
   }
 
   .wallet-menu-card-background-blue {
-    background: rgb(27,154,220);
-    background: linear-gradient(145deg, rgb(0, 30, 220) 0%, rgb(14, 149, 202) 20%, rgb(117, 240, 236) 70%);
-    box-shadow: 0 4px 20px rgba(14, 149, 202, 0.5), 0 3px 0 #70c4fd;
+    background: linear-gradient(135deg, #2025ff 0%, #0bc4ff 46%, #9cfcff 100%);
+    box-shadow: 0 18px 38px rgba(32, 37, 255, 0.28), 0 0 32px rgba(11, 196, 255, 0.18);
   }
 
   .wallet-menu-card-background-blue.is-clickable:hover {
-    box-shadow: 0 4px 40px rgb(11, 140, 202), 0 2px 0 #0063cc;
+    box-shadow: 0 22px 44px rgba(32, 37, 255, 0.34), 0 0 36px rgba(11, 196, 255, 0.28);
   }
 
   .wallet-menu-card-background-purple {
-    background: rgb(90,0,188);
-    background: linear-gradient(145deg, rgb(90, 0, 188) 0%, rgb(228, 62, 120) 100%);
-    box-shadow: 0 4px 20px rgba(228, 62, 120, 0.5), 0 3px 0 #940000;
+    background: linear-gradient(135deg, #6c18ff 0%, #ff4fc8 58%, #ffb057 100%);
+    box-shadow: 0 18px 38px rgba(108, 24, 255, 0.3), 0 0 32px rgba(255, 79, 200, 0.18);
   }
 
   .wallet-menu-card-background-purple.is-clickable:hover {
-    box-shadow: 0 4px 40px rgb(209, 57, 228), 0 2px 0 #940000;
+    box-shadow: 0 22px 44px rgba(108, 24, 255, 0.34), 0 0 36px rgba(255, 79, 200, 0.26);
   }
 
   .wallet-menu-card-background-green {
-    background: rgb(27,138,117);
-    background: linear-gradient(145deg, rgb(0, 155, 94) 0%, rgb(217, 255, 51) 100%);
-    box-shadow: 0 4px 20px rgba(44, 214, 2, 0.5), 0 3px 0 #459e7d;
+    background: linear-gradient(135deg, #00b36c 0%, #26f0a3 52%, #d9ff61 100%);
+    box-shadow: 0 18px 38px rgba(0, 179, 108, 0.28), 0 0 32px rgba(38, 240, 163, 0.18);
   }
 
   .wallet-menu-card-background-green.is-clickable:hover {
-    box-shadow: 0 4px 40px rgb(1, 214, 133), 0 2px 0 #186649;
+    box-shadow: 0 22px 44px rgba(0, 179, 108, 0.34), 0 0 36px rgba(38, 240, 163, 0.24);
   }
 
   .wallet-menu-card-background-orange {
-    background: rgb(188,76,0);
-    background: linear-gradient(145deg, rgb(188, 76, 0) 0%, rgb(254, 255, 29) 100%);
-    box-shadow: 0 4px 20px rgba(255, 133, 29, 0.5), 0 3px 0 #d6a46e;
+    background: linear-gradient(135deg, #ff6b3d 0%, #ff9a3d 48%, #ffe16d 100%);
+    box-shadow: 0 18px 38px rgba(255, 107, 61, 0.28), 0 0 32px rgba(255, 154, 61, 0.18);
   }
 
   .wallet-menu-card-background-orange.is-clickable:hover {
-    box-shadow: 0 4px 40px rgb(255, 154, 120), 0 2px 0 #ff8400;
+    box-shadow: 0 22px 44px rgba(255, 107, 61, 0.32), 0 0 36px rgba(255, 154, 61, 0.26);
   }
 
   .wallet-menu-card-background-red {
-    background: rgb(188,0,89);
-    background: linear-gradient(145deg, rgb(188, 0, 89) 0%, rgb(228, 181, 62) 100%);
-    box-shadow: 0 4px 20px rgba(228, 181, 62, 0.5), 0 3px 0 #98004d;
+    background: linear-gradient(135deg, #ff2f92 0%, #ff5b9d 46%, #ffbf5f 100%);
+    box-shadow: 0 18px 38px rgba(255, 47, 146, 0.28), 0 0 32px rgba(255, 95, 157, 0.18);
   }
 
   .wallet-menu-card-background-red.is-clickable:hover {
-    box-shadow: 0 4px 40px rgb(228, 76, 53), 0 2px 0 #98004d;
+    box-shadow: 0 22px 44px rgba(255, 47, 146, 0.34), 0 0 36px rgba(255, 95, 157, 0.26);
   }
 
   .wallet-menu-card-content {
@@ -142,7 +169,8 @@ export default {
     width: 100%;
     top: 0;
     left: 0;
-    padding: 15px;
+    padding: 12px 13px;
+    z-index: 1;
   }
 
   .wallet-menu-card.is-shadowless {
@@ -154,6 +182,7 @@ export default {
   }
 
   .is-size-6-1 {
-    font-size: 1.1rem !important;
+    font-size: 0.98rem !important;
+    letter-spacing: 0.04em;
   }
 </style>

@@ -10,9 +10,7 @@
   border-top-right-radius: 0;
 }
 
-@media (prefers-color-scheme: dark) {
-  .box-with-pins > .box[disabled] {
-    background-color: #4a4a4a;
-    color: #252525;
-  }
+.box-with-pins > .box[disabled] {
+  background: rgba(32, 35, 53, 0.74);
+  color: var(--rv-text-muted);
 }

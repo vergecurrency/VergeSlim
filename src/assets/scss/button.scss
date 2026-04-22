@@ -1,151 +1,147 @@
-.button.is-primary {
-  box-shadow: 0px 3px 0px #119ab8;
+.button {
+  position: relative;
+  border-radius: 999px;
+  border-color: rgba(83, 243, 255, 0.18);
+  background: rgba(15, 22, 48, 0.84);
+  color: var(--rv-text);
+  min-height: 3rem;
+  padding: 0.8rem 1.45rem;
+  font-size: 0.84rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  transition: transform 140ms ease, box-shadow 140ms ease, border-color 140ms ease, background-color 140ms ease, color 140ms ease;
+  box-shadow: 0 14px 30px rgba(1, 4, 18, 0.28), inset 0 1px 0 rgba(255, 255, 255, 0.04);
+  overflow: hidden;
 }
 
-.button.is-primary:hover {
-  top: 1px;
-  box-shadow: 0px 2px 0px #119ab8;
+.button::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(120deg, transparent 0%, rgba(255, 255, 255, 0.16) 18%, transparent 36%);
+  opacity: 0;
+  transform: translateX(-130%);
+  transition: transform 240ms ease, opacity 240ms ease;
+  pointer-events: none;
+}
+
+.button:hover,
+.button.is-hovered {
+  transform: translateY(-1px);
+  border-color: rgba(83, 243, 255, 0.3);
+  color: #ffffff;
+  box-shadow: 0 18px 34px rgba(1, 4, 18, 0.32), 0 0 24px rgba(83, 243, 255, 0.08);
+}
+
+.button:hover::before,
+.button.is-hovered::before {
+  opacity: 1;
+  transform: translateX(125%);
+}
+
+.button:focus,
+.button.is-focused {
+  border-color: rgba(83, 243, 255, 0.44);
+  box-shadow: 0 0 0 0.125em rgba(83, 243, 255, 0.16), 0 18px 34px rgba(1, 4, 18, 0.34);
+  color: #ffffff;
+}
+
+.button:active,
+.button.is-active {
+  transform: translateY(1px);
+  box-shadow: 0 10px 22px rgba(1, 4, 18, 0.28);
+}
+
+.button.is-white,
+.button.is-light,
+.button:not(.is-primary):not(.is-info):not(.is-success):not(.is-warning):not(.is-danger) {
+  background: rgba(15, 22, 48, 0.86);
+  color: var(--rv-text);
+}
+
+.button.is-primary {
+  border-color: transparent;
+  background: linear-gradient(135deg, var(--rv-pink) 0%, var(--rv-cyan) 100%);
+  color: #14061f;
+  box-shadow: 0 18px 34px rgba(255, 87, 210, 0.22), 0 0 30px rgba(83, 243, 255, 0.18);
+}
+
+.button.is-primary:hover,
+.button.is-primary.is-hovered {
+  box-shadow: 0 22px 40px rgba(255, 87, 210, 0.28), 0 0 36px rgba(83, 243, 255, 0.26);
 }
 
 .button.is-info {
-  box-shadow: 0px 3px 0px #0e70be;
-}
-
-.button.is-info:hover {
-  top: 1px;
-  box-shadow: 0px 2px 0px #0e70be;
+  border-color: transparent;
+  background: linear-gradient(135deg, #5963ff 0%, var(--rv-cyan-deep) 100%);
+  color: #f6f8ff;
+  box-shadow: 0 18px 34px rgba(41, 199, 255, 0.18);
 }
 
 .button.is-success {
-  box-shadow: 0px 3px 0px #18573b;
-}
-
-.button.is-success:hover {
-  top: 1px;
-  box-shadow: 0px 2px 0px #18573b;
+  border-color: transparent;
+  background: linear-gradient(135deg, #24dc8f 0%, var(--rv-lime) 100%);
+  color: #071712;
+  box-shadow: 0 18px 34px rgba(77, 246, 178, 0.22);
 }
 
 .button.is-danger {
-  box-shadow: 0px 3px 0px #c01f16;
-}
-
-.button.is-danger:hover {
-  top: 1px;
-  box-shadow: 0px 2px 0px #c01f16;
+  border-color: transparent;
+  background: linear-gradient(135deg, #ff5ba4 0%, #ff9066 100%);
+  color: #fff6fb;
+  box-shadow: 0 18px 34px rgba(255, 91, 164, 0.2);
 }
 
 .button.is-warning {
-  box-shadow: 0px 3px 0px #9e9021;
-}
-
-.button.is-warning:hover {
-  top: 1px;
-  box-shadow: 0px 2px 0px #9e9021;
+  border-color: transparent;
+  background: linear-gradient(135deg, var(--rv-orange) 0%, #ffd66f 100%);
+  color: #261103;
+  box-shadow: 0 18px 34px rgba(255, 154, 61, 0.22);
 }
 
 .button.is-dark {
-  box-shadow: 0px 3px 0px #000000;
+  background: linear-gradient(135deg, rgba(8, 12, 28, 0.96), rgba(18, 12, 38, 0.96));
+  border-color: rgba(255, 87, 210, 0.22);
+  color: var(--rv-text);
+  box-shadow: 0 18px 34px rgba(1, 4, 18, 0.34), 0 0 28px rgba(255, 87, 210, 0.1);
 }
 
-.button.is-dark:hover {
-  top: 1px;
-  box-shadow: 0px 2px 0px #000000;
+.button .icon:first-child:not(:last-child) {
+  margin-right: 0.55rem;
 }
 
-@media (prefers-color-scheme: dark) {
-  .button {
-    transition: box-shadow 160ms ease, transform 160ms ease, background-color 160ms ease, border-color 160ms ease;
-  }
+.button.is-text {
+  min-height: auto;
+  padding: 0.2rem 0.4rem;
+  letter-spacing: 0.08em;
+  text-transform: none;
+  background: transparent;
+  box-shadow: none;
+}
 
-  .button {
-    background: #363636;
-    border-color: transparent;
-    color: whitesmoke;
-  }
+.button.is-text:hover {
+  transform: none;
+  box-shadow: none;
+  color: var(--rv-cyan);
+}
 
-  .button:hover, .button.is-hovered {
-    background-color: #2f2f2f;
-    border-color: transparent;
-    color: whitesmoke;
-  }
+.button.is-cta {
+  min-height: 3.45rem;
+  padding: 0.95rem 1.75rem;
+  font-size: 0.93rem;
+  letter-spacing: 0.14em;
+  box-shadow: 0 22px 42px rgba(1, 4, 18, 0.36), 0 0 30px rgba(83, 243, 255, 0.12);
+}
 
-  .button:active, .button.is-active {
-    color: whitesmoke;
-  }
+.button.is-cta.is-primary,
+.button.is-cta.is-success,
+.button.is-cta.is-info {
+  animation-duration: 4.2s;
+}
 
-  .button:focus, .button.is-focused {
-    color: whitesmoke;
-  }
-
-  .button.is-white {
-    background: #0a0a0a;
-    color: white;
-  }
-
-  .button:hover,
-  .button.is-hovered,
-  .button:focus-visible,
-  .button.is-focused {
-    animation: dark-button-glow 1.8s ease-in-out infinite;
-  }
-
-  .button:active,
-  .button.is-active {
-    animation: none;
-  }
-
-  .button.is-primary {
-    box-shadow: 0px 3px 0px #0e7e97;
-  }
-
-  .button.is-primary:hover {
-    box-shadow: 0px 2px 0px #0e7e97;
-  }
-
-  .button.is-info {
-    box-shadow: 0px 3px 0px #0b5997;
-  }
-
-  .button.is-info:hover {
-    box-shadow: 0px 2px 0px #0b5997;
-  }
-
-  .button.is-success {
-    box-shadow: 0px 3px 0px #18573b;
-  }
-
-  .button.is-success:hover {
-    box-shadow: 0px 2px 0px #18573b;
-  }
-
-  .button.is-danger {
-    box-shadow: 0px 3px 0px #921711;
-  }
-
-  .button.is-danger:hover {
-    box-shadow: 0px 2px 0px #921711;
-  }
-
-  .button.is-warning {
-    box-shadow: 0px 3px 0px #6e6417;
-  }
-
-  .button.is-warning:hover {
-    box-shadow: 0px 2px 0px #6e6417;
-  }
-
-  @keyframes dark-button-glow {
-    0%, 100% {
-      box-shadow:
-        0px 3px 0px rgba(0, 0, 0, 0.35),
-        0 0 0 rgba(255, 255, 255, 0);
-    }
-
-    50% {
-      box-shadow:
-        0px 3px 0px rgba(0, 0, 0, 0.35),
-        0 0 16px rgba(255, 255, 255, 0.16),
-        0 0 28px rgba(173, 230, 255, 0.08);
-    }
-  }
+.button.is-primary:not([disabled]):not(.is-static),
+.button.is-info:not([disabled]):not(.is-static),
+.button.is-success:not([disabled]):not(.is-static) {
+  animation: rv-glow-breathe 5s ease-in-out infinite;
 }

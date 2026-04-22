@@ -1,14 +1,16 @@
-@media (prefers-color-scheme: dark) {
-  .tabs ul {
-    border-bottom-color: #3a3a3a;
-  }
+.tabs ul {
+  border-bottom-color: rgba(83, 243, 255, 0.12);
+}
 
-  .tabs li a {
-    border-bottom-color: #3a3a3a;
-    color: white;
-  }
+.tabs li a {
+  border-bottom-color: transparent;
+  color: var(--rv-text-muted);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
 
-  .tabs a:hover {
-    color: #a5a5a5;
-  }
+.tabs li.is-active a,
+.tabs a:hover {
+  border-bottom-color: var(--rv-cyan);
+  color: var(--rv-cyan);
 }

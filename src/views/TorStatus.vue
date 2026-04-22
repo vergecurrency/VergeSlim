@@ -70,6 +70,7 @@ export default {
       this.torActivated = this.$store.getters.isTorEnabled
     }
 
+    this.syncTorPhase()
     this.applyTorState()
   },
 
@@ -108,18 +109,24 @@ export default {
   },
 
   methods: {
+    syncTorPhase () {
+      this.$store.dispatch('updateTorStatus', this.connectionStatus)
+    },
+
     delay (ms) {
       return new Promise(resolve => setTimeout(resolve, ms))
     },
 
     async applyTorState () {
       try {
+        this.syncTorPhase()
         await ensureTorProxyState(this.torActivated)
 
         if (!this.torActivated) {
           this.error = null
           this.networkData = null
           this.loading = false
+          this.syncTorPhase()
           return
         }
 
@@ -131,6 +138,7 @@ export default {
         this.error = err
         this.networkData = null
         this.loading = false
+        this.syncTorPhase()
       }
     },
 
@@ -138,6 +146,7 @@ export default {
       this.error = null
       this.ip = null
       this.loading = true
+      this.syncTorPhase()
 
       const maxAttempts = 6
       const retryDelayMs = 7000
@@ -158,6 +167,7 @@ export default {
           Log.info('Fetched Tor IP address')
           this.networkData = networkData
           this.loading = false
+          this.syncTorPhase()
           return
         } catch (err) {
           Log.warn(`Tor IP lookup attempt ${attempt}/${maxAttempts} failed`, err)
@@ -171,6 +181,7 @@ export default {
               torVersion: this.networkData && this.networkData.torVersion ? this.networkData.torVersion : 'Unknown'
             }
             this.loading = false
+            this.syncTorPhase()
             return
           }
         }

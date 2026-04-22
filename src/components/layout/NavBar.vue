@@ -31,17 +31,26 @@ export default {
 }
 </script>
 
-<style>
+<style lang="scss">
 .navbar {
-  border-bottom: 1px solid #e8e8e8;
+  border-bottom: 1px solid rgba(83, 243, 255, 0.14);
+  box-shadow: 0 16px 30px rgba(1, 4, 18, 0.28);
 }
 
 .navbar.is-app-navbar {
-  background: #f0f0f0;
+  background: linear-gradient(180deg, rgba(8, 12, 28, 0.94), rgba(12, 16, 34, 0.82));
+  backdrop-filter: blur(16px);
+}
+
+.navbar-menu,
+.navbar-start,
+.navbar-end {
+  align-items: center;
 }
 
 .navbar .button {
-  max-height: 36px;
+  max-height: 40px;
+  min-width: 40px;
 }
 
 .is-draggable {
@@ -57,24 +66,12 @@ export default {
 }
 
 .logo {
-  margin-left: 10px;
-  background: url("~@/assets/logo.svg");
+  margin-left: 12px;
+  background: url("~@/assets/logo-light.svg");
   background-repeat: no-repeat;
   background-position: center;
-  width: 120px;
-}
-
-@media (prefers-color-scheme: dark) {
-  .navbar {
-    border-bottom: 1px solid #3a3a3a;
-  }
-
-  .navbar.is-app-navbar {
-    background: #2c2e30;
-  }
-
-  .logo {
-    background-image: url("~@/assets/logo-light.svg");
-  }
+  background-size: contain;
+  filter: drop-shadow(0 0 18px rgba(83, 243, 255, 0.24));
+  width: 132px;
 }
 </style>

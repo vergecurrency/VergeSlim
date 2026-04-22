@@ -1,5 +1,19 @@
-@media (prefers-color-scheme: dark) {
-  .notification {
-    background: #37393b;
-  }
+.notification {
+  background: linear-gradient(180deg, rgba(16, 23, 53, 0.94), rgba(10, 16, 38, 0.9));
+  border: 1px solid var(--rv-border);
+  color: var(--rv-text);
+  box-shadow: var(--rv-shadow-soft);
+}
+
+.notification.is-success {
+  border-color: rgba(83, 243, 255, 0.24);
+  background: linear-gradient(135deg, rgba(18, 35, 68, 0.96), rgba(11, 20, 44, 0.9));
+}
+
+.notification.is-warning {
+  border-color: rgba(255, 176, 77, 0.26);
+}
+
+.notification.is-danger {
+  border-color: rgba(255, 91, 164, 0.26);
 }

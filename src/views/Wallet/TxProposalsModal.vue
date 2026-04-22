@@ -1,5 +1,5 @@
 <template>
-  <div class="modal-card">
+  <div class="modal-card modal-panel">
     <div class="modal-card-head is-warning">
       <h3 class="modal-card-title" v-html="$i18n.t('wallet.transactionProposals')"/>
     </div>
@@ -8,12 +8,11 @@
         <p v-html="$i18n.t('wallet.transactionProposalsDesc')"/>
       </b-field>
 
-      <div class="box is-paddingless">
+      <div class="box is-paddingless txp-list">
         <div
           v-for="txp in wallet.txProposals"
           :key="txp.id"
-          class="p-3"
-          style="border-bottom: 1px solid #00000050"
+          class="p-3 txp-item"
         >
           <div class="columns is-vcentered">
             <div class="column">
@@ -76,3 +75,22 @@ export default {
   }
 }
 </script>
+
+<style scoped>
+  .txp-list {
+    border: 1px solid rgba(83, 243, 255, 0.14);
+  }
+
+  .txp-item {
+    border-bottom: 1px solid rgba(83, 243, 255, 0.12);
+    transition: background-color 140ms ease;
+  }
+
+  .txp-item:hover {
+    background: rgba(83, 243, 255, 0.06);
+  }
+
+  .txp-item:last-child {
+    border-bottom: none;
+  }
+</style>

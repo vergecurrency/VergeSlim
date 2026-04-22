@@ -10,11 +10,17 @@ import Timeout = NodeJS.Timeout
 export default class WalletManager {
   protected config?: ManagerConfig
   protected ticker?: Timeout
+  protected statusReporter?: (phase: string) => void
 
   public readonly wallets: Wallet[] = []
 
+  public setStatusReporter (statusReporter: (phase: string) => void) {
+    this.statusReporter = statusReporter
+  }
+
   public async boot (config: ManagerConfig) {
     this.config = config
+    this.reportWalletStatus(this.config.wallets.length > 0 ? 'connecting' : 'ready')
 
     for (const walletConfig of this.config.wallets) {
       try {
@@ -132,6 +138,13 @@ export default class WalletManager {
 
   protected startTicker () {
     const fetch = async () => {
+      if (this.wallets.length === 0) {
+        this.reportWalletStatus('ready')
+        return
+      }
+
+      this.reportWalletStatus('syncing')
+
       for (const wallet of this.wallets) {
         try {
           await wallet.status()
@@ -141,6 +154,8 @@ export default class WalletManager {
           Log.error(e.toString())
         }
       }
+
+      this.reportWalletStatus('ready')
     }
 
     this.ticker = setInterval(fetch, 30000)
@@ -157,5 +172,11 @@ export default class WalletManager {
   protected restartTicker () {
     this.stopTicker()
     this.startTicker()
+  }
+
+  protected reportWalletStatus (phase: string) {
+    if (this.statusReporter) {
+      this.statusReporter(phase)
+    }
   }
 }

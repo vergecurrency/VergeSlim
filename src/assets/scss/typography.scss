@@ -11,19 +11,18 @@
 }
 
 .has-line-height-large {
-  line-height: 200%;
+  line-height: 185%;
 }
 
-@media (prefers-color-scheme: dark) {
-  .title {
-    color: #9f9f9f;
-  }
+.title,
+.subtitle {
+  letter-spacing: 0.04em;
+}
 
-  .subtitle {
-    color: #b0b0b0;
-  }
+.title {
+  text-shadow: 0 0 18px rgba(83, 243, 255, 0.08);
+}
 
-  strong {
-    color: #aeaeae;
-  }
+.subtitle {
+  color: var(--rv-text-muted) !important;
 }

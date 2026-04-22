@@ -1,19 +1,14 @@
 .box {
-  border: 1px solid #e8e8e8;
+  border: 1px solid var(--rv-border);
+  background: linear-gradient(180deg, rgba(16, 23, 53, 0.94), rgba(10, 16, 38, 0.9));
+  box-shadow: var(--rv-shadow-soft);
 }
 
-@media (prefers-color-scheme: dark) {
-  .box {
-    background: #2c2e30;
-    border: 1px solid #3a3a3a;
-    box-shadow: 0 5px 10px #00000021;
-  }
+.box:not(.has-background-warning) {
+  color: var(--rv-text);
+}
 
-  .box:not(.has-background-warning) {
-    color: white;
-  }
-
-  .box.has-background-info-light {
-    background-color: #1d72aa !important;
-  }
+.box.has-background-info-light {
+  background-color: rgba(91, 125, 255, 0.16) !important;
+  border-color: rgba(91, 125, 255, 0.24);
 }

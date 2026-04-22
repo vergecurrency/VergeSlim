@@ -38,7 +38,7 @@
     <div class="columns">
       <div class="column has-text-left" v-html="$i18n.t('send.recipient')" />
       <div class="column has-text-right has-text-weight-bold">
-        <span class="tag is-large is-selectable is-family-monospace" v-html="value.toAddress"/>
+        <span class="tag is-large is-selectable" :class="{ 'is-family-monospace': !value.resolvedDomain }" v-html="recipientLabel"/>
       </div>
     </div>
 
@@ -53,8 +53,8 @@
     <div class="columns">
       <div class="column">
         <div class="buttons is-centered">
-          <button class="button is-light" @click="$emit('cancel')" v-html="$i18n.t('send.cancel')"/>
-          <button class="button is-primary" @click="$emit('confirmed')" v-html="$i18n.t('send.confirmTransaction')"/>
+          <button class="button is-light is-cta" @click="$emit('cancel')" v-html="$i18n.t('send.cancel')"/>
+          <button class="button is-primary is-cta" @click="$emit('confirmed')" v-html="$i18n.t('send.confirmTransaction')"/>
         </div>
       </div>
     </div>
@@ -76,6 +76,9 @@ export default {
   },
 
   computed: {
+    recipientLabel () {
+      return this.value.recipientLabel || this.value.toAddress
+    },
     totalAmount () {
       return this.value.txp.amount + this.value.txp.fee || 0
     }

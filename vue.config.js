@@ -1,6 +1,21 @@
+const disableBuildWorkers = process.env.MYVERGIES_DISABLE_BUILD_WORKERS === 'true'
+
 module.exports = {
+  ...(disableBuildWorkers ? { parallel: false } : {}),
+  chainWebpack: config => {
+    if (disableBuildWorkers) {
+      config.plugins.delete('fork-ts-checker')
+      config.optimization.minimize(false)
+    }
+  },
   pluginOptions: {
     electronBuilder: {
+      chainWebpackMainProcess: config => {
+        if (disableBuildWorkers) {
+          config.plugins.delete('uglify')
+          config.optimization.minimize(false)
+        }
+      },
       builderOptions: {
         productName: 'MyVergies',
         appId: 'com.github.vergecurrency.myvergies',

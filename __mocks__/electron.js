@@ -7,6 +7,10 @@ module.exports = {
   Menu: jest.fn(() => ({
     append: jest.fn()
   })),
+  ipcRenderer: {
+    invoke: jest.fn(),
+    on: jest.fn()
+  },
   app: {
     name: 'MyVergies',
     getVersion () {

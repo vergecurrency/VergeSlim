@@ -1,19 +1,14 @@
-@media (prefers-color-scheme: dark) {
-  .navbar-divider {
-    background-color: darken($navbar-divider-background-color, 81%);
-  }
+.navbar-divider {
+  background-color: rgba(83, 243, 255, 0.14);
+}
 
-  .navbar.is-light {
-    background: #2c2e30;
-  }
+.navbar.is-light {
+  background: linear-gradient(180deg, rgba(10, 16, 38, 0.96), rgba(12, 18, 45, 0.88));
+}
 
-  .navbar.is-light .navbar-brand > a.navbar-item:hover,
-  .navbar.is-light .navbar-brand > a.navbar-item.is-active {
-    background-color: rgba(11, 11, 11, 0.7);
-  }
-
-  .navbar.is-light .navbar-start > a.navbar-item.is-active {
-    background-color: rgba(11, 11, 11, 0.7);
-    color: #e8e8e8;
-  }
+.navbar.is-light .navbar-brand > a.navbar-item:hover,
+.navbar.is-light .navbar-brand > a.navbar-item.is-active,
+.navbar.is-light .navbar-start > a.navbar-item.is-active {
+  background-color: rgba(83, 243, 255, 0.1);
+  color: var(--rv-text);
 }

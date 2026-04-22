@@ -1,5 +1,5 @@
 <template>
-  <div class="modal-card is-modal-auth" :class="{'is-auth-failed': wrongPin}">
+  <div class="modal-card is-modal-auth modal-panel" :class="{'is-auth-failed': wrongPin}">
     <div class="modal-content">
       <button
         v-if="showCloseButton"
@@ -93,8 +93,8 @@ export default {
 
 <style>
   .modal-card.is-modal-auth {
-    background: #f0f0f0;
-    backdrop-filter: brightness(150%) saturate(150%) blur(30px);
+    background: linear-gradient(180deg, rgba(14, 20, 48, 0.98), rgba(7, 11, 28, 0.96));
+    backdrop-filter: brightness(130%) saturate(140%) blur(30px);
     padding: 30px;
   }
 
@@ -111,6 +111,8 @@ export default {
 
   .id-card {
     width: 250px;
+    filter: drop-shadow(0 0 28px rgba(83, 243, 255, 0.16));
+    animation: rv-drift 8s ease-in-out infinite;
   }
 
   .modal-card.is-modal-auth.is-auth-failed {
@@ -136,17 +138,11 @@ export default {
     }
   }
 
-  @media (prefers-color-scheme: dark) {
-    .modal-card.is-modal-auth {
-      background-color: #2c2e30;
-    }
+  .modal-card.is-modal-auth .box {
+    background: rgba(13, 19, 46, 0.86);
+  }
 
-    .modal-card.is-modal-auth .box {
-      background: #262729;
-    }
-
-    .modal-card.is-modal-auth .box.has-background-danger-light {
-      background: #2f2626 !important;
-    }
+  .modal-card.is-modal-auth .box.has-background-danger-light {
+    background: linear-gradient(180deg, rgba(58, 23, 45, 0.88), rgba(38, 16, 31, 0.84)) !important;
   }
 </style>

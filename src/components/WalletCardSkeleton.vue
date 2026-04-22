@@ -16,20 +16,18 @@ export default {
 
 <style scoped>
   .wallet-card-skeleton {
-    background: #ffffff;
-    border-radius: 10px;
-    height: 120px;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1), 0 3px 0 #b0b0b0;
+    background: linear-gradient(180deg, rgba(13, 19, 46, 0.82), rgba(10, 16, 38, 0.78));
+    border-radius: 22px;
+    height: 90px;
+    border: 1px solid rgba(83, 243, 255, 0.12);
+    box-shadow: 0 18px 36px rgba(1, 4, 18, 0.24);
   }
 
   .wallet-card-skeleton-content {
-    padding: 15px;
+    padding: 12px 13px;
   }
 
-  @media (prefers-color-scheme: dark) {
-    .wallet-card-skeleton {
-      background: #2c2c2c;
-      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1), 0 3px 0 #111111;
-    }
+  ::v-deep .b-skeleton .b-skeleton-item {
+    background: linear-gradient(90deg, rgba(83, 243, 255, 0.18), rgba(255, 87, 210, 0.18));
   }
 </style>

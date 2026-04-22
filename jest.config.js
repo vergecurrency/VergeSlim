@@ -6,6 +6,11 @@ module.exports = {
     '.*\\.ts$': 'ts-jest'
   },
   testRegex: '.*/.*\\.spec\\.ts$',
+  modulePathIgnorePatterns: [
+    '<rootDir>/.tmp/',
+    '<rootDir>/.tools/',
+    '<rootDir>/dist_electron/'
+  ],
   moduleNameMapper: {
     '^@/(.*)$': '<rootDir>/src/$1'
   }

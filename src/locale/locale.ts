@@ -15,7 +15,24 @@ export interface LocaleDefinition {
       green: string
       purple: string
       orange: string
-    },
+    }
+    status: {
+      bootstrappingTor: string
+      bootstrappingTorDetail: string
+      torBootstrapped: string
+      torBootstrappedDetail: string
+      torDisabled: string
+      torDisabledDetail: string
+      torError: string
+      torErrorDetail: string
+      connectingWallet: string
+      connectingWalletDetail: string
+      syncingWallet: string
+      syncingWalletDetail: string
+      walletReady: string
+      walletReadyDetail: string
+      readyForWallet: string
+    }
     version: string
   }
   welcome: {
@@ -68,6 +85,7 @@ export interface LocaleDefinition {
   }
   transaction: {
     transaction: string
+    web3Domain?: string
     sent: string
     sending: string
     received: string
@@ -91,7 +109,10 @@ export interface LocaleDefinition {
     sending: string
     sent: string
     recipient: string
+    recipientPlaceholder: string
     recipientDetails: string
+    resolveRecipient: string
+    recipientResolved: string
     amount: string
     amountDetails: string
     internalMemo: string
@@ -124,6 +145,12 @@ export interface LocaleDefinition {
       'Insufficient funds': string
       'BADREQUEST: Invalid amount': string
       'Amount below dust threshold': string
+      INVALID_WEB3_DOMAIN?: string
+      UNSTOPPABLE_DOMAIN_NOT_FOUND?: string
+      UNSTOPPABLE_DOMAIN_MISSING_XVG_ADDRESS?: string
+      UNSTOPPABLE_AUTH_FAILED?: string
+      UNSTOPPABLE_LOOKUP_TIMEOUT?: string
+      UNSTOPPABLE_LOOKUP_FAILED?: string
     }
   }
   receive: {

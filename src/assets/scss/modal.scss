@@ -1,52 +1,112 @@
 .modal-card {
-  box-shadow: 0 10px 30px 0px #0000006b;
-  border-radius: 10px;
+  border-radius: 24px;
+  border: 1px solid var(--rv-border-strong);
+  box-shadow: var(--rv-shadow), var(--rv-glow);
+  overflow: hidden;
+  position: relative;
 }
 
 .modal-card-head {
-  border-bottom: none;
+  border-bottom: 1px solid rgba(83, 243, 255, 0.12);
 }
 
 .modal-card-foot {
-  border-top: none;
+  border-top: 1px solid rgba(83, 243, 255, 0.12);
 }
 
 .modal-card-head {
-  background-color: #efefef;
+  background: linear-gradient(180deg, rgba(20, 28, 66, 0.96), rgba(14, 20, 48, 0.96));
 }
 
-.modal-card-body, .modal-card-foot {
-  background-color: #f7f7f7;
+.modal-card-body,
+.modal-card-foot {
+  background: linear-gradient(180deg, rgba(10, 16, 38, 0.96), rgba(7, 11, 28, 0.94));
+}
+
+.modal-card-body {
+  padding: 1.6rem;
+}
+
+.modal-card-foot {
+  padding: 1.2rem 1.6rem 1.5rem;
 }
 
 .modal-background {
-  background-color: rgba(190, 190, 190, 0.5);
+  background-color: rgba(2, 3, 10, 0.8);
+  backdrop-filter: blur(6px);
 }
 
 .modal-card-head.is-warning {
-  background-color: $warning;
+  background: linear-gradient(135deg, var(--rv-orange) 0%, #ffd66f 100%);
 }
 
-@media (prefers-color-scheme: dark) {
-  .modal-background {
-    background-color: rgba(70, 70, 70, 0.5);
-  }
+.modal-card-title {
+  color: var(--rv-text);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
 
-  .modal-card-head {
-    background-color: #1e1e1e;
-    color: #9f9f9f;
-  }
+.modal-card-head.is-warning .modal-card-title {
+  color: #261103;
+}
 
-  .modal-card-body, .modal-card-foot {
-    background-color: #151515;
-    color: whitesmoke;
-  }
+.modal-card.modal-panel::before,
+.dialog .modal-card::before {
+  content: "";
+  position: absolute;
+  inset: -20% -10% auto;
+  height: 180px;
+  background:
+    radial-gradient(circle at 20% 10%, rgba(83, 243, 255, 0.16), transparent 34%),
+    radial-gradient(circle at 80% 20%, rgba(255, 87, 210, 0.16), transparent 28%);
+  pointer-events: none;
+  animation: rv-drift 9s ease-in-out infinite;
+}
 
-  .modal-card-title {
-    color: #b6b6b6;
-  }
+.modal-panel,
+.dialog .modal-card {
+  background: linear-gradient(180deg, rgba(14, 20, 48, 0.98), rgba(7, 11, 28, 0.96));
+}
 
-  .modal-card-head.is-warning .modal-card-title {
-    color: #1e1e1e;
-  }
+.modal-panel.modal-panel-compact {
+  width: auto;
+  min-width: 380px;
+}
+
+.modal-card-head,
+.dialog .modal-card-head {
+  padding: 1.3rem 1.5rem 1.2rem;
+}
+
+.dialog .modal-card-title,
+.dialog .title,
+.dialog .label,
+.dialog .content {
+  color: var(--rv-text) !important;
+}
+
+.dialog .modal-card-body {
+  color: var(--rv-text-soft);
+}
+
+.dialog .modal-card-foot {
+  justify-content: flex-end;
+  gap: 0.75rem;
+}
+
+.modal-close,
+.delete {
+  background-color: rgba(83, 243, 255, 0.18);
+  box-shadow: 0 0 16px rgba(83, 243, 255, 0.16);
+}
+
+.modal-close:hover,
+.delete:hover {
+  background-color: rgba(255, 87, 210, 0.26);
+}
+
+.toast {
+  background: linear-gradient(135deg, rgba(14, 20, 48, 0.96), rgba(7, 11, 28, 0.94)) !important;
+  border: 1px solid rgba(83, 243, 255, 0.18);
+  box-shadow: var(--rv-shadow-soft);
 }

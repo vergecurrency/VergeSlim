@@ -12,11 +12,6 @@
          <b-icon size="is-small" icon="cog" />
        </span>
     </router-link>
-    <router-link to="/" class="button is-white is-not-draggable">
-      <span class="icon has-text-grey-dark">
-        <b-icon size="is-small" icon="question-circle" />
-      </span>
-    </router-link>
   </div>
 </template>
 
@@ -30,6 +25,10 @@ export default {
 </script>
 
 <style scoped>
+.buttons {
+  align-items: center;
+}
+
 .dropdown-trigger {
   margin: 0 0.5rem 0 0;
 }

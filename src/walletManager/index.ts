@@ -6,12 +6,20 @@ import { Store } from 'vuex'
 import { ensureTorProxyState } from '@/utils/torStartup'
 
 const walletManager: PluginFunction<any> = function (vue: typeof Vue, options: any): void {
-  vue.prototype.$walletManager = new WalletManager()
+  const manager = new WalletManager()
+  manager.setStatusReporter((phase: string) => {
+    options.store.dispatch('updateWalletStatus', phase)
+  })
+  vue.prototype.$walletManager = manager
+
+  options.store.dispatch('updateWalletStatus', 'connecting')
 
   loadWallets(options.store).then(async (wallets: WalletConfigItem[]) => {
     await ensureTorProxyState(options.store.getters.isTorEnabled)
     vue.prototype.$walletManager.boot(new ManagerConfig(wallets))
   }).catch((error: any) => {
+    options.store.dispatch('updateWalletStatus', 'idle')
+
     if (Keytar.isAccessError(error)) {
       const details = error && error.originalMessage ? `<br/><br/><small>${error.originalMessage}</small>` : ''
 

@@ -1,18 +1,21 @@
-@media (prefers-color-scheme: dark) {
-  .b-steps .steps .step-items .step-item.is-active .step-marker {
-    background-color: #2b2e30;
-  }
+.b-steps .steps .step-items .step-item.is-active .step-marker {
+  background: linear-gradient(135deg, var(--rv-pink), var(--rv-cyan));
+  border-color: transparent;
+  color: #14061f;
+  box-shadow: 0 0 20px rgba(83, 243, 255, 0.22);
+}
 
-  .b-steps .steps .step-items .step-item .step-marker {
-    background-color: #9f9f9f;
-    border-color: #2b2e30;
-  }
+.b-steps .steps .step-items .step-item .step-marker {
+  background: rgba(15, 22, 48, 0.9);
+  border-color: rgba(83, 243, 255, 0.16);
+  color: var(--rv-text-soft);
+}
 
-  .step-title {
-    color: #9f9f9f;
-  }
+.step-title {
+  color: var(--rv-text-muted);
+}
 
-  .b-steps .steps .step-items .step-item::before, .b-steps .steps .step-items .step-item::after {
-    background: #1b1b1b;
-  }
+.b-steps .steps .step-items .step-item::before,
+.b-steps .steps .step-items .step-item::after {
+  background: rgba(83, 243, 255, 0.12);
 }
