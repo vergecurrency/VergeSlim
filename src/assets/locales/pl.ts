@@ -21,6 +21,8 @@ const pl: LocaleDefinition = {
     status: {
       bootstrappingTor: 'Uruchamianie Tor',
       bootstrappingTorDetail: 'Negocjowanie bezpiecznego obwodu',
+      verifyingTorRoute: 'Weryfikacja trasy Tor',
+      verifyingTorRouteDetail: 'Dane portfela sa juz zaladowane, trwa sprawdzanie wyjscia Tor',
       torBootstrapped: 'Tor gotowy',
       torBootstrappedDetail: 'Bezpieczna trasa jest aktywna',
       torDisabled: 'Tor wyÅ‚Ä…czony',
@@ -45,7 +47,7 @@ const pl: LocaleDefinition = {
     addWallet: 'Dodaj portfel',
     changeThings: 'Zmień ustawienia',
     changeThingsDesc: 'W ustawieniach możesz dopasować MyVergies tak, by stał się idealnym towarzyszem Twojego XVG!',
-    tweakSettings: 'Dostosuj ustawienia',
+    tweakSettings: 'Ustawienia',
     helpImprove: 'Handluj XVG',
     helpImproveDesc: 'Kupuj, sprzedawaj i wymieniaj XVG bezpośrednio z poziomu aplikacji.',
     goToGithub: 'Handluj XVG'

@@ -107,6 +107,22 @@ export default {
       return this.walletPlaceholders.some(wallet => wallet.isLoading)
     },
 
+    hasLoadedWallets () {
+      return this.wallets.length > 0
+    },
+
+    isWalletConnecting () {
+      return !this.hasLoadedWallets && (this.walletStatusPhase === 'connecting' || this.hasLoadingWalletPlaceholders)
+    },
+
+    isWalletSyncing () {
+      return this.hasLoadedWallets && this.walletStatusPhase === 'syncing'
+    },
+
+    isVerifyingTorRoute () {
+      return this.hasLoadedWallets && this.walletStatusPhase === 'ready' && this.torStatusPhase !== 'connected'
+    },
+
     statusTitle () {
       if (!this.isTorEnabled || this.torStatusPhase === 'disconnected') {
         return this.$i18n.t('main.status.torDisabled')
@@ -116,16 +132,20 @@ export default {
         return this.$i18n.t('main.status.torError')
       }
 
-      if (this.torStatusPhase !== 'connected') {
-        return this.$i18n.t('main.status.bootstrappingTor')
-      }
-
-      if (this.hasLoadingWalletPlaceholders || this.walletStatusPhase === 'connecting') {
+      if (this.isWalletConnecting) {
         return this.$i18n.t('main.status.connectingWallet')
       }
 
-      if (this.walletStatusPhase === 'syncing') {
+      if (this.isWalletSyncing) {
         return this.$i18n.t('main.status.syncingWallet')
+      }
+
+      if (this.isVerifyingTorRoute) {
+        return this.$i18n.t('main.status.verifyingTorRoute')
+      }
+
+      if (this.torStatusPhase !== 'connected') {
+        return this.$i18n.t('main.status.bootstrappingTor')
       }
 
       if (this.hasNoWallets) {
@@ -144,16 +164,20 @@ export default {
         return this.$i18n.t('main.status.torErrorDetail')
       }
 
-      if (this.torStatusPhase !== 'connected') {
-        return this.$i18n.t('main.status.bootstrappingTorDetail')
-      }
-
-      if (this.hasLoadingWalletPlaceholders || this.walletStatusPhase === 'connecting') {
+      if (this.isWalletConnecting) {
         return this.$i18n.t('main.status.connectingWalletDetail')
       }
 
-      if (this.walletStatusPhase === 'syncing') {
+      if (this.isWalletSyncing) {
         return this.$i18n.t('main.status.syncingWalletDetail')
+      }
+
+      if (this.isVerifyingTorRoute) {
+        return this.$i18n.t('main.status.verifyingTorRouteDetail')
+      }
+
+      if (this.torStatusPhase !== 'connected') {
+        return this.$i18n.t('main.status.bootstrappingTorDetail')
       }
 
       if (this.hasNoWallets) {
@@ -172,16 +196,20 @@ export default {
         return 'is-danger'
       }
 
-      if (this.torStatusPhase !== 'connected') {
-        return 'is-bootstrapping'
-      }
-
-      if (this.hasLoadingWalletPlaceholders || this.walletStatusPhase === 'connecting') {
+      if (this.isWalletConnecting) {
         return 'is-connecting'
       }
 
-      if (this.walletStatusPhase === 'syncing') {
+      if (this.isWalletSyncing) {
         return 'is-syncing'
+      }
+
+      if (this.isVerifyingTorRoute) {
+        return 'is-verifying'
+      }
+
+      if (this.torStatusPhase !== 'connected') {
+        return 'is-bootstrapping'
       }
 
       return 'is-ready'
@@ -347,6 +375,10 @@ export default {
 
   .wallet-status-strip.is-syncing {
     background: linear-gradient(135deg, rgba(14, 44, 67, 0.96), rgba(18, 14, 58, 0.9));
+  }
+
+  .wallet-status-strip.is-verifying {
+    background: linear-gradient(135deg, rgba(13, 38, 74, 0.96), rgba(19, 21, 64, 0.9));
   }
 
   .wallet-status-strip.is-ready {

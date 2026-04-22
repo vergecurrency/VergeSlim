@@ -38,6 +38,8 @@ export default {
 }
 
 .navbar.is-app-navbar {
+  position: relative;
+  z-index: 20;
   background: linear-gradient(180deg, rgba(8, 12, 28, 0.94), rgba(12, 16, 34, 0.82));
   backdrop-filter: blur(16px);
 }

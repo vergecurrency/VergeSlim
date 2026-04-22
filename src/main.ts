@@ -44,15 +44,15 @@ new Vue({
   async mounted () {
     try {
       await ensureTorProxyState(this.$store.getters.isTorEnabled)
-
-      setInterval(() => {
-        this.loadData()
-      }, 30000)
-
-      await this.loadData()
     } finally {
       markPrimaryApiReady()
     }
+
+    setInterval(() => {
+      this.loadData().catch(() => undefined)
+    }, 30000)
+
+    this.loadData().catch(() => undefined)
 
     this.$i18n.locale = this.currentLanguageCode
   }

@@ -2,11 +2,11 @@
   <div>
     <div class="columns">
       <div class="column welcome-header">
-        <div class="welcome-copy has-text-right">
-          <h1 class="welcome-title is-family-display" v-html="$i18n.t('welcome.welcomeToMyVergies')"/>
-        </div>
         <div class="header-logo">
           <img src="@/assets/headers/logo@2x.png"/>
+        </div>
+        <div class="welcome-copy">
+          <h1 class="welcome-title is-family-display" v-html="$i18n.t('welcome.welcomeToMyVergies')"/>
         </div>
       </div>
     </div>
@@ -55,20 +55,21 @@ export default {
 <style>
   .welcome-header {
     display: flex;
-    justify-content: center;
+    justify-content: flex-start;
     align-items: center;
     gap: 2rem;
     margin-bottom: 0.75rem;
   }
 
   .header-logo > img {
-    width: 200px;
+    width: 256px;
     filter: drop-shadow(0 0 28px rgba(83, 243, 255, 0.18));
     animation: rv-drift 9s ease-in-out infinite;
   }
 
   .welcome-copy {
     min-width: 340px;
+    text-align: left;
   }
 
   .welcome-title {
@@ -89,13 +90,14 @@ export default {
 
   @media (max-width: 768px) {
     .welcome-header {
-      flex-direction: column-reverse;
+      flex-direction: column;
+      align-items: flex-start;
       gap: 1rem;
     }
 
     .welcome-title {
       font-size: 2.75rem;
-      text-align: center;
+      text-align: left;
       letter-spacing: 0.06em;
     }
 

@@ -4,6 +4,7 @@ import logger from 'electron-log'
 import ElectronWindowState from 'electron-window-state'
 import * as ElectronUtils from 'electron-util'
 import path from 'path'
+import fs from 'fs'
 import { execFile } from 'child_process'
 import Installer from '@/setup/installer'
 import { generateMenuTemplate, dockTemplate } from '@/toolbar/menu'
@@ -33,8 +34,10 @@ let win: BrowserWindow | null = null
 const TOR_SOCKS_PORT = 9999
 const TOR_HTTP_TUNNEL_PORT = 9998
 const TOR_BIN_PATH = path.join(app.getPath('appData'), 'MyVergies', 'bin', 'Tor')
+const TOR_DATA_DIRECTORY = path.join(app.getPath('appData'), 'MyVergies', 'tor-data')
+const TOR_DATA_LOCK_FILE = path.join(TOR_DATA_DIRECTORY, 'lock')
 let torController: any = null
-let torBootstrapPromise: Promise<void> | null = null
+let torStartupPromise: Promise<void> | null = null
 // Scheme must be registered before the app is ready
 protocol.registerSchemesAsPrivileged([{ scheme: 'app', privileges: { secure: true, standard: true } }])
 
@@ -134,54 +137,6 @@ const getCountryName = (countryCode: string) => {
   } catch (_error) {
     return countryCode
   }
-}
-
-const parseBootstrapStatus = (status: string) => {
-  const progressMatch = status.match(/PROGRESS=(\d+)/)
-  const summaryMatch = status.match(/SUMMARY="([^"]+)"/)
-
-  return {
-    progress: progressMatch ? Number(progressMatch[1]) : 0,
-    summary: summaryMatch ? summaryMatch[1] : status
-  }
-}
-
-const waitForTorBootstrap = async (controller: any, maxAttempts = 24, delayMs = 2500) => {
-  if (!controller) {
-    throw new Error('Tor controller is not ready')
-  }
-
-  for (let attempt = 1; attempt <= maxAttempts; attempt++) {
-    try {
-      const bootstrapStatus = await getTorInfo(controller, 'status/bootstrap-phase')
-      const { progress, summary } = parseBootstrapStatus(bootstrapStatus)
-
-      logger.info(`Waiting for Tor bootstrap (${attempt}/${maxAttempts}) progress=${progress} summary="${summary}"`)
-
-      if (progress >= 100) {
-        logger.info('Tor bootstrap completed')
-        return
-      }
-    } catch (error) {
-      logger.warn('Tor bootstrap status check failed:', error)
-    }
-
-    if (attempt < maxAttempts) {
-      await new Promise(resolve => setTimeout(resolve, delayMs))
-    }
-  }
-
-  throw new Error('Tor bootstrap did not complete in time')
-}
-
-const ensureTorBootstrapped = (controller: any) => {
-  if (!torBootstrapPromise) {
-    torBootstrapPromise = waitForTorBootstrap(controller).finally(() => {
-      torBootstrapPromise = null
-    })
-  }
-
-  return torBootstrapPromise
 }
 
 const requestJson = (
@@ -306,6 +261,151 @@ const getTorVersion = () => new Promise((resolve) => {
   })
 })
 
+const getMainWindowOrThrow = () => {
+  if (!win || win.isDestroyed()) {
+    throw new Error('Main window is not available')
+  }
+
+  return win
+}
+
+const notifyTorStartupError = (error: Error) => {
+  if (!win || win.isDestroyed()) {
+    return
+  }
+
+  setTimeout(() => {
+    if (win && !win.isDestroyed()) {
+      win.webContents.send(eventConstants.torConnectionError, error)
+    }
+  }, 1000)
+}
+
+const clearStaleTorLock = () => {
+  if (!fs.existsSync(TOR_DATA_LOCK_FILE)) {
+    return false
+  }
+
+  try {
+    fs.unlinkSync(TOR_DATA_LOCK_FILE)
+    logger.warn(`Removed stale Tor data lock: ${TOR_DATA_LOCK_FILE}`)
+    return true
+  } catch (error) {
+    logger.warn('Failed to remove stale Tor data lock:', error)
+    return false
+  }
+}
+
+const ensureTorStarted = () => {
+  if (!torStartupPromise) {
+    const startTor = () => startUpTorOnPort(TOR_SOCKS_PORT)
+      .then(port => {
+        logger.info(`TorSocks listening on ${port}!`)
+      })
+
+    torStartupPromise = startTor()
+      .catch(async (error: Error) => {
+        const isLockStartupFailure = error.message.includes('Tor exited with code 1')
+
+        if (isLockStartupFailure && clearStaleTorLock()) {
+          logger.warn('Retrying Tor startup after clearing stale data lock')
+          return startTor()
+        }
+
+        throw error
+      })
+      .catch(async (error: Error) => {
+        logger.error(error)
+        torStartupPromise = null
+        notifyTorStartupError(error)
+
+        if (win && !win.isDestroyed()) {
+          await deactivateTorProxy(win)
+        }
+
+        throw error
+      })
+  }
+
+  return torStartupPromise
+}
+
+const registerIpcHandlers = () => {
+  ipcMain.handle(eventConstants.toggleTor, async (_event, arg: any) => {
+    logger.info(`Tor toggle requested: activate=${arg.activate}`)
+
+    const window = getMainWindowOrThrow()
+    const shouldActivateTor = arg.activate === true
+
+    applyNodeProxyState(shouldActivateTor)
+
+    if (shouldActivateTor) {
+      await ensureTorStarted()
+      await activateTorProxy(window)
+    } else {
+      await deactivateTorProxy(window)
+    }
+
+    logger.info(`Tor toggle applied: activate=${arg.activate}`)
+
+    return { success: true }
+  })
+
+  ipcMain.handle(eventConstants.getTorNetworkInfo, async () => {
+    try {
+      const window = getMainWindowOrThrow()
+
+      await ensureTorStarted()
+
+      const torVersion = await getTorVersion()
+      const torIp = await waitForTorCircuit(window)
+      let countryCode = 'Unknown'
+
+      try {
+        countryCode = (await getTorInfo(torController, `ip-to-country/${torIp}`)).trim().toUpperCase()
+      } catch (countryError) {
+        const message = countryError instanceof Error ? countryError.message : String(countryError)
+        logger.debug(`Tor country lookup unavailable; continuing with verified Tor IP only: ${message}`)
+      }
+
+      return {
+        ip: torIp || 'Unknown',
+        country_name: getCountryName(countryCode),
+        country_code: countryCode || 'Unknown',
+        torVersion
+      }
+    } catch (error) {
+      logger.warn('Tor network info lookup failed, returning unknown values:', error)
+      return {
+        ip: 'Unknown',
+        country_name: 'Unknown',
+        country_code: 'Unknown',
+        torVersion: await getTorVersion()
+      }
+    }
+  })
+
+  ipcMain.handle(eventConstants.resolveUnstoppableDomain, async (_event, arg: any) => {
+    try {
+      const window = getMainWindowOrThrow()
+      const domain = arg && typeof arg.domain === 'string' ? arg.domain : ''
+      const result = await resolveUnstoppableDomain(window, domain)
+
+      return {
+        success: true,
+        ...result
+      }
+    } catch (error: any) {
+      logger.warn('Unstoppable Domains IPC resolution failed:', error)
+
+      return {
+        success: false,
+        error: error instanceof Error ? error.message : 'UNSTOPPABLE_LOOKUP_FAILED'
+      }
+    }
+  })
+}
+
 function createWindow () {
   Menu.setApplicationMenu(Menu.buildFromTemplate(generateMenuTemplate()))
 
@@ -422,6 +522,7 @@ app.on('activate', () => {
 const startUpTorOnPort = (port: number) => {
   return new Promise((resolve, reject) => {
     const tor = Tor({}, {
+      DataDirectory: TOR_DATA_DIRECTORY,
       SocksPort: `${port}`,
       HTTPTunnelPort: `${TOR_HTTP_TUNNEL_PORT}`
     })
@@ -448,92 +549,23 @@ app.on('ready', async () => {
   ElectronUtils.enforceMacOSAppLocation()
   applyNodeProxyState(true)
 
-  startUpTorOnPort(TOR_SOCKS_PORT).then(async port => {
-    console.log(`TorSocks listening on ${port}!`)
-
-    if (Utils.isDevelopmentEnvironment() && !process.env.IS_TEST) {
-    // Install Vue Devtools
-    // Devtools extensions are broken in Electron 6.0.0 and greater
-    // See https://github.com/nklayman/vue-cli-plugin-electron-builder/issues/378 for more info
-    // Electron will not launch with Devtools extensions installed on Windows 10 with dark mode
-    // If you are not using Windows 10 dark mode, you may uncomment these lines
-    // In addition, if the linked issue is closed, you can upgrade electron and uncomment these lines
-      try {
-        await installVueDevtools()
-      } catch (e) {
-        console.error('Vue Devtools failed to install:', e.toString())
-      }
-    }
-    const window = createWindow()
-    ipcMain.handle(eventConstants.toggleTor, async (_event, arg: any) => {
-      logger.info(`Tor toggle requested: activate=${arg.activate}`)
-      applyNodeProxyState(arg.activate === true)
-      if (arg.activate === true) {
-        await activateTorProxy(window)
-      } else {
-        await deactivateTorProxy(window)
-      }
-      logger.info(`Tor toggle applied: activate=${arg.activate}`)
-      return { success: true }
+  if (Utils.isDevelopmentEnvironment() && !process.env.IS_TEST) {
+  // Install Vue Devtools
+  // Devtools extensions are broken in Electron 6.0.0 and greater
+  // See https://github.com/nklayman/vue-cli-plugin-electron-builder/issues/378 for more info
+  // Electron will not launch with Devtools extensions installed on Windows 10 with dark mode
+  // If you are not using Windows 10 dark mode, you may uncomment these lines
+  // In addition, if the linked issue is closed, you can upgrade electron and uncomment these lines
+    installVueDevtools().catch(e => {
+      console.error('Vue Devtools failed to install:', e.toString())
     })
+  }
 
-    ipcMain.handle(eventConstants.getTorNetworkInfo, async () => {
-      try {
-        await ensureTorBootstrapped(torController)
-        const torVersion = await getTorVersion()
-        const torIp = await waitForTorCircuit(window)
-        let countryCode = 'Unknown'
+  createWindow()
+  registerIpcHandlers()
 
-        try {
-          countryCode = (await getTorInfo(torController, `ip-to-country/${torIp}`)).trim().toUpperCase()
-        } catch (countryError) {
-          const message = countryError instanceof Error ? countryError.message : String(countryError)
-          logger.debug(`Tor country lookup unavailable; continuing with verified Tor IP only: ${message}`)
-        }
-
-        return {
-          ip: torIp || 'Unknown',
-          country_name: getCountryName(countryCode),
-          country_code: countryCode || 'Unknown',
-          torVersion
-        }
-      } catch (error) {
-        logger.warn('Tor network info lookup failed, returning unknown values:', error)
-        return {
-          ip: 'Unknown',
-          country_name: 'Unknown',
-          country_code: 'Unknown',
-          torVersion: await getTorVersion()
-        }
-      }
-    })
-
-    ipcMain.handle(eventConstants.resolveUnstoppableDomain, async (_event, arg: any) => {
-      try {
-        const domain = arg && typeof arg.domain === 'string' ? arg.domain : ''
-        const result = await resolveUnstoppableDomain(window, domain)
-
-        return {
-          success: true,
-          ...result
-        }
-      } catch (error: any) {
-        logger.warn('Unstoppable Domains IPC resolution failed:', error)
-
-        return {
-          success: false,
-          error: error instanceof Error ? error.message : 'UNSTOPPABLE_LOOKUP_FAILED'
-        }
-      }
-    })
-  }).catch(error => {
-    logger.error(error)
-
-    const window = createWindow()
-
-    setTimeout(() => window.webContents.send(eventConstants.torConnectionError, error), 1000)
-
-    deactivateTorProxy(window)
+  ensureTorStarted().catch(() => {
+    // Startup errors are surfaced through the IPC alert path.
   })
 })
 

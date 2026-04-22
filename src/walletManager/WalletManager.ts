@@ -1,5 +1,6 @@
 // @ts-ignore
 import Client from 'bitcore-wallet-client-xvg'
+import axios from 'axios'
 import Log from 'electron-log'
 import Wallet from '@/walletManager/Wallet'
 import ManagerConfig, { WalletConfigItem } from '@/walletManager/ManagerConfig'
@@ -7,9 +8,18 @@ import constants from '@/utils/constants'
 import Keytar from '@/utils/keytar'
 import Timeout = NodeJS.Timeout
 
+const STARTUP_CLIENT_TIMEOUT_MS = 10000
+const STEADY_STATE_CLIENT_TIMEOUT_MS = 30000
+const STARTUP_ROUTE_WARMUP_ATTEMPTS = 2
+const STARTUP_ROUTE_WARMUP_TIMEOUT_MS = 2500
+const STARTUP_OPERATION_ATTEMPTS = 2
+const STARTUP_RETRY_DELAY_MS = 1500
+const INITIAL_WALLET_HYDRATION_DELAY_MS = 2500
+
 export default class WalletManager {
   protected config?: ManagerConfig
   protected ticker?: Timeout
+  protected initialHydrationTimer?: Timeout
   protected statusReporter?: (phase: string) => void
 
   public readonly wallets: Wallet[] = []
@@ -24,16 +34,14 @@ export default class WalletManager {
 
     for (const walletConfig of this.config.wallets) {
       try {
-        const vwc = this.getClient(walletConfig)
-        const wallet = new Wallet(walletConfig.identifier, walletConfig.name, walletConfig.color, vwc)
-        await wallet.open()
-
+        const wallet = await this.initializeWallet(walletConfig)
         this.wallets.push(wallet)
       } catch (e) {
         Log.error(e.toString())
       }
     }
 
+    this.reportWalletStatus('ready')
     this.startTicker()
   }
 
@@ -113,8 +121,23 @@ export default class WalletManager {
     })
 
     vwc.seedFromMnemonic(walletConfig.paperkey, walletConfig)
+    this.setClientTimeout(vwc, STEADY_STATE_CLIENT_TIMEOUT_MS)
 
     return vwc
+  }
+
+  protected async initializeWallet (walletConfig: WalletConfigItem): Promise<Wallet> {
+    const vwc = this.getClient(walletConfig)
+    const wallet = new Wallet(walletConfig.identifier, walletConfig.name, walletConfig.color, vwc)
+
+    this.setClientTimeout(vwc, STARTUP_CLIENT_TIMEOUT_MS)
+    await this.warmWalletServiceRoute(walletConfig)
+
+    await this.retryStartupOperation(`connect wallet "${walletConfig.name}"`, () => wallet.open())
+
+    this.setClientTimeout(vwc, STEADY_STATE_CLIENT_TIMEOUT_MS)
+
+    return wallet
   }
 
   protected generateWalletIdentifier (): string {
@@ -137,7 +160,7 @@ export default class WalletManager {
   }
 
   protected startTicker () {
-    const fetch = async () => {
+    const fetch = async (includeTransactions = true) => {
       if (this.wallets.length === 0) {
         this.reportWalletStatus('ready')
         return
@@ -148,8 +171,12 @@ export default class WalletManager {
       for (const wallet of this.wallets) {
         try {
           await wallet.status()
-          await wallet.fetchTxHistory()
-          await wallet.getTxProposals()
+          if (includeTransactions) {
+            await Promise.allSettled([
+              wallet.fetchTxHistory(),
+              wallet.getTxProposals()
+            ])
+          }
         } catch (e) {
           Log.error(e.toString())
         }
@@ -158,14 +185,22 @@ export default class WalletManager {
       this.reportWalletStatus('ready')
     }
 
-    this.ticker = setInterval(fetch, 30000)
+    this.initialHydrationTimer = setTimeout(() => {
+      fetch(true).catch(error => Log.error(error.toString()))
+    }, INITIAL_WALLET_HYDRATION_DELAY_MS)
 
-    fetch()
+    this.ticker = setInterval(() => {
+      fetch(true).catch(error => Log.error(error.toString()))
+    }, 30000)
   }
 
   protected stopTicker () {
     if (this.ticker) {
       clearInterval(this.ticker)
+    }
+
+    if (this.initialHydrationTimer) {
+      clearTimeout(this.initialHydrationTimer)
     }
   }
 
@@ -178,5 +213,67 @@ export default class WalletManager {
     if (this.statusReporter) {
       this.statusReporter(phase)
     }
+  }
+
+  protected setClientTimeout (vwc: Client, timeoutMs: number) {
+    ;(vwc as any).timeout = timeoutMs
+
+    if ((vwc as any).request) {
+      ;(vwc as any).request.timeout = timeoutMs
+    }
+  }
+
+  protected async retryStartupOperation<T> (label: string, task: () => Promise<T>): Promise<T> {
+    let lastError: any = null
+
+    for (let attempt = 1; attempt <= STARTUP_OPERATION_ATTEMPTS; attempt++) {
+      try {
+        if (attempt > 1) {
+          Log.info(`Retrying ${label} (${attempt}/${STARTUP_OPERATION_ATTEMPTS})`)
+        }
+
+        return await task()
+      } catch (error) {
+        lastError = error
+        Log.warn(`${label} failed on attempt ${attempt}/${STARTUP_OPERATION_ATTEMPTS}: ${error}`)
+
+        if (attempt < STARTUP_OPERATION_ATTEMPTS) {
+          await this.delay(STARTUP_RETRY_DELAY_MS)
+        }
+      }
+    }
+
+    throw lastError
+  }
+
+  protected async warmWalletServiceRoute (walletConfig: WalletConfigItem) {
+    const warmupUrl = this.getWalletServiceWarmupUrl(walletConfig)
+
+    for (let attempt = 1; attempt <= STARTUP_ROUTE_WARMUP_ATTEMPTS; attempt++) {
+      try {
+        await axios.get(warmupUrl, {
+          timeout: STARTUP_ROUTE_WARMUP_TIMEOUT_MS
+        })
+        return
+      } catch (error) {
+        Log.warn(`Wallet service warmup failed for ${walletConfig.name} (${attempt}/${STARTUP_ROUTE_WARMUP_ATTEMPTS}): ${error}`)
+
+        if (attempt < STARTUP_ROUTE_WARMUP_ATTEMPTS) {
+          await this.delay(STARTUP_RETRY_DELAY_MS)
+        }
+      }
+    }
+  }
+
+  protected getWalletServiceWarmupUrl (walletConfig: WalletConfigItem) {
+    const baseUrl = (walletConfig.vwsApi || constants.vwsApi).replace(/\/+$/, '')
+    const coin = encodeURIComponent(walletConfig.coin || 'xvg')
+    const network = encodeURIComponent(walletConfig.network || 'livenet')
+
+    return `${baseUrl}/v2/feelevels/?coin=${coin}&network=${network}`
+  }
+
+  protected delay (ms: number) {
+    return new Promise(resolve => setTimeout(resolve, ms))
   }
 }

@@ -117,6 +117,22 @@ export default {
       return new Promise(resolve => setTimeout(resolve, ms))
     },
 
+    async waitForWalletStartupWindow () {
+      if (!this.torActivated) {
+        return
+      }
+
+      const maxAttempts = 60
+
+      for (let attempt = 0; attempt < maxAttempts; attempt++) {
+        if (this.$store.getters.walletStatusPhase !== 'connecting') {
+          return
+        }
+
+        await this.delay(500)
+      }
+    },
+
     async applyTorState () {
       try {
         this.syncTorPhase()
@@ -131,6 +147,7 @@ export default {
         }
 
         await waitForPrimaryApiReady()
+        await this.waitForWalletStartupWindow()
 
         return this.fetchIpAddress()
       } catch (err) {

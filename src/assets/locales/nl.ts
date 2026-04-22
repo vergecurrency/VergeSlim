@@ -21,6 +21,8 @@ const nl: LocaleDefinition = {
     status: {
       bootstrappingTor: 'Tor wordt opgestart',
       bootstrappingTorDetail: 'Beveiligde route wordt opgebouwd',
+      verifyingTorRoute: 'Tor-route wordt geverifieerd',
+      verifyingTorRouteDetail: 'Walletgegevens zijn al geladen terwijl de Tor-exitcheck afrondt',
       torBootstrapped: 'Tor staat klaar',
       torBootstrappedDetail: 'Beveiligde route is actief',
       torDisabled: 'Tor uitgeschakeld',
@@ -45,7 +47,7 @@ const nl: LocaleDefinition = {
     addWallet: 'Voeg wallet toe',
     changeThings: 'Verander dingen',
     changeThingsDesc: 'Met behulp van de instellingen kun je MyVergies veranderen in de perfecte XVG partner!',
-    tweakSettings: 'Verander instellingen',
+    tweakSettings: 'Instellingen',
     helpImprove: 'Trade XVG',
     helpImproveDesc: 'Koop, verkoop en wissel XVG direct in de app.',
     goToGithub: 'Trade XVG'

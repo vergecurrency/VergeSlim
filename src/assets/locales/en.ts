@@ -21,6 +21,8 @@ const en: LocaleDefinition = {
     status: {
       bootstrappingTor: 'Bootstrapping Tor',
       bootstrappingTorDetail: 'Negotiating a secure circuit',
+      verifyingTorRoute: 'Verifying Tor route',
+      verifyingTorRouteDetail: 'Wallet data is already live while Tor exit checks finish',
       torBootstrapped: 'Tor bootstrapped',
       torBootstrappedDetail: 'Secure route is live',
       torDisabled: 'Tor disabled',
@@ -45,7 +47,7 @@ const en: LocaleDefinition = {
     addWallet: 'Add wallet',
     changeThings: 'Change things',
     changeThingsDesc: 'Within the settings you\'re able to tweak MyVergies into the perfect XVG wallet companion!',
-    tweakSettings: 'Tweak settings',
+    tweakSettings: 'Settings',
     helpImprove: 'Trade XVG',
     helpImproveDesc: 'Buy, sell, and swap XVG directly from inside the app.',
     goToGithub: 'Trade XVG'
