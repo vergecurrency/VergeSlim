@@ -116,7 +116,7 @@ npm run docs:build
 * [Electron](https://github.com/github/electron) - Build cross-platform desktop apps with JavaScript, HTML, and CSS
 * [Vue CLI](https://github.com/vuejs/vue-cli) - The renderer build uses Vue CLI with webpack 5
 * [Electron Builder](https://github.com/electron-userland/electron-builder) - Packaging is handled directly without the old Vue Electron plugin layer
-* [Tor](https://www.torproject.org) - The intergration of Tor makes sure your transactions are private
+* [Tor](https://dist.torproject.org/torbrowser/) - The intergration of Tor (expert bundle binary) makes sure your transactions are private
 
 ### Community
 
@@ -130,6 +130,3 @@ npm run docs:build
 
 Please read [CONTRIBUTING.md](CONTRIBUTING.md) for details on our code of conduct, and the process for submitting pull requests to us.
 
-### BEFORE CONTRIBUTING
-
-This repository is in beta state and so it's not ready for feature pull requests.
