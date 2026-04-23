@@ -64,7 +64,9 @@
           :is-narrow="false"
           type="is-info"
         >
-          <b-input v-model="apiEndpoint" @blur="save"/>
+          <b-field :type="apiEndpointValid ? '' : 'is-danger'">
+            <b-input v-model="apiEndpoint" @blur="save"/>
+          </b-field>
         </form-box>
       </form-section>
 
@@ -133,6 +135,7 @@ import CredentialBox from '@/components/CredentialBox'
 import FormBox from '@/components/layout/FormBox'
 import WalletCard from '@/components/WalletCard'
 import ExportModal from '@/views/Wallet/Settings/ExportModal'
+import { isValidVwsApiUrl, resolveVwsApiUrl } from '@/utils/vwsApi'
 
 export default {
   name: 'wallet-settings-view',
@@ -169,28 +172,39 @@ export default {
 
       return this.$walletManager.getWallets().map(wallet => wallet.name).includes(this.name)
     },
-    preferencesAreValid () {
+    apiEndpointValid () {
+      return isValidVwsApiUrl(this.apiEndpoint)
+    },
+    namePreferencesAreValid () {
       return this.wallet.name !== '' && this.nameLongEnough && this.nameNotTooLong && !this.nameExists
     },
+    preferencesAreValid () {
+      return this.namePreferencesAreValid && this.apiEndpointValid
+    },
     nameType () {
-      return this.preferencesAreValid ? '' : 'is-danger'
+      return this.namePreferencesAreValid ? '' : 'is-danger'
     }
   },
 
   created () {
     this.name = this.wallet.name
     this.color = this.wallet.color
-    this.apiEndpoint = this.wallet.vwc.request.baseUrl
+    this.apiEndpoint = resolveVwsApiUrl(this.wallet.vwc.request.baseUrl)
   },
 
   methods: {
     save () {
-      if (!this.preferencesAreValid) {
+      if (!this.namePreferencesAreValid) {
         this.name = this.previousWalletName
 
         return
       }
 
+      if (!this.apiEndpointValid) {
+        return
+      }
+
+      this.apiEndpoint = resolveVwsApiUrl(this.apiEndpoint)
       this.wallet.setName(this.name)
       this.wallet.setColor(this.color)
       this.wallet.setApiEndpoint(this.apiEndpoint)

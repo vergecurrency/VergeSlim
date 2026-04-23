@@ -31,7 +31,7 @@ If you want to help with development, use this setup:
 
 1. Fork the project, and clone it to your local machine.
 
-2. Use Node 24 and npm 10 (recommended).
+2. Use Node 22+ and npm 10 (recommended).
 ```bash
 node -v
 npm -v
@@ -104,17 +104,18 @@ Please do not replace Tor with a system binary for normal development. The app i
 
 ### Docs Website
 
-Running the website can be done using NuxtJS:
+Build the static docs site:
 
 ```bash
-npm run nuxt:serve
+npm run docs:build
 ```
 
 ## Build With
 
 * [Vue.js](https://github.com/vuejs/vue) - Vue.js is a progressive, incrementally-adoptable JavaScript framework for building UI on the web
 * [Electron](https://github.com/github/electron) - Build cross-platform desktop apps with JavaScript, HTML, and CSS
-* [Vue CLI Plugin Electron Builder](https://github.com/nklayman/vue-cli-plugin-electron-builder) - A Vue Cli 3/4 plugin for Electron with no required configuration
+* [Vue CLI](https://github.com/vuejs/vue-cli) - The renderer build uses Vue CLI with webpack 5
+* [Electron Builder](https://github.com/electron-userland/electron-builder) - Packaging is handled directly without the old Vue Electron plugin layer
 * [Tor](https://www.torproject.org) - The intergration of Tor makes sure your transactions are private
 
 ### Community

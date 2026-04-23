@@ -5,7 +5,7 @@
         <page-title>
           <img src="@/assets/headers/create-wallet@2x.png"/>
         </page-title>
-        <h1 class="is-size-1 has-text-grey is-family-handwritten" v-html="$i18n.t('createWallet.createAWallet')"/>
+        <h1 class="is-size-1 has-text-grey is-family-display create-wallet-title" v-html="$i18n.t('createWallet.createAWallet')"/>
         <p v-html="$i18n.t('createWallet.createAWalletDesc')"/>
       </div>
     </div>
@@ -45,3 +45,13 @@ export default {
   components: { PageTitle }
 }
 </script>
+
+<style scoped>
+  .create-wallet-title {
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    text-shadow:
+      0 0 10px rgba(124, 255, 242, 0.18),
+      0 0 24px rgba(50, 239, 222, 0.24);
+  }
+</style>

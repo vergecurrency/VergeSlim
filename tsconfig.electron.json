@@ -1,0 +1,24 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "module": "commonjs",
+    "target": "es2020",
+    "rootDir": "src",
+    "outDir": "dist_electron/bundled",
+    "sourceMap": false,
+    "importHelpers": false,
+    "types": [
+      "node"
+    ]
+  },
+  "include": [
+    "src/background.ts",
+    "src/**/*.d.ts"
+  ],
+  "exclude": [
+    "node_modules",
+    "src/docs/**/*",
+    "tests/**/*.ts",
+    "tests/**/*.tsx"
+  ]
+}

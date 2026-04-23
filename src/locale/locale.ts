@@ -312,6 +312,21 @@ export interface LocaleDefinition {
     lockAfter: string
     lockAfterDetails: string
     connection: string
+    walletService: string
+    walletServiceDetails: string
+    manageWalletService: string
+    vwsServer: string
+    vwsServerDetails: string
+    vwsServerHint: string
+    saveDefaultVwsServer: string
+    useVergeDefault: string
+    applyToExistingWallets: string
+    applyToExistingWalletsDesc: string
+    applyToAllWallets: string
+    vwsServerSaved: string
+    vwsServerApplied: string
+    invalidVwsServer: string
+    noWalletsToUpdate: string
     torConnection: string
     manageTorConnection: string
     changeYourPin: string

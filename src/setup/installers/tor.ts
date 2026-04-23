@@ -5,7 +5,6 @@ import * as ElectronUtils from 'electron-util'
 import Log from 'electron-log'
 import { InstallerInterface } from '@/setup/installer'
 
-const ASAR_TOR_PATH: string = ElectronUtils.fixPathForAsarUnpack(path.join(__dirname, 'bin', 'Tor'))
 const BIN_PATH: string = path.join(app.getPath('appData'), 'MyVergies', 'bin')
 const TOR_PATH: string = path.join(BIN_PATH, 'Tor')
 
@@ -18,6 +17,20 @@ const linuxExecutableFiles = [
 const macExecutableFiles = [
   'tor.real'
 ]
+
+const getBundledTorPath = (): string | null => {
+  const pathCandidates = [
+    path.resolve(__dirname, '..', '..', 'bin', 'Tor'),
+    path.resolve(__dirname, 'bin', 'Tor'),
+    path.join(app.getAppPath(), 'dist_electron', 'bundled', 'bin', 'Tor'),
+    path.join(process.cwd(), 'dist_electron', 'bundled', 'bin', 'Tor'),
+    path.join(process.cwd(), 'public', 'bin', 'Tor')
+  ]
+
+  return pathCandidates
+    .map(candidatePath => ElectronUtils.fixPathForAsarUnpack(candidatePath))
+    .find(candidatePath => fs.existsSync(candidatePath)) || null
+}
 
 class TorInstaller implements InstallerInterface {
   private ensureFolder (folder: string): void {
@@ -128,7 +141,7 @@ class TorInstaller implements InstallerInterface {
     entries.forEach(entry => {
       const sourcePath = path.join(source, entry.name)
       const destinationPath = path.join(destination, entry.name)
-      const relativePath = path.relative(ASAR_TOR_PATH, sourcePath)
+      const relativePath = path.relative(source, sourcePath)
 
       if (entry.isDirectory()) {
         this.ensureFolder(destinationPath)
@@ -158,7 +171,7 @@ class TorInstaller implements InstallerInterface {
         }
         fs.copyFileSync(sourcePath, destinationPath)
         copiedFiles++
-        Log.info(`Tor installation: file copied: ${path.relative(ASAR_TOR_PATH, sourcePath)}`)
+        Log.info(`Tor installation: file copied: ${relativePath}`)
       }
     })
 
@@ -166,10 +179,17 @@ class TorInstaller implements InstallerInterface {
   }
 
   public install (): boolean {
+    const bundledTorPath = getBundledTorPath()
+
+    if (!bundledTorPath) {
+      Log.error('Tor installation: bundled Tor directory not found')
+      return false
+    }
+
     this.ensureFolder(BIN_PATH)
     this.ensureFolder(TOR_PATH)
     this.removeIncompatiblePlatformFiles()
-    this.syncFiles(ASAR_TOR_PATH, TOR_PATH)
+    this.syncFiles(bundledTorPath, TOR_PATH)
 
     if (!ElectronUtils.is.windows) {
       const executableFiles = ElectronUtils.is.macos ? macExecutableFiles : linuxExecutableFiles

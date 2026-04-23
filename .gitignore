@@ -26,6 +26,7 @@ yarn-error.log*
 
 # Electron-builder source assets and generated output
 /dist_electron/**
+/dist/
 !/dist_electron/bin
 !/dist_electron/icons/
 !/dist_electron/icons/**
@@ -33,6 +34,9 @@ yarn-error.log*
 !/dist_electron/certs/**
 !/dist_electron/entitlements.mac.plist
 !/dist_electron/notarize.js
+/win-unpacked-launch.log
+/src/**/*.js
+/src/**/*.js.map
 
 #Nuxt output
 /.nuxt

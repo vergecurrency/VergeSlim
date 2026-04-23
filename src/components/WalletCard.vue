@@ -1,11 +1,11 @@
 <template>
-  <div :class="containerClass">
-    <div :class="['wallet-menu-card-background', wallet.info.wallet.coin]"></div>
-    <div class="wallet-menu-card-content">
-      <p class="is-size-6-1 is-family-handwritten is-capitalized">{{ wallet.name }}</p>
+    <div :class="containerClass">
+      <div :class="['wallet-menu-card-background', wallet.info.wallet.coin]"></div>
+      <div class="wallet-menu-card-content">
+      <p class="is-size-6-1 is-family-display is-capitalized wallet-menu-card-title">{{ wallet.name }}</p>
       <p
         v-if="!wallet.name || wallet.name === ''"
-        class="is-size-6-1 is-family-handwritten is-capitalized"
+        class="is-size-6-1 is-family-display is-capitalized wallet-menu-card-title"
         v-html="'a proper name'"
         style="opacity: 0.5"
       />
@@ -183,6 +183,10 @@ export default {
 
   .is-size-6-1 {
     font-size: 0.98rem !important;
-    letter-spacing: 0.04em;
+  }
+
+  .wallet-menu-card-title {
+    letter-spacing: 0.1em;
+    text-shadow: 0 0 16px rgba(83, 243, 255, 0.16);
   }
 </style>

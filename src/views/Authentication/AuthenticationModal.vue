@@ -9,7 +9,7 @@
       />
 
       <div v-if="forgotPin">
-        <h1 class="is-size-1 has-text-grey is-family-handwritten" v-html="$i18n.t('unlock.youForgotYourPin')"/>
+        <h1 class="is-size-1 auth-modal-title" v-html="$i18n.t('unlock.youForgotYourPin')"/>
         <p v-html="$i18n.t('unlock.youForgotYourPinDesc')"/>
         <br/>
         <div class="columns">
@@ -25,7 +25,7 @@
         <div class="columns has-text-centered">
           <div class="column">
             <img src="@/assets/headers/id-card@2x.png" class="id-card"/>
-            <h1 class="is-size-1 has-text-grey is-family-handwritten" v-html="$i18n.t('unlock.unlockYourWallet')"/>
+            <h1 class="is-size-1 auth-modal-title" v-html="$i18n.t('unlock.unlockYourWallet')"/>
           </div>
         </div>
 
@@ -144,5 +144,14 @@ export default {
 
   .modal-card.is-modal-auth .box.has-background-danger-light {
     background: linear-gradient(180deg, rgba(58, 23, 45, 0.88), rgba(38, 16, 31, 0.84)) !important;
+  }
+
+  .auth-modal-title {
+    font-family: inherit;
+    font-weight: 800;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--rv-text);
+    text-shadow: 0 0 18px rgba(83, 243, 255, 0.12), 0 0 28px rgba(255, 87, 210, 0.08);
   }
 </style>

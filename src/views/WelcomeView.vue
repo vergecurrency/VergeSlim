@@ -15,30 +15,32 @@
           <img src="@/assets/headers/logo@2x.png"/>
         </div>
         <div class="welcome-copy">
-          <h1 class="welcome-title is-family-display">
-            <template v-if="titleSecretSegments">
-              <span v-text="titleSecretSegments.beforeO"/>
-              <button
-                type="button"
-                class="welcome-title-secret-trigger"
-                aria-label="Secret trigger"
-                @click="handleSecretLetterClick('o')"
-                v-text="titleSecretSegments.triggerO"
-              />
-              <span v-text="titleSecretSegments.beforeG"/>
-              <button
-                type="button"
-                class="welcome-title-secret-trigger"
-                aria-label="Secret trigger"
-                @click="handleSecretLetterClick('g')"
-                v-text="titleSecretSegments.triggerG"
-              />
-              <span v-text="titleSecretSegments.afterG"/>
-            </template>
-            <template v-else>
-              <span v-text="$i18n.t('welcome.welcomeToMyVergies')"/>
-            </template>
-          </h1>
+          <div class="welcome-title-stack">
+            <h1 class="welcome-title welcome-title-foreground is-family-display">
+              <template v-if="titleSecretSegments">
+                <span v-text="titleSecretSegments.beforeO"/>
+                <button
+                  type="button"
+                  class="welcome-title-secret-trigger"
+                  aria-label="Secret trigger"
+                  @click="handleSecretLetterClick('o')"
+                  v-text="titleSecretSegments.triggerO"
+                />
+                <span v-text="titleSecretSegments.beforeG"/>
+                <button
+                  type="button"
+                  class="welcome-title-secret-trigger"
+                  aria-label="Secret trigger"
+                  @click="handleSecretLetterClick('g')"
+                  v-text="titleSecretSegments.triggerG"
+                />
+                <span v-text="titleSecretSegments.afterG"/>
+              </template>
+              <template v-else>
+                <span v-text="$i18n.t('welcome.welcomeToMyVergies')"/>
+              </template>
+            </h1>
+          </div>
         </div>
       </div>
     </div>
@@ -276,7 +278,14 @@ export default {
     text-align: left;
   }
 
+  .welcome-title-stack {
+    display: inline-grid;
+    align-items: start;
+    justify-items: start;
+  }
+
   .welcome-title {
+    display: block;
     font-size: 3.5rem;
     font-weight: 800;
     letter-spacing: 0.08em;
@@ -284,8 +293,16 @@ export default {
     line-height: 0.95;
     color: var(--rv-text);
     text-wrap: balance;
-    text-shadow: 0 0 22px rgba(83, 243, 255, 0.18), 0 0 38px rgba(255, 87, 210, 0.08);
-    animation: rv-glow-breathe 5.8s ease-in-out infinite;
+  }
+
+  .welcome-title-foreground {
+    position: relative;
+    z-index: 0;
+    text-shadow:
+      0 0 8px rgba(124, 255, 242, 0.2),
+      0 0 20px rgba(50, 239, 222, 0.32),
+      0 0 38px rgba(50, 239, 222, 0.18);
+    animation: welcome-title-teal-pulse 7.2s ease-in-out infinite;
   }
 
   .welcome-title-secret-trigger {
@@ -300,6 +317,7 @@ export default {
     line-height: inherit;
     text-transform: inherit;
     cursor: default;
+    text-shadow: inherit;
   }
 
   .welcome-title-secret-trigger:focus-visible {
@@ -319,6 +337,22 @@ export default {
     letter-spacing: 0.14em;
     text-transform: uppercase;
     color: var(--rv-text);
+  }
+
+  @keyframes welcome-title-teal-pulse {
+    0%, 100% {
+      text-shadow:
+        0 0 8px rgba(124, 255, 242, 0.16),
+        0 0 18px rgba(50, 239, 222, 0.24),
+        0 0 34px rgba(50, 239, 222, 0.14);
+    }
+
+    50% {
+      text-shadow:
+        0 0 10px rgba(124, 255, 242, 0.28),
+        0 0 26px rgba(50, 239, 222, 0.44),
+        0 0 52px rgba(50, 239, 222, 0.24);
+    }
   }
 
   @media (max-width: 768px) {

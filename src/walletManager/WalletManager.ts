@@ -4,8 +4,8 @@ import axios from 'axios'
 import Log from 'electron-log'
 import Wallet from '@/walletManager/Wallet'
 import ManagerConfig, { WalletConfigItem } from '@/walletManager/ManagerConfig'
-import constants from '@/utils/constants'
 import Keytar from '@/utils/keytar'
+import { resolveVwsApiUrl } from '@/utils/vwsApi'
 import Timeout = NodeJS.Timeout
 
 const STARTUP_CLIENT_TIMEOUT_MS = 10000
@@ -116,7 +116,7 @@ export default class WalletManager {
 
   protected getClient (walletConfig: WalletConfigItem): Client {
     const vwc = new Client({
-      baseUrl: walletConfig.vwsApi || constants.vwsApi,
+      baseUrl: resolveVwsApiUrl(walletConfig.vwsApi),
       verbose: false
     })
 
@@ -266,7 +266,7 @@ export default class WalletManager {
   }
 
   protected getWalletServiceWarmupUrl (walletConfig: WalletConfigItem) {
-    const baseUrl = (walletConfig.vwsApi || constants.vwsApi).replace(/\/+$/, '')
+    const baseUrl = resolveVwsApiUrl(walletConfig.vwsApi)
     const coin = encodeURIComponent(walletConfig.coin || 'xvg')
     const network = encodeURIComponent(walletConfig.network || 'livenet')
 

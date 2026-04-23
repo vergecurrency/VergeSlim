@@ -39,13 +39,19 @@
         </form-box>
       </form-section>
 
-      <form-section
-        :title="$i18n.t('settings.connection')"
-        class="is-hidden"
-      >
-        <b-field horizontal :label="$i18n.t('settings.torConnection')">
-          <b-button v-html="$i18n.t('settings.manageTorConnection')" type="is-light"/>
-        </b-field>
+      <form-section :title="$i18n.t('settings.connection')">
+        <form-box
+          :title="$i18n.t('settings.walletService')"
+          :description="$i18n.t('settings.walletServiceDetails')"
+          :is-narrow="false"
+          type="is-info"
+        >
+          <router-link
+            class="button is-primary is-cta"
+            :to="{ name: 'settings.wallet-service' }"
+            v-html="$i18n.t('settings.manageWalletService')"
+          />
+        </form-box>
       </form-section>
 
     </div>

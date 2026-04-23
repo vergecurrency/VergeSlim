@@ -47,7 +47,8 @@ import WalletPreferences from '@/views/Wallet/Create/WalletPreferences'
 import PaperKey from '@/views/Wallet/Create/PaperKey'
 import PassPhrase from '@/views/Wallet/Create/PassPhrase'
 import Create from '@/views/Wallet/Create/Create'
-import constants from '@/utils/constants'
+import { mapGetters } from 'vuex'
+import { getDefaultVwsApiUrl, resolveVwsApiUrl } from '@/utils/vwsApi'
 
 export default {
   name: 'WalletSetupView',
@@ -63,7 +64,7 @@ export default {
         paperkey: '',
         passphrase: '',
         singleAddress: false,
-        vwsApi: constants.vwsApi,
+        vwsApi: getDefaultVwsApiUrl(),
         info: {
           balance: {
             totalAmount: 12300000000
@@ -78,6 +79,12 @@ export default {
       type: Boolean,
       default: false
     }
+  },
+  computed: {
+    ...mapGetters(['currentVwsApi'])
+  },
+  created () {
+    this.wallet.vwsApi = resolveVwsApiUrl(this.currentVwsApi)
   },
   methods: {
     next () {

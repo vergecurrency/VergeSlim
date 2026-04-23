@@ -31,7 +31,7 @@
         <div class="wallet-header-content">
           <div class="columns is-vcentered">
             <div class="column is-narrow">
-              <p class="is-size-3 is-family-handwritten is-capitalized has-text-grey has-line-height-small">
+              <p class="is-size-3 is-family-display is-capitalized has-text-grey has-line-height-small wallet-header-title">
                 {{ wallet.name }}
               </p>
               <p>
@@ -227,6 +227,11 @@ export default {
   grid-area: 1 / 1;
   padding: 1.5rem;
   z-index: 2;
+}
+
+.wallet-header-title {
+  letter-spacing: 0.12em;
+  text-shadow: 0 0 18px rgba(83, 243, 255, 0.14);
 }
 
 .wallet-settings-button {

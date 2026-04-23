@@ -6,6 +6,7 @@ import Tx from '@/walletManager/models/Tx'
 import { TxProposal, TxProposalResponse } from '@/walletManager/models/TxProposal'
 import AddressInfo from '@/walletManager/models/AddressInfo'
 import SendMaxInfo from '@/walletManager/models/SendMaxInfo'
+import { resolveVwsApiUrl } from '@/utils/vwsApi'
 
 export default class Wallet {
   protected vwc: Client
@@ -274,7 +275,7 @@ export default class Wallet {
   }
 
   public setApiEndpoint (apiEndpoint: string): void {
-    this.vwc.request.baseUrl = apiEndpoint
+    this.vwc.request.baseUrl = resolveVwsApiUrl(apiEndpoint)
   }
 
   public getExportConfig (): object {
@@ -286,7 +287,7 @@ export default class Wallet {
       paperkey: this.vwc.credentials.mnemonic,
       walletPrivKey: this.vwc.credentials.walletPrivKey,
       singleAddress: this.info!.wallet.singleAddress,
-      vwsApi: this.vwc.request.baseUrl
+      vwsApi: resolveVwsApiUrl(this.vwc.request.baseUrl)
     }
   }
 

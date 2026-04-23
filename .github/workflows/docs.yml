@@ -12,7 +12,7 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest]
-        node: [14]
+        node: [22]
 
     steps:
       - name: Checkout
@@ -24,12 +24,12 @@ jobs:
           node-version: ${{ matrix.node }}
 
       - name: Install dependencies
-        run: npm install
+        run: npm ci
         env:
           GRANAX_TOR_VERSION: 10.0.15
 
       - name: Generate
-        run: npm run nuxt:generate
+        run: npm run docs:build
 
       - name: Deploy
         uses: peaceiris/actions-gh-pages@v3

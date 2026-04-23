@@ -106,6 +106,7 @@ export default {
     background:
       radial-gradient(circle at 12% 18%, rgba(83, 243, 255, 0.18), transparent 24%),
       radial-gradient(circle at 78% 12%, rgba(255, 87, 210, 0.18), transparent 22%),
+      radial-gradient(circle at 18% 84%, rgba(255, 87, 210, 0.14), transparent 18%),
       radial-gradient(circle at 50% 70%, rgba(255, 154, 61, 0.1), transparent 32%);
     animation: rv-drift 14s ease-in-out infinite;
   }

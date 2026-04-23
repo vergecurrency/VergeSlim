@@ -2,6 +2,7 @@ import Vue, { PluginFunction } from 'vue'
 import WalletManager from '@/walletManager/WalletManager'
 import ManagerConfig, { WalletConfigItem } from '@/walletManager/ManagerConfig'
 import Keytar from '@/utils/keytar'
+import { resolveVwsApiUrl } from '@/utils/vwsApi'
 import { Store } from 'vuex'
 import { ensureTorProxyState } from '@/utils/torStartup'
 
@@ -58,7 +59,10 @@ const loadWallets = async (store: Store<any>): Promise<WalletConfigItem[]> => {
       throw Error(`Couldn't load wallet: ${identifier}`)
     }
 
-    return JSON.parse(atob(encryptedWallet as string))
+    const wallet = JSON.parse(atob(encryptedWallet as string))
+    wallet.vwsApi = resolveVwsApiUrl(wallet.vwsApi || store.getters.currentVwsApi)
+
+    return wallet
   }))
 }
 
@@ -78,6 +82,7 @@ const migrateOldWallets = async (store: Store<any>): Promise<any> => {
     const wallet = JSON.parse(atob(encryptedWallet as string))
     const identifier = generateWalletIdentifier()
     wallet.identifier = identifier
+    wallet.vwsApi = resolveVwsApiUrl(wallet.vwsApi || store.getters.currentVwsApi)
 
     // Remove old items
     await store.dispatch('removeWalletName', wallet.name)

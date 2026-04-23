@@ -1,5 +1,6 @@
 .button {
   position: relative;
+  isolation: isolate;
   border-radius: 999px;
   border-color: rgba(83, 243, 255, 0.18);
   background: rgba(15, 22, 48, 0.84);
@@ -10,7 +11,7 @@
   font-weight: 700;
   letter-spacing: 0.12em;
   text-transform: uppercase;
-  transition: transform 140ms ease, box-shadow 140ms ease, border-color 140ms ease, background-color 140ms ease, color 140ms ease;
+  transition: transform 160ms ease, box-shadow 160ms ease, border-color 160ms ease, background-color 160ms ease, background-position 220ms ease, color 160ms ease;
   box-shadow: 0 14px 30px rgba(1, 4, 18, 0.28), inset 0 1px 0 rgba(255, 255, 255, 0.04);
   overflow: hidden;
 }
@@ -26,9 +27,26 @@
   pointer-events: none;
 }
 
+.button::after {
+  content: "";
+  position: absolute;
+  left: 16%;
+  right: 16%;
+  bottom: -16px;
+  height: 30px;
+  border-radius: 999px;
+  background: radial-gradient(circle, rgba(83, 243, 255, 0.32) 0%, rgba(83, 243, 255, 0.12) 42%, transparent 76%);
+  filter: blur(14px);
+  opacity: 0;
+  transform: scale(0.72);
+  transition: opacity 180ms ease, transform 180ms ease;
+  pointer-events: none;
+  z-index: -1;
+}
+
 .button:hover,
 .button.is-hovered {
-  transform: translateY(-1px);
+  transform: translateY(-2px) scale(1.01);
   border-color: rgba(83, 243, 255, 0.3);
   color: #ffffff;
   box-shadow: 0 18px 34px rgba(1, 4, 18, 0.32), 0 0 24px rgba(83, 243, 255, 0.08);
@@ -38,6 +56,12 @@
 .button.is-hovered::before {
   opacity: 1;
   transform: translateX(125%);
+}
+
+.button:hover::after,
+.button.is-hovered::after {
+  opacity: 1;
+  transform: scale(1);
 }
 
 .button:focus,
@@ -63,41 +87,72 @@
 .button.is-primary {
   border-color: transparent;
   background: linear-gradient(135deg, var(--rv-pink) 0%, var(--rv-cyan) 100%);
+  background-size: 170% 170%;
+  background-position: 0% 50%;
   color: #14061f;
   box-shadow: 0 18px 34px rgba(255, 87, 210, 0.22), 0 0 30px rgba(83, 243, 255, 0.18);
 }
 
 .button.is-primary:hover,
 .button.is-primary.is-hovered {
+  background-position: 100% 50%;
   box-shadow: 0 22px 40px rgba(255, 87, 210, 0.28), 0 0 36px rgba(83, 243, 255, 0.26);
 }
 
 .button.is-info {
   border-color: transparent;
   background: linear-gradient(135deg, #5963ff 0%, var(--rv-cyan-deep) 100%);
+  background-size: 170% 170%;
+  background-position: 0% 50%;
   color: #f6f8ff;
   box-shadow: 0 18px 34px rgba(41, 199, 255, 0.18);
+}
+
+.button.is-info:hover,
+.button.is-info.is-hovered {
+  background-position: 100% 50%;
 }
 
 .button.is-success {
   border-color: transparent;
   background: linear-gradient(135deg, #24dc8f 0%, var(--rv-lime) 100%);
+  background-size: 170% 170%;
+  background-position: 0% 50%;
   color: #071712;
   box-shadow: 0 18px 34px rgba(77, 246, 178, 0.22);
+}
+
+.button.is-success:hover,
+.button.is-success.is-hovered {
+  background-position: 100% 50%;
 }
 
 .button.is-danger {
   border-color: transparent;
   background: linear-gradient(135deg, #ff5ba4 0%, #ff9066 100%);
+  background-size: 170% 170%;
+  background-position: 0% 50%;
   color: #fff6fb;
   box-shadow: 0 18px 34px rgba(255, 91, 164, 0.2);
+}
+
+.button.is-danger:hover,
+.button.is-danger.is-hovered {
+  background-position: 100% 50%;
 }
 
 .button.is-warning {
   border-color: transparent;
   background: linear-gradient(135deg, var(--rv-orange) 0%, #ffd66f 100%);
+  background-size: 170% 170%;
+  background-position: 0% 50%;
   color: #261103;
   box-shadow: 0 18px 34px rgba(255, 154, 61, 0.22);
+}
+
+.button.is-warning:hover,
+.button.is-warning.is-hovered {
+  background-position: 100% 50%;
 }
 
 .button.is-dark {
@@ -134,6 +189,11 @@
   box-shadow: 0 22px 42px rgba(1, 4, 18, 0.36), 0 0 30px rgba(83, 243, 255, 0.12);
 }
 
+.button.is-cta::before {
+  opacity: 0.28;
+  animation: rv-button-sheen 6.6s linear infinite;
+}
+
 .button.is-cta.is-primary,
 .button.is-cta.is-success,
 .button.is-cta.is-info {
@@ -144,4 +204,25 @@
 .button.is-info:not([disabled]):not(.is-static),
 .button.is-success:not([disabled]):not(.is-static) {
   animation: rv-glow-breathe 5s ease-in-out infinite;
+}
+
+@keyframes rv-button-sheen {
+  0% {
+    opacity: 0;
+    transform: translateX(-140%);
+  }
+
+  12% {
+    opacity: 0.55;
+  }
+
+  30% {
+    opacity: 0;
+    transform: translateX(135%);
+  }
+
+  100% {
+    opacity: 0;
+    transform: translateX(135%);
+  }
 }

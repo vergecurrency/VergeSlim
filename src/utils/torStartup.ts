@@ -1,6 +1,5 @@
 import { ipcRenderer } from 'electron'
 import { eventConstants } from '@/utils/constants'
-import { applyNodeProxyState } from '@/utils/nodeProxy'
 
 let torProxyPromise: Promise<any> | null = null
 let lastTorProxyState: boolean | null = null
@@ -11,8 +10,6 @@ const primaryApiReadyPromise = new Promise<void>((resolve) => {
 })
 
 export const ensureTorProxyState = (activate: boolean) => {
-  applyNodeProxyState(activate)
-
   if (torProxyPromise && lastTorProxyState === activate) {
     return torProxyPromise
   }

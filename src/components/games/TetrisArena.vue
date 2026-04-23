@@ -2,7 +2,6 @@
   <div class="tetris-shell">
     <div class="tetris-hero">
       <div class="tetris-copy">
-        <span class="tetris-kicker">{{ $i18n.t('games.tetris') }}</span>
         <h2 class="tetris-title">{{ $i18n.t('games.tetris') }}</h2>
         <p class="tetris-description">{{ $i18n.t('games.tetrisDescription') }}</p>
         <p class="tetris-source">{{ $i18n.t('games.inspiredBy') }}</p>
@@ -726,7 +725,6 @@ export default {
   margin-bottom: 1.35rem;
 }
 
-.tetris-kicker,
 .tetris-panel-kicker,
 .tetris-overlay-kicker {
   display: inline-flex;
@@ -739,7 +737,6 @@ export default {
   color: rgba(83, 243, 255, 0.82);
 }
 
-.tetris-kicker::before,
 .tetris-panel-kicker::before,
 .tetris-overlay-kicker::before {
   content: "";
@@ -750,7 +747,7 @@ export default {
 }
 
 .tetris-title {
-  margin: 0.35rem 0 0.5rem;
+  margin: 0 0 0.5rem;
   font-size: 2.3rem;
   line-height: 1;
   color: var(--rv-text);
@@ -799,12 +796,40 @@ export default {
 .tetris-stats-card,
 .tetris-preview-card,
 .tetris-controls-card {
+  position: relative;
   padding: 1rem;
   border-radius: 22px;
   border: 1px solid rgba(83, 243, 255, 0.14);
   background:
     linear-gradient(180deg, rgba(13, 19, 46, 0.88), rgba(7, 11, 28, 0.94));
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04), 0 18px 34px rgba(1, 4, 18, 0.24);
+  overflow: hidden;
+  transition: transform 180ms ease, box-shadow 180ms ease, border-color 180ms ease;
+}
+
+.tetris-board-frame::before,
+.tetris-stats-card::before,
+.tetris-preview-card::before,
+.tetris-controls-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(120deg, transparent 0%, rgba(255, 255, 255, 0.12) 22%, transparent 46%),
+    radial-gradient(circle at top right, rgba(83, 243, 255, 0.12), transparent 32%);
+  background-size: 220% 100%, auto;
+  animation: tetris-panel-sheen 7.8s linear infinite;
+  opacity: 0.42;
+  pointer-events: none;
+}
+
+.tetris-board-frame:hover,
+.tetris-stats-card:hover,
+.tetris-preview-card:hover,
+.tetris-controls-card:hover {
+  transform: translateY(-2px);
+  border-color: rgba(83, 243, 255, 0.24);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04), 0 22px 42px rgba(1, 4, 18, 0.28), 0 0 26px rgba(83, 243, 255, 0.08);
 }
 
 .tetris-board {
@@ -1021,6 +1046,16 @@ export default {
   50% {
     transform: scale(0.98);
     box-shadow: 0 0 22px rgba(255, 255, 255, 0.22);
+  }
+}
+
+@keyframes tetris-panel-sheen {
+  0% {
+    background-position: 140% 0, 0 0;
+  }
+
+  100% {
+    background-position: -120% 0, 0 0;
   }
 }
 

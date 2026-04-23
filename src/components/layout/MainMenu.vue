@@ -288,7 +288,7 @@ export default {
 
   .main-menu {
     position: relative;
-    background: linear-gradient(180deg, rgba(9, 13, 31, 0.96), rgba(11, 15, 34, 0.9));
+    background: transparent;
     border-right: 1px solid rgba(83, 243, 255, 0.12);
     max-width: 296px;
     padding: 1.25rem 1rem 1.5rem;
@@ -296,12 +296,7 @@ export default {
   }
 
   .main-menu::before {
-    content: "";
-    position: absolute;
-    inset: 1rem 0 auto;
-    height: 180px;
-    background: radial-gradient(circle at left center, rgba(255, 87, 210, 0.12), transparent 62%);
-    pointer-events: none;
+    display: none;
   }
 
   .menu-list.menu-list-wallet a {
@@ -326,6 +321,47 @@ export default {
     display: block;
     padding: 0 !important;
     border-radius: 22px;
+    transition: transform 170ms ease, filter 170ms ease;
+  }
+
+  .menu-wallets-card:hover {
+    transform: translateY(-2px);
+    filter: drop-shadow(0 0 18px rgba(83, 243, 255, 0.14));
+  }
+
+  .menu-wallets > li:last-child > a {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 0.55rem;
+    border-radius: 18px;
+    border: 1px solid rgba(83, 243, 255, 0.14);
+    background: rgba(13, 19, 46, 0.34);
+    overflow: hidden;
+    transition: transform 170ms ease, border-color 170ms ease, box-shadow 170ms ease, background-color 170ms ease;
+  }
+
+  .menu-wallets > li:last-child > a::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(120deg, transparent 0%, rgba(255, 255, 255, 0.18) 24%, transparent 48%);
+    opacity: 0;
+    transform: translateX(-135%);
+    transition: transform 240ms ease, opacity 240ms ease;
+    pointer-events: none;
+  }
+
+  .menu-wallets > li:last-child > a:hover {
+    transform: translateY(-2px);
+    border-color: rgba(83, 243, 255, 0.28);
+    background: rgba(13, 19, 46, 0.5);
+    box-shadow: 0 16px 30px rgba(1, 4, 18, 0.2), 0 0 24px rgba(83, 243, 255, 0.08);
+  }
+
+  .menu-wallets > li:last-child > a:hover::before {
+    opacity: 1;
+    transform: translateX(125%);
   }
 
   .menu-list-wallet a.router-link-active::after {

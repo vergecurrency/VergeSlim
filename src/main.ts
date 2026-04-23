@@ -12,10 +12,7 @@ import { mapActions, mapGetters } from 'vuex'
 import constants from './utils/constants'
 import walletManager from '@/walletManager'
 import authManager from '@/authentication'
-import { applyNodeProxyState } from '@/utils/nodeProxy'
 import { ensureTorProxyState, markPrimaryApiReady } from '@/utils/torStartup'
-
-applyNodeProxyState(store.getters.isTorEnabled)
 
 Vue.use(walletManager, { store })
 Vue.use(authManager)

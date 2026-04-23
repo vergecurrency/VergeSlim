@@ -2,7 +2,7 @@
   <form @submit.prevent="confirm">
 
     <div class="block">
-      <h3 class="is-size-3 is-family-handwritten" v-html="$i18n.t('send.send')"/>
+      <h3 class="is-size-3 is-family-display send-form-title" v-html="$i18n.t('send.send')"/>
       <p v-html="$i18n.t('send.formDescription')"/>
     </div>
 
@@ -258,3 +258,12 @@ export default {
   }
 }
 </script>
+
+<style scoped>
+  .send-form-title {
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--rv-text);
+    text-shadow: 0 0 18px rgba(83, 243, 255, 0.14);
+  }
+</style>

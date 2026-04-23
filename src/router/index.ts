@@ -12,6 +12,7 @@ import WalletSettingsView from '@/views/Wallet/Settings/SettingsView.vue'
 import BlockchainView from '@/views/Blockchain/BlockchainView.vue'
 import ContactsView from '@/views/Contacts/ContactsView.vue'
 import SettingsView from '@/views/Settings/SettingsView.vue'
+import VwsServerSettingsView from '@/views/Settings/VwsServerSettingsView.vue'
 import TradeView from '@/views/TradeView.vue'
 import GamesView from '@/views/GamesView.vue'
 
@@ -105,6 +106,14 @@ const router = new VueRouter({
       path: '/settings',
       name: 'settings',
       component: SettingsView
+    },
+    {
+      path: '/settings/wallet-service',
+      name: 'settings.wallet-service',
+      component: VwsServerSettingsView,
+      meta: {
+        needsAuthentication: true
+      }
     },
     {
       path: '/trade',

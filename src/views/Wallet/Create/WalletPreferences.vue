@@ -2,7 +2,7 @@
   <div>
     <form @submit.prevent="proceed">
       <div class="block">
-        <h3 class="is-size-3 is-family-handwritten" v-html="$i18n.t('createWallet.aWalletName')"/>
+        <h3 class="is-size-3 is-family-display wallet-preferences-title" v-html="$i18n.t('createWallet.aWalletName')"/>
         <p v-html="$i18n.t('createWallet.aWalletNameDescription')"/>
       </div>
 
@@ -45,7 +45,7 @@
               />
             </b-field>
 
-            <b-field :label="$i18n.t('createWallet.serviceURL')">
+            <b-field :label="$i18n.t('createWallet.serviceURL')" :type="vwsApiValid ? '' : 'is-danger'">
               <b-input
                 ref="vwsApi"
                 type="url"
@@ -74,6 +74,7 @@
 <script>
 import WalletCard from '@/components/WalletCard'
 import { mapGetters } from 'vuex'
+import { isValidVwsApiUrl, resolveVwsApiUrl } from '@/utils/vwsApi'
 
 export default {
   name: 'WalletPreferences',
@@ -117,15 +118,18 @@ export default {
     nameExists () {
       return this.$walletManager.getWallets().map(wallet => wallet.name).includes(this.wallet.name)
     },
+    vwsApiValid () {
+      return isValidVwsApiUrl(this.vwsApi)
+    },
     preferencesAreValid () {
-      return this.wallet.name !== '' && this.nameLongEnough && this.nameNotTooLong && !this.nameExists
+      return this.wallet.name !== '' && this.nameLongEnough && this.nameNotTooLong && !this.nameExists && this.vwsApiValid
     }
   },
   created () {
     this.name = this.value.name
     this.color = this.value.color
     this.singleAddress = this.value.singleAddress
-    this.vwsApi = this.value.vwsApi
+    this.vwsApi = resolveVwsApiUrl(this.value.vwsApi)
   },
   methods: {
     proceed () {
@@ -133,6 +137,7 @@ export default {
         return
       }
 
+      this.vwsApi = resolveVwsApiUrl(this.vwsApi)
       this.$emit('input', this.wallet)
       this.$emit('next')
     }
@@ -141,6 +146,15 @@ export default {
 </script>
 
 <style scoped>
+.wallet-preferences-title {
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--rv-text);
+  text-shadow:
+    0 0 10px rgba(124, 255, 242, 0.18),
+    0 0 24px rgba(50, 239, 222, 0.24);
+}
+
 .card-column {
   max-width: 250px;
 }

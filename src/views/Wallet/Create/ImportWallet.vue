@@ -54,6 +54,7 @@
           <div v-if="wallet" class="box">
             <b-notification v-if="!preferencesAreValid" v type="is-danger">
               <p v-if="nameExists" v-html="$i18n.t('createWallet.walletNameAlreadyExists')"/>
+              <p v-else-if="!vwsApiValid" v-html="$i18n.t('settings.invalidVwsServer')"/>
             </b-notification>
 
             <table class="table is-fullwidth">
@@ -149,6 +150,7 @@ import ContentView from '@/components/layout/ContentView'
 import ExportImportManager from '@/walletManager/ExportImportManager'
 import { mapGetters } from 'vuex'
 import Create from '@/views/Wallet/Create/Create'
+import { isValidVwsApiUrl, resolveVwsApiUrl } from '@/utils/vwsApi'
 
 export default {
   name: 'ImportWallet',
@@ -173,7 +175,7 @@ export default {
   },
 
   computed: {
-    ...mapGetters(['allWalletIdentifiers']),
+    ...mapGetters(['allWalletIdentifiers', 'currentVwsApi']),
     nameLongEnough () {
       return this.wallet.name.length < 1 || this.wallet.name.length > 4
     },
@@ -183,8 +185,11 @@ export default {
     nameExists () {
       return this.allWalletIdentifiers.includes(this.wallet.name)
     },
+    vwsApiValid () {
+      return this.wallet && isValidVwsApiUrl(this.wallet.vwsApi)
+    },
     preferencesAreValid () {
-      return this.wallet.name !== '' && this.nameLongEnough && this.nameNotTooLong && !this.nameExists
+      return this.wallet.name !== '' && this.nameLongEnough && this.nameNotTooLong && !this.nameExists && this.vwsApiValid
     }
   },
 
@@ -206,7 +211,10 @@ export default {
       })
 
       exportImportManager.readWallet(this.importFile, passwordPromise).then(wallet => {
-        this.wallet = wallet
+        this.wallet = {
+          ...wallet,
+          vwsApi: resolveVwsApiUrl(wallet.vwsApi || this.currentVwsApi)
+        }
         this.activeStep = 1
       }).catch(e => {
         this.$buefy.dialog.alert({
@@ -224,6 +232,7 @@ export default {
         return
       }
 
+      this.wallet.vwsApi = resolveVwsApiUrl(this.wallet.vwsApi)
       this.$walletManager.addWallet(this.wallet).then(wallet => {
         this.$store.dispatch('addWalletIdentifier', wallet.identifier)
 

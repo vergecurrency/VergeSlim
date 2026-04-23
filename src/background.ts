@@ -1,5 +1,4 @@
 import { app, protocol, nativeTheme, BrowserWindow, Menu, ipcMain, powerMonitor, net, screen } from 'electron'
-import { createProtocol, installVueDevtools } from 'vue-cli-plugin-electron-builder/lib'
 import logger from 'electron-log'
 import ElectronWindowState from 'electron-window-state'
 import * as ElectronUtils from 'electron-util'
@@ -499,10 +498,21 @@ function createWindow () {
       win!.webContents.openDevTools()
     }
   } else {
-    createProtocol('app')
     // Load the index.html when not in development
-    win!.loadURL('app://./index.html')
+    win!.loadFile(path.join(__dirname, 'index.html'))
   }
+
+  win.webContents.on('did-fail-load', (_event, errorCode, errorDescription, validatedURL, isMainFrame) => {
+    logger.error(`Renderer failed to load: code=${errorCode} description=${errorDescription} url=${validatedURL} mainFrame=${isMainFrame}`)
+  })
+
+  win.webContents.on('console-message', (_event, level, message, line, sourceId) => {
+    logger.warn(`Renderer console [${level}] ${sourceId}:${line} ${message}`)
+  })
+
+  win.webContents.on('render-process-gone', (_event, details) => {
+    logger.error(`Renderer process gone: reason=${details.reason} exitCode=${details.exitCode}`)
+  })
 
   if (Utils.isMacOSEnvironment()) {
     let forceQuit = false
@@ -596,18 +606,6 @@ const startUpTorOnPort = (port: number) => {
 app.on('ready', async () => {
   ElectronUtils.enforceMacOSAppLocation()
   applyNodeProxyState(true)
-
-  if (Utils.isDevelopmentEnvironment() && !process.env.IS_TEST) {
-  // Install Vue Devtools
-  // Devtools extensions are broken in Electron 6.0.0 and greater
-  // See https://github.com/nklayman/vue-cli-plugin-electron-builder/issues/378 for more info
-  // Electron will not launch with Devtools extensions installed on Windows 10 with dark mode
-  // If you are not using Windows 10 dark mode, you may uncomment these lines
-  // In addition, if the linked issue is closed, you can upgrade electron and uncomment these lines
-    installVueDevtools().catch(e => {
-      console.error('Vue Devtools failed to install:', e.toString())
-    })
-  }
 
   createWindow()
   registerIpcHandlers()
