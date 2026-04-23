@@ -2,10 +2,10 @@
   <div>
     <div class="block">
       <div v-if="!confirmed && !skipConfirmation">
-        <h3 class="is-size-3 is-family-handwritten" v-html="$i18n.t('createWallet.almostReady')"/>
+        <h3 class="is-size-3 is-family-display create-flow-title" v-html="$i18n.t('createWallet.almostReady')"/>
         <p v-html="$i18n.t('createWallet.almostReadyDesc')"/>
       </div>
-      <h1 v-else class="title is-family-handwritten" v-html="$i18n.t('createWallet.awesomeYouveDoneIt')"/>
+      <h1 v-else class="title is-family-display create-flow-title" v-html="$i18n.t('createWallet.awesomeYouveDoneIt')"/>
     </div>
 
     <div v-if="!confirmed && !skipConfirmation">
@@ -58,7 +58,7 @@
     </b-notification>
 
     <div v-if="(confirmed || skipConfirmation) && done">
-      <h3 class="is-size-3 is-family-handwritten" v-html="$i18n.t('createWallet.whatToDoNext')"/>
+      <h3 class="is-size-3 is-family-display create-flow-title" v-html="$i18n.t('createWallet.whatToDoNext')"/>
       <div class="box has-background-warning">
         <div class="columns is-vcentered">
           <div class="column">
@@ -175,6 +175,15 @@ export default {
 </script>
 
 <style>
+  .create-flow-title {
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--rv-text);
+    text-shadow:
+      0 0 10px rgba(124, 255, 242, 0.18),
+      0 0 24px rgba(50, 239, 222, 0.24);
+  }
+
   .create-wallet-icon {
     width: 30px
   }

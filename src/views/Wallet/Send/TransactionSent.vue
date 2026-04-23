@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="block">
-      <h1 class="title is-family-handwritten" v-html="$i18n.t('send.awesomeYouveDoneIt')"/>
+      <h1 class="title is-family-display section-display-title" v-html="$i18n.t('send.awesomeYouveDoneIt')"/>
     </div>
 
     <b-notification :closable="false">
@@ -12,7 +12,7 @@
       </div>
     </b-notification>
 
-    <h3 class="is-size-3 is-family-handwritten" v-html="$i18n.t('send.whatToDoNext')"/>
+    <h3 class="is-size-3 is-family-display section-display-title" v-html="$i18n.t('send.whatToDoNext')"/>
     <div class="box has-background-info-light">
       <div class="columns is-vcentered">
         <div class="column">
@@ -61,3 +61,14 @@ export default {
   name: 'TransactionSent'
 }
 </script>
+
+<style scoped>
+  .section-display-title {
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--rv-text);
+    text-shadow:
+      0 0 10px rgba(124, 255, 242, 0.18),
+      0 0 24px rgba(50, 239, 222, 0.24);
+  }
+</style>

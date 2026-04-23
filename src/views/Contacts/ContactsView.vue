@@ -3,7 +3,7 @@
     <div class="columns has-text-centered">
       <div class="column">
         <b-icon icon="address-book" custom-size="6x"/>
-        <h1 class="is-size-1 has-text-grey is-family-handwritten">
+        <h1 class="is-size-1 has-text-grey is-family-display contacts-display-title">
           Your Awesome Contacts 👨‍👩‍👦‍👦
         </h1>
       </div>
@@ -57,3 +57,13 @@ export default {
   }
 }
 </script>
+
+<style scoped>
+  .contacts-display-title {
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    text-shadow:
+      0 0 10px rgba(124, 255, 242, 0.18),
+      0 0 24px rgba(50, 239, 222, 0.24);
+  }
+</style>

@@ -2,7 +2,7 @@
   <div class="modal-card box modal-panel">
     <div class="columns">
       <div class="column">
-        <p class="is-size-3 is-family-handwritten" v-html="$i18n.t('settings.addPin')"/>
+        <p class="is-size-3 is-family-display modal-display-title" v-html="$i18n.t('settings.addPin')"/>
         <span v-html="$i18n.t('settings.addPinDesc')"/>
       </div>
     </div>
@@ -120,3 +120,14 @@ export default {
   }
 }
 </script>
+
+<style scoped>
+  .modal-display-title {
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--rv-text);
+    text-shadow:
+      0 0 10px rgba(124, 255, 242, 0.18),
+      0 0 24px rgba(50, 239, 222, 0.24);
+  }
+</style>

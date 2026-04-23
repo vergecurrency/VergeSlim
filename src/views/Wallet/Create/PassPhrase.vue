@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="block">
-      <h3 class="is-size-3 is-family-handwritten" v-html="$i18n.t('createWallet.passPhrase')"/>
+      <h3 class="is-size-3 is-family-display create-flow-title" v-html="$i18n.t('createWallet.passPhrase')"/>
       <p v-html="$i18n.t('createWallet.passPhraseDescription')"/>
     </div>
 
@@ -133,3 +133,14 @@ export default {
   }
 }
 </script>
+
+<style scoped>
+  .create-flow-title {
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--rv-text);
+    text-shadow:
+      0 0 10px rgba(124, 255, 242, 0.18),
+      0 0 24px rgba(50, 239, 222, 0.24);
+  }
+</style>
