@@ -237,9 +237,9 @@ jobs:
         run: |
           set -euo pipefail
           APP_PATH="$(find dist_electron/mac -maxdepth 1 -name '*.app' -type d | head -n1)"
+          APP_VERSION="$(node -p "(() => { const version = require('./package.json').version; const [major='0', minor='0', patch='0'] = version.split('.'); return Number(patch) > 0 ? version : [major, minor].join('.'); })()")"
           APP_NAME="$(basename "$APP_PATH" .app)"
-          APP_VERSION="$(node -p "require('./package.json').version")"
-          DMG_PATH="dist_electron/${APP_NAME}-${APP_VERSION}.dmg"
+          DMG_PATH="dist_electron/VergeSlim-v${APP_VERSION}.dmg"
           VOL_PATH="/Volumes/${APP_NAME}"
           if mount | grep -Fq "on ${VOL_PATH} "; then
             hdiutil detach "$VOL_PATH" -force || true
@@ -247,7 +247,7 @@ jobs:
           fi
 
           SRC_DIR="$RUNNER_TEMP/dmg-src"
-          TMP_DMG="$RUNNER_TEMP/${APP_NAME}-${APP_VERSION}.dmg"
+          TMP_DMG="$RUNNER_TEMP/VergeSlim-v${APP_VERSION}.dmg"
           rm -rf "$SRC_DIR"
           mkdir -p "$SRC_DIR"
           cp -R "$APP_PATH" "$SRC_DIR/"

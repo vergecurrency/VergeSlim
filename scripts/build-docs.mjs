@@ -10,6 +10,10 @@ const docsDir = path.join(rootDir, 'docs')
 const docsAssetsDir = path.join(docsDir, 'assets')
 const pkg = JSON.parse(readFileSync(path.join(rootDir, 'package.json'), 'utf8'))
 const displayVersion = pkg.version.replace(/\.0$/, '')
+const [majorVersion = '0', minorVersion = '0', patchVersion = '0'] = pkg.version.split('.')
+const releaseVersion = Number(patchVersion) > 0
+  ? pkg.version
+  : `${majorVersion}.${minorVersion}`
 
 const features = [
   {
@@ -421,6 +425,10 @@ const buildHtml = () => {
         const button = document.getElementById('downloadButton');
         const version = pkg.version;
         const displayVersion = version.replace(/\\.0$/, '');
+        const versionParts = version.split('.');
+        const releaseVersion = Number(versionParts[2] || '0') > 0
+          ? version
+          : versionParts.slice(0, 2).join('.');
         const platform = navigator.platform || navigator.userAgent || '';
         const isMac = /Mac/.test(platform);
         const isWin = /Win/.test(platform);
@@ -430,14 +438,14 @@ const buildHtml = () => {
         let label = 'Browse releases';
 
         if (isMac) {
-          href = githubUrl + '/releases/download/v' + version + '/' + encodeURIComponent('Verge Slim-' + version + '.dmg');
-          label = 'Download macOS v' + version;
+          href = githubUrl + '/releases/download/v' + version + '/' + encodeURIComponent('VergeSlim-v' + releaseVersion + '.dmg');
+          label = 'Download macOS v' + releaseVersion;
         } else if (isWin) {
-          href = githubUrl + '/releases/download/v' + version + '/' + encodeURIComponent('Verge Slim ' + displayVersion + '.exe');
-          label = 'Download Windows v' + displayVersion;
+          href = githubUrl + '/releases/download/v' + version + '/' + encodeURIComponent('VergeSlim-v' + releaseVersion + '.exe');
+          label = 'Download Windows v' + releaseVersion;
         } else if (isLinux) {
-          href = githubUrl + '/releases/download/v' + version + '/' + encodeURIComponent('Verge Slim-' + version + '.AppImage');
-          label = 'Download Linux v' + version;
+          href = githubUrl + '/releases/download/v' + version + '/' + encodeURIComponent('VergeSlim-v' + releaseVersion + '.AppImage');
+          label = 'Download Linux v' + releaseVersion;
         }
 
         button.href = href;
