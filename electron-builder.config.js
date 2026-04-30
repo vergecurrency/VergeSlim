@@ -2,7 +2,7 @@ const pkg = require('./package.json')
 const displayVersion = pkg.version.replace(/\.0$/, '')
 
 module.exports = {
-  productName: 'MyVergies',
+  productName: 'Verge Slim',
   appId: 'com.github.vergecurrency.myvergies',
   directories: {
     output: 'dist_electron'
@@ -77,7 +77,7 @@ module.exports = {
     artifactName: '${productName}-Setup-${version}.${ext}'
   },
   portable: {
-    artifactName: 'MyVergies ' + displayVersion + '.${ext}'
+    artifactName: 'Verge Slim ' + displayVersion + '.${ext}'
   },
   afterSign: 'dist_electron/notarize.js'
 }

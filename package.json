@@ -1,5 +1,5 @@
 {
-  "name": "MyVergies",
+  "name": "verge-slim",
   "description": "An electron-vue Verge Currency desktop wallet with Tor built in",
   "version": "26.5.0",
   "license": "MIT",

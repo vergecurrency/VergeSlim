@@ -14,7 +14,7 @@ const displayVersion = pkg.version.replace(/\.0$/, '')
 const features = [
   {
     title: 'Tor Built In',
-    description: 'Tor has been directly integrated into MyVergies. No worries about your privacy.'
+    description: 'Tor has been directly integrated into Verge Slim. No worries about your privacy.'
   },
   {
     title: 'Multiple Wallets',
@@ -26,11 +26,11 @@ const features = [
   },
   {
     title: 'Import & Export',
-    description: 'Easily import and export your wallets into MyVergies for some extra comfort.'
+    description: 'Easily import and export your wallets into Verge Slim for some extra comfort.'
   },
   {
     title: 'Multiple Languages',
-    description: 'MyVergies supports many different languages translated by community users.'
+    description: 'Verge Slim supports many different languages translated by community users.'
   },
   {
     title: 'Familiar World Currencies',
@@ -38,7 +38,7 @@ const features = [
   },
   {
     title: 'Windows, macOS and Linux',
-    description: 'Install MyVergies on Windows, macOS or Linux with the same privacy-first experience.'
+    description: 'Install Verge Slim on Windows, macOS or Linux with the same privacy-first experience.'
   },
   {
     title: 'Very Small',
@@ -430,13 +430,13 @@ const buildHtml = () => {
         let label = 'Browse releases';
 
         if (isMac) {
-          href = githubUrl + '/releases/download/v' + version + '/' + encodeURIComponent('MyVergies-' + version + '.dmg');
+          href = githubUrl + '/releases/download/v' + version + '/' + encodeURIComponent('Verge Slim-' + version + '.dmg');
           label = 'Download macOS v' + version;
         } else if (isWin) {
-          href = githubUrl + '/releases/download/v' + version + '/' + encodeURIComponent('MyVergies ' + displayVersion + '.exe');
+          href = githubUrl + '/releases/download/v' + version + '/' + encodeURIComponent('Verge Slim ' + displayVersion + '.exe');
           label = 'Download Windows v' + displayVersion;
         } else if (isLinux) {
-          href = githubUrl + '/releases/download/v' + version + '/' + encodeURIComponent('MyVergies-' + version + '.AppImage');
+          href = githubUrl + '/releases/download/v' + version + '/' + encodeURIComponent('Verge Slim-' + version + '.AppImage');
           label = 'Download Linux v' + version;
         }
 

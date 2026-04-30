@@ -4,7 +4,10 @@ export const eventConstants = {
   torConnectionError: 'TOR_CONNECTION_ERROR',
   getTorNetworkInfo: 'GET_TOR_NETWORK_INFO',
   resolveUnstoppableDomain: 'RESOLVE_UNSTOPPABLE_DOMAIN',
-  fitWindowToContent: 'FIT_WINDOW_TO_CONTENT'
+  fitWindowToContent: 'FIT_WINDOW_TO_CONTENT',
+  minimizeWindow: 'MINIMIZE_WINDOW',
+  toggleMaximizeWindow: 'TOGGLE_MAXIMIZE_WINDOW',
+  closeWindow: 'CLOSE_WINDOW'
 }
 
 export default {

@@ -5,7 +5,7 @@ export default class Keytar {
   static readonly appService: string = 'MyVergies'
   static readonly walletService: string = 'MyVergies Wallet'
   static readonly accessErrorTitle: string = 'Keychain Access Needed'
-  static readonly accessErrorMessage: string = 'MyVergies could not access the macOS Keychain. Enter your Mac login password and choose "Always Allow" if prompted, then try again. If you denied access earlier, restart MyVergies and retry.'
+  static readonly accessErrorMessage: string = 'Verge Slim could not access the macOS Keychain. Enter your Mac login password and choose "Always Allow" if prompted, then try again. If you denied access earlier, restart Verge Slim and retry.'
 
   static async setCredentials (service: string, account: string, credentials: string) {
     Log.info(`set credentials for service "${service}" and account "${account}"`)

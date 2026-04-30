@@ -10,7 +10,7 @@
           size="is-medium"
           icon="arrow-alt-circle-up"
         />
-        <span class="mx-1">There is a recommended update for <b>MyVergies</b></span>
+        <span class="mx-1">There is a recommended update for <b>Verge Slim</b></span>
       </div>
       <div class="column has-text-right">
         <b-button

@@ -45,13 +45,13 @@ const nl: LocaleDefinition = {
     version: 'versie'
   },
   welcome: {
-    welcomeToMyVergies: 'Welkom bij MyVergies',
+    welcomeToMyVergies: 'Verge Slim',
     createdBy: 'Ontwikkeld door <b>Swen van Zanten</b>',
     addAWallet: 'Voeg wallet toe',
     addAWalletDesc: 'Je kunt meerdere wallets toevoegen... dat is te gek want ik kan zeker een aantal reden bedenken om er een paar toe te voegen.',
     addWallet: 'Voeg wallet toe',
     changeThings: 'Verander dingen',
-    changeThingsDesc: 'Met behulp van de instellingen kun je MyVergies veranderen in de perfecte XVG partner!',
+    changeThingsDesc: 'Hier kun je je PIN, lokale valuta of taal aanpassen!',
     tweakSettings: 'Instellingen',
     helpImprove: 'Trade XVG',
     helpImproveDesc: 'Koop, verkoop en wissel XVG direct in de app.',
@@ -59,7 +59,7 @@ const nl: LocaleDefinition = {
   },
   games: {
     games: 'Games',
-    subtitle: 'Een ingebouwde arcadehoek voor wanneer je even in MyVergies wilt blijven.',
+    subtitle: 'Een ingebouwde arcadehoek voor wanneer je even in Verge Slim wilt blijven.',
     tetris: 'Tetris',
     tetrisDescription: 'Stapel strakke lijnen, overleef de snelheid en houd het veld schoon.',
     inspiredBy: 'Geinspireerd door het MIT-gelicentieerde vue-tetris-demo project.',
@@ -309,7 +309,7 @@ const nl: LocaleDefinition = {
     currency: 'Valuta',
     currencyDetails: 'Alle fiat prijzen zullen worden getoond in deze valuta',
     pin: 'PIN',
-    pinDetails: 'Beveilig MyVergies met een persoonlijke PIN code.',
+    pinDetails: 'Beveilig Verge Slim met een persoonlijke PIN code.',
     changePin: 'Verander PIN',
     lockAfter: 'Vergrendel na',
     lockAfterDetails: 'Vergrendel applicatie na de opgegeven tijd is verstreken',
@@ -345,7 +345,7 @@ const nl: LocaleDefinition = {
     addPin: 'Voeg PIN toe',
     addPinDesc: 'Deze applicatie beveiligd al uw wallets en instellingen met een makkelijk te onthouden PIN. Laten we er één instellen!',
     couldntSetPin: 'Kon de PIN niet instellen',
-    pinAdded: 'PIN ingesteld, geniet nu van MyVergies!'
+    pinAdded: 'PIN ingesteld, geniet nu van Verge Slim!'
   },
   export: {
     description: 'Het aanmaken van een extra backup van je wallet gegevens is best een slimme zet. Sla deze gegevens op op een verwijderbare hardeschijf or op een andere veilige plaats.',

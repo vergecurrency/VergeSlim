@@ -1,4 +1,4 @@
-<p align="center"><img src="https://raw.githubusercontent.com/vergecurrency/MyVergies/main/readme-header.png" alt="MyVergies Logo"></p>
+<p align="center"><img src="https://raw.githubusercontent.com/vergecurrency/MyVergies/main/readme-header.png" alt="Verge Slim Logo"></p>
 
 <p align="center">
   <a href="https://github.com/vergecurrency/MyVergies/actions" target="_blank"><img src="https://github.com/vergecurrency/MyVergies/actions/workflows/ci.yml/badge.svg"></a>
@@ -10,7 +10,7 @@
   <img src="https://img.shields.io/badge/node.js-24-blue.svg">
 </p>
 
-#  MyVergies
+#  Verge Slim
 ## created by: Swen Van Zanten
 
 This desktop wallet provides an easy and secure wallet on your personal computer. With **Tor** integrated you can be sure your http communication is private. Sending and receiving XVG in a secure and easy to use wallet will actually change the way you use Verge Currency. 💪
@@ -91,7 +91,7 @@ Some Linux environments require launching the wallet with `--no-sandbox`.
 Example:
 
 ```bash
-./MyVergies-1.1.0.AppImage --no-sandbox
+./Verge\ Slim-1.1.0.AppImage --no-sandbox
 ```
 
 Please setup your own local VWS instance to test your changes against. You can checkout [the bitcore repository](https://github.com/vergecurrency/bitcore) and setup an instance [using docker](https://github.com/vergecurrency/bitcore/blob/main/Docker.md).

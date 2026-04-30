@@ -105,7 +105,7 @@
 const BOARD_WIDTH = 10
 const BOARD_HEIGHT = 20
 const PREVIEW_SIZE = 4
-const BEST_SCORE_STORAGE_KEY = 'myvergies.games.tetris.bestScore'
+const BEST_SCORE_STORAGE_KEY = 'verge-slim.games.tetris.bestScore'
 const LINE_CLEAR_SCORES = {
   1: 100,
   2: 300,

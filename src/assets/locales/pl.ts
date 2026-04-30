@@ -45,13 +45,13 @@ const pl: LocaleDefinition = {
     version: 'wersja'
   },
   welcome: {
-    welcomeToMyVergies: 'Witaj w MyVergies',
+    welcomeToMyVergies: 'Verge Slim',
     createdBy: 'Stworzone przez <b>Swen van Zanten</b>',
     addAWallet: 'Dodaj portfel',
     addAWalletDesc: 'Możesz dodać wiele portfeli... to świetna sprawa, bo istnieje mnóstwo powodów, by mieć więcej niż jeden!',
     addWallet: 'Dodaj portfel',
     changeThings: 'Zmień ustawienia',
-    changeThingsDesc: 'W ustawieniach możesz dopasować MyVergies tak, by stał się idealnym towarzyszem Twojego XVG!',
+    changeThingsDesc: 'Tutaj możesz zmienić PIN, lokalną walutę lub język!',
     tweakSettings: 'Ustawienia',
     helpImprove: 'Handluj XVG',
     helpImproveDesc: 'Kupuj, sprzedawaj i wymieniaj XVG bezpośrednio z poziomu aplikacji.',
@@ -59,7 +59,7 @@ const pl: LocaleDefinition = {
   },
   games: {
     games: 'Gry',
-    subtitle: 'Wbudowany arcade room, kiedy chcesz zostac w MyVergies.',
+    subtitle: 'Wbudowany arcade room, kiedy chcesz zostac w Verge Slim.',
     tetris: 'Tetris',
     tetrisDescription: 'Ukladaj linie, pilnuj planszy i przetrwaj rosnaca predkosc.',
     inspiredBy: 'Inspiracja: projekt vue-tetris-demo na licencji MIT.',
@@ -309,7 +309,7 @@ const pl: LocaleDefinition = {
     currency: 'Waluta',
     currencyDetails: 'Wszystkie ceny będą wyświetlane w tej walucie',
     pin: 'PIN',
-    pinDetails: 'Zabezpiecz MyVergies osobistym kodem PIN.',
+    pinDetails: 'Zabezpiecz Verge Slim osobistym kodem PIN.',
     changePin: 'Zmień PIN',
     lockAfter: 'Blokuj po',
     lockAfterDetails: 'Zablokuj aplikację po określonym czasie bezczynności',
@@ -345,7 +345,7 @@ const pl: LocaleDefinition = {
     addPin: 'Dodaj PIN',
     addPinDesc: 'Zabezpiecz swoje portfele łatwym do zapamiętania kodem PIN.',
     couldntSetPin: 'Nie udało się ustawić kodu PIN',
-    pinAdded: 'PIN ustawiony, miłego korzystania z MyVergies!'
+    pinAdded: 'PIN ustawiony, miłego korzystania z Verge Slim!'
   },
   export: {
     description: 'Dodatkowa kopia zapasowa danych portfela to mądry krok. Przechowuj plik w bezpiecznym miejscu, np. na zaszyfrowanym dysku zewnętrznym.',

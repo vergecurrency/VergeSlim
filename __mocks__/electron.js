@@ -12,7 +12,7 @@ module.exports = {
     on: jest.fn()
   },
   app: {
-    name: 'MyVergies',
+    name: 'Verge Slim',
     getVersion () {
       return '0.0.1'
     }

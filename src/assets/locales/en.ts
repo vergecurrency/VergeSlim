@@ -45,7 +45,7 @@ const en: LocaleDefinition = {
     version: 'version'
   },
   welcome: {
-    welcomeToMyVergies: 'Welcome to MyVergies',
+    welcomeToMyVergies: 'Verge Slim',
     createdBy: 'Created by <b>Swen van Zanten</b>',
     addAWallet: 'Add a wallet',
     addAWalletDesc: 'Here you can import a new wallet, create another wallet, or restore another wallet from seedphrase.',
@@ -59,7 +59,7 @@ const en: LocaleDefinition = {
   },
   games: {
     games: 'Games',
-    subtitle: 'A built-in arcade corner for when you want to stay inside MyVergies.',
+    subtitle: 'A built-in arcade corner for when you want to stay inside Verge Slim.',
     tetris: 'Tetris',
     tetrisDescription: 'Stack clean lines, survive the speed curve, and keep the board under control.',
     inspiredBy: 'Inspired by the MIT-licensed vue-tetris-demo project.',
@@ -309,7 +309,7 @@ const en: LocaleDefinition = {
     currency: 'Currency',
     currencyDetails: 'All fiat prices will be displayed in this currency',
     pin: 'PIN',
-    pinDetails: 'Secure MyVergies with a personal PIN code.',
+    pinDetails: 'Secure Verge Slim with a personal PIN code.',
     changePin: 'Change PIN',
     lockAfter: 'Lock after',
     lockAfterDetails: 'Lock application after the given amount of time',
@@ -345,7 +345,7 @@ const en: LocaleDefinition = {
     addPin: 'Add PIN',
     addPinDesc: 'This applications secures all your wallets and settings with an easy to remember PIN. Let\'s set one up.',
     couldntSetPin: 'Couldn\'t set your PIN',
-    pinAdded: 'PIN was set, enjoy MyVergies!'
+    pinAdded: 'PIN was set, enjoy Verge Slim!'
   },
   export: {
     description: 'Creating an extra backup of your wallet credentials can be a smart thing to do. Either store it safely on a removable drive or another secure place.',

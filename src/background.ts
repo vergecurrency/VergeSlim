@@ -22,7 +22,7 @@ import {
   normalizeWeb3Domain
 } from '@/utils/unstoppableDomains'
 
-// Install MyVergies components
+// Install Verge Slim components
 Installer.install()
 
 logger.transports.file.level = 'debug'
@@ -32,6 +32,7 @@ logger.transports.file.level = 'debug'
 let win: BrowserWindow | null = null
 const TOR_SOCKS_PORT = 9999
 const TOR_HTTP_TUNNEL_PORT = 9998
+const LEGACY_USER_DATA_DIRECTORY = path.join(app.getPath('appData'), 'MyVergies')
 const TOR_BIN_PATH = path.join(app.getPath('appData'), 'MyVergies', 'bin', 'Tor')
 const TOR_DATA_DIRECTORY = path.join(app.getPath('appData'), 'MyVergies', 'tor-data')
 const TOR_DATA_LOCK_FILE = path.join(TOR_DATA_DIRECTORY, 'lock')
@@ -53,6 +54,66 @@ const getWindowsWindowIconPath = () => {
   ]
 
   return iconPathCandidates.find(iconPath => fs.existsSync(iconPath))
+}
+
+const getPersistedVuexStatePath = (baseDirectory: string) => path.join(baseDirectory, 'vuex.json')
+
+const readPersistedVuexState = (filePath: string) => {
+  try {
+    if (!fs.existsSync(filePath)) {
+      return null
+    }
+
+    return JSON.parse(fs.readFileSync(filePath, 'utf8'))
+  } catch (error) {
+    logger.warn(`Failed to read persisted Vuex state from ${filePath}:`, error)
+    return null
+  }
+}
+
+const getStoredWalletReferenceCount = (persistedState: any) => {
+  if (!persistedState || typeof persistedState !== 'object') {
+    return 0
+  }
+
+  const rootState = persistedState.state || {}
+  const walletIdentifiers = Array.isArray(rootState.WalletIdentifiers) ? rootState.WalletIdentifiers : []
+  const walletNames = Array.isArray(rootState.WalletNames) ? rootState.WalletNames : []
+
+  return walletIdentifiers.length + walletNames.length
+}
+
+const migrateLegacyWalletState = () => {
+  const currentUserDataDirectory = app.getPath('userData')
+
+  if (path.resolve(currentUserDataDirectory) === path.resolve(LEGACY_USER_DATA_DIRECTORY)) {
+    return
+  }
+
+  const legacyVuexStatePath = getPersistedVuexStatePath(LEGACY_USER_DATA_DIRECTORY)
+  const currentVuexStatePath = getPersistedVuexStatePath(currentUserDataDirectory)
+  const legacyPersistedState = readPersistedVuexState(legacyVuexStatePath)
+
+  if (!legacyPersistedState) {
+    return
+  }
+
+  const legacyWalletReferenceCount = getStoredWalletReferenceCount(legacyPersistedState)
+
+  if (legacyWalletReferenceCount === 0) {
+    return
+  }
+
+  const currentPersistedState = readPersistedVuexState(currentVuexStatePath)
+  const currentWalletReferenceCount = getStoredWalletReferenceCount(currentPersistedState)
+
+  if (currentWalletReferenceCount > 0) {
+    return
+  }
+
+  fs.mkdirSync(currentUserDataDirectory, { recursive: true })
+  fs.copyFileSync(legacyVuexStatePath, currentVuexStatePath)
+  logger.info(`Migrated wallet state from ${legacyVuexStatePath} to ${currentVuexStatePath}`)
 }
 
 const activateTorProxy = (win: BrowserWindow) => win.webContents.session.setProxy({
@@ -443,6 +504,30 @@ const registerIpcHandlers = () => {
 
     return { success: true, height: targetHeight }
   })
+
+  ipcMain.handle(eventConstants.minimizeWindow, async () => {
+    const window = getMainWindowOrThrow()
+    window.minimize()
+    return { success: true }
+  })
+
+  ipcMain.handle(eventConstants.toggleMaximizeWindow, async () => {
+    const window = getMainWindowOrThrow()
+
+    if (window.isMaximized()) {
+      window.unmaximize()
+      return { success: true, maximized: false }
+    }
+
+    window.maximize()
+    return { success: true, maximized: true }
+  })
+
+  ipcMain.handle(eventConstants.closeWindow, async () => {
+    const window = getMainWindowOrThrow()
+    window.close()
+    return { success: true }
+  })
 }
 
 function createWindow () {
@@ -464,10 +549,11 @@ function createWindow () {
     y: mainWindowState.y,
     height: mainWindowState.height,
     width: mainWindowState.width,
-    title: 'MyVergies',
+    title: 'Verge Slim',
     minHeight: MAIN_WINDOW_MIN_HEIGHT,
     minWidth: MAIN_WINDOW_MIN_WIDTH,
     show: true,
+    frame: !Utils.isWinOSEnvironment(),
     useContentSize: true,
     autoHideMenuBar: true,
     ...(windowIcon
@@ -606,6 +692,7 @@ const startUpTorOnPort = (port: number) => {
 app.on('ready', async () => {
   ElectronUtils.enforceMacOSAppLocation()
   applyNodeProxyState(true)
+  migrateLegacyWalletState()
 
   createWindow()
   registerIpcHandlers()

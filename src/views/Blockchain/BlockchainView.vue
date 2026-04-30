@@ -3,7 +3,7 @@
     <navigation-header title="Blockchain" />
     <form-box
       title="Blockchain installation"
-      description="By installing the full Verge Currency blockchain you can easily support the network. If you keep MyVergies running while you've installed the full blockchain the network gets extra support in distributing blocks. MyVergies will make sure the blockchain is supported by running the latest version of a Verge node."
+      description="By installing the full Verge Currency blockchain you can easily support the network. If you keep Verge Slim running while you've installed the full blockchain the network gets extra support in distributing blocks. Verge Slim will make sure the blockchain is supported by running the latest version of a Verge node."
       type="is-success"
     >
       <b-button

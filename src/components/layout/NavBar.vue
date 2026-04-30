@@ -8,7 +8,10 @@
       <div class="navbar-start">
         <div class="navbar-brand">
           <div v-if="isDarwin" class="navbar-item navbar-window-controls"></div>
-          <div class="navbar-item logo"></div>
+          <div class="navbar-item logo">
+            <span class="logo-mark" aria-hidden="true">V</span>
+            <span class="logo-wordmark is-family-display">Verge Slim</span>
+          </div>
         </div>
       </div>
       <div class="navbar-end">
@@ -69,11 +72,34 @@ export default {
 
 .logo {
   margin-left: 12px;
-  background: url("~@/assets/logo-light.svg");
-  background-repeat: no-repeat;
-  background-position: center;
-  background-size: contain;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.7rem;
   filter: drop-shadow(0 0 18px rgba(83, 243, 255, 0.24));
-  width: 132px;
+  min-width: 0;
+}
+
+.logo-mark {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 10px;
+  background: linear-gradient(135deg, rgba(255, 63, 181, 0.92), rgba(83, 243, 255, 0.9));
+  color: rgba(7, 10, 24, 0.96);
+  font-size: 1rem;
+  font-weight: 900;
+  letter-spacing: 0.04em;
+  box-shadow: 0 0 18px rgba(83, 243, 255, 0.22);
+}
+
+.logo-wordmark {
+  font-size: 1.05rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--rv-text);
+  white-space: nowrap;
 }
 </style>

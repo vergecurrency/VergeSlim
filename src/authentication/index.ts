@@ -92,7 +92,7 @@ class AuthManager {
             Log.info('user wants to reset PIN')
 
             const options = {
-              name: 'MyVergies'
+              name: 'Verge Slim'
             }
 
             SudoPrompt.exec('echo hello', options, (error, stdout, stderr) => {

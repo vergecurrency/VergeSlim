@@ -70,7 +70,7 @@ export default class ExportImportManager {
   protected userSavesFile (filename: string, isEncrypted: boolean = false): Promise<Electron.SaveDialogReturnValue> {
     return electron.ipcRenderer.sendSync(
       'export-wallet-file',
-      `${filename.toLocaleLowerCase().replace(' ', '-')}${isEncrypted ? '-encrypted-' : ''}-myvergies-export.json`
+      `${filename.toLocaleLowerCase().replace(' ', '-')}${isEncrypted ? '-encrypted-' : ''}-verge-slim-export.json`
     )
   }
 

@@ -124,24 +124,17 @@ export default {
     titleSecretSegments () {
       const welcomeTitle = String(this.$i18n.t('welcome.welcomeToMyVergies'))
       const welcomeTitleLowerCase = welcomeTitle.toLowerCase()
-      const toWordIndex = welcomeTitleLowerCase.indexOf(' to ')
-      const myVergiesIndex = welcomeTitleLowerCase.indexOf('myvergies')
+      const triggerEIndex = welcomeTitleLowerCase.indexOf('e')
+      const triggerGIndex = welcomeTitleLowerCase.indexOf('g')
 
-      if (toWordIndex === -1 || myVergiesIndex === -1) {
-        return null
-      }
-
-      const triggerOIndex = toWordIndex + 2
-      const triggerGIndex = welcomeTitleLowerCase.indexOf('g', myVergiesIndex)
-
-      if (triggerGIndex === -1) {
+      if (triggerEIndex === -1 || triggerGIndex === -1 || triggerGIndex <= triggerEIndex) {
         return null
       }
 
       return {
-        beforeO: welcomeTitle.slice(0, triggerOIndex),
-        triggerO: welcomeTitle.charAt(triggerOIndex),
-        beforeG: welcomeTitle.slice(triggerOIndex + 1, triggerGIndex),
+        beforeO: welcomeTitle.slice(0, triggerEIndex),
+        triggerO: welcomeTitle.charAt(triggerEIndex),
+        beforeG: welcomeTitle.slice(triggerEIndex + 1, triggerGIndex),
         triggerG: welcomeTitle.charAt(triggerGIndex),
         afterG: welcomeTitle.slice(triggerGIndex + 1)
       }

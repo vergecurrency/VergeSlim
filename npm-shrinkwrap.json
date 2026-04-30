@@ -1,11 +1,11 @@
 {
-  "name": "MyVergies",
+  "name": "verge-slim",
   "version": "26.5.0",
   "lockfileVersion": 2,
   "requires": true,
   "packages": {
     "": {
-      "name": "MyVergies",
+      "name": "verge-slim",
       "version": "26.5.0",
       "funding": [
         {
