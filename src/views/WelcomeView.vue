@@ -77,9 +77,9 @@ import VersionBlock from '@/components/VersionBlock'
 import { eventConstants } from '@/utils/constants'
 import sunglassesGif from '@/assets/sunglasses.gif'
 
-const SECRET_SEQUENCE_TIMEOUT_MS = 1500
+const SECRET_SEQUENCE_TIMEOUT_MS = 6000
 const SUNGLASSES_GIF_LOOP_MS = 840
-const SUNGLASSES_GIF_TOTAL_LOOPS = 4
+const SUNGLASSES_GIF_TOTAL_LOOPS = 3
 const SECRET_TITLE_SEQUENCE = ['v', 'e', 'r', 'g', 'e']
 
 export default {
@@ -214,9 +214,7 @@ export default {
         return
       }
 
-      if (this.secretSequenceIndex === 0) {
-        this.startSecretSequenceTimer()
-      }
+      this.startSecretSequenceTimer()
 
       this.secretSequenceIndex += 1
 
@@ -341,7 +339,7 @@ export default {
     letter-spacing: inherit;
     line-height: inherit;
     text-transform: inherit;
-    cursor: default;
+      cursor: pointer;
     text-shadow: inherit;
   }
 
