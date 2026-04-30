@@ -18,23 +18,18 @@
           <div class="welcome-title-stack">
             <h1 class="welcome-title welcome-title-foreground is-family-display">
               <template v-if="titleSecretSegments">
-                <span v-text="titleSecretSegments.beforeO"/>
-                <button
-                  type="button"
-                  class="welcome-title-secret-trigger"
-                  aria-label="Secret trigger"
-                  @click="handleSecretLetterClick('o')"
-                  v-text="titleSecretSegments.triggerO"
-                />
-                <span v-text="titleSecretSegments.beforeG"/>
-                <button
-                  type="button"
-                  class="welcome-title-secret-trigger"
-                  aria-label="Secret trigger"
-                  @click="handleSecretLetterClick('g')"
-                  v-text="titleSecretSegments.triggerG"
-                />
-                <span v-text="titleSecretSegments.afterG"/>
+                <template v-for="segment in titleSecretSegments">
+                  <span v-if="segment.type === 'text'" :key="segment.key" v-text="segment.value"/>
+                  <button
+                    v-else
+                    :key="segment.key"
+                    type="button"
+                    class="welcome-title-secret-trigger"
+                    aria-label="Secret trigger"
+                    @click="handleSecretLetterClick(segment.expected)"
+                    v-text="segment.value"
+                  />
+                </template>
               </template>
               <template v-else>
                 <span v-text="$i18n.t('welcome.welcomeToMyVergies')"/>
@@ -85,6 +80,7 @@ import sunglassesGif from '@/assets/sunglasses.gif'
 const SECRET_SEQUENCE_TIMEOUT_MS = 1500
 const SUNGLASSES_GIF_LOOP_MS = 840
 const SUNGLASSES_GIF_TOTAL_LOOPS = 4
+const SECRET_TITLE_SEQUENCE = ['v', 'e', 'r', 'g', 'e']
 
 export default {
   name: 'WelcomeView',
@@ -94,7 +90,7 @@ export default {
   data () {
     return {
       fitWindowTimer: null,
-      secretSequenceStep: null,
+      secretSequenceIndex: 0,
       secretSequenceTimer: null,
       secretOverlayTimer: null,
       isSunglassesOverlayVisible: false,
@@ -124,20 +120,51 @@ export default {
     titleSecretSegments () {
       const welcomeTitle = String(this.$i18n.t('welcome.welcomeToMyVergies'))
       const welcomeTitleLowerCase = welcomeTitle.toLowerCase()
-      const triggerEIndex = welcomeTitleLowerCase.indexOf('e')
-      const triggerGIndex = welcomeTitleLowerCase.indexOf('g')
+      const triggerIndices = []
+      let searchIndex = 0
 
-      if (triggerEIndex === -1 || triggerGIndex === -1 || triggerGIndex <= triggerEIndex) {
-        return null
+      for (const triggerLetter of SECRET_TITLE_SEQUENCE) {
+        const nextIndex = welcomeTitleLowerCase.indexOf(triggerLetter, searchIndex)
+
+        if (nextIndex === -1) {
+          return null
+        }
+
+        triggerIndices.push(nextIndex)
+        searchIndex = nextIndex + 1
       }
 
-      return {
-        beforeO: welcomeTitle.slice(0, triggerEIndex),
-        triggerO: welcomeTitle.charAt(triggerEIndex),
-        beforeG: welcomeTitle.slice(triggerEIndex + 1, triggerGIndex),
-        triggerG: welcomeTitle.charAt(triggerGIndex),
-        afterG: welcomeTitle.slice(triggerGIndex + 1)
+      const segments = []
+      let previousIndex = 0
+
+      triggerIndices.forEach((triggerIndex, index) => {
+        if (triggerIndex > previousIndex) {
+          segments.push({
+            type: 'text',
+            key: `text-${index}-${previousIndex}`,
+            value: welcomeTitle.slice(previousIndex, triggerIndex)
+          })
+        }
+
+        segments.push({
+          type: 'trigger',
+          key: `trigger-${index}-${triggerIndex}`,
+          expected: SECRET_TITLE_SEQUENCE[index],
+          value: welcomeTitle.charAt(triggerIndex)
+        })
+
+        previousIndex = triggerIndex + 1
+      })
+
+      if (previousIndex < welcomeTitle.length) {
+        segments.push({
+          type: 'text',
+          key: `text-tail-${previousIndex}`,
+          value: welcomeTitle.slice(previousIndex)
+        })
       }
+
+      return segments
     }
   },
 
@@ -179,18 +206,23 @@ export default {
     },
 
     handleSecretLetterClick (letter) {
-      if (letter === 'o') {
-        this.secretSequenceStep = 'o'
+      const normalizedLetter = String(letter).toLowerCase()
+      const expectedLetter = SECRET_TITLE_SEQUENCE[this.secretSequenceIndex]
+
+      if (normalizedLetter !== expectedLetter) {
+        this.resetSecretSequence()
+        return
+      }
+
+      if (this.secretSequenceIndex === 0) {
         this.startSecretSequenceTimer()
-        return
       }
 
-      if (letter === 'g' && this.secretSequenceStep === 'o') {
+      this.secretSequenceIndex += 1
+
+      if (this.secretSequenceIndex >= SECRET_TITLE_SEQUENCE.length) {
         this.revealSunglassesOverlay()
-        return
       }
-
-      this.resetSecretSequence()
     },
 
     startSecretSequenceTimer () {
@@ -219,7 +251,7 @@ export default {
     },
 
     resetSecretSequence () {
-      this.secretSequenceStep = null
+      this.secretSequenceIndex = 0
       this.clearSecretSequenceTimer()
     },
 
