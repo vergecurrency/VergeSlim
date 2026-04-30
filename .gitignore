@@ -30,6 +30,7 @@ yarn-error.log*
 !/dist_electron/bin
 !/dist_electron/icons/
 !/dist_electron/icons/**
+/dist_electron/icons/icon.ico
 !/dist_electron/certs/
 !/dist_electron/certs/**
 !/dist_electron/entitlements.mac.plist

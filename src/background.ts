@@ -48,9 +48,9 @@ protocol.registerSchemesAsPrivileged([{ scheme: 'app', privileges: { secure: tru
 
 const getWindowsWindowIconPath = () => {
   const iconPathCandidates = [
-    path.join(process.resourcesPath, 'icon.ico'),
-    path.join(process.cwd(), 'dist_electron', 'icons', 'icon.ico'),
-    path.join(app.getAppPath(), 'dist_electron', 'icons', 'icon.ico')
+    path.join(process.resourcesPath, 'icon.png'),
+    path.join(process.cwd(), 'dist_electron', 'icons', 'icon.png'),
+    path.join(app.getAppPath(), 'dist_electron', 'icons', 'icon.png')
   ]
 
   return iconPathCandidates.find(iconPath => fs.existsSync(iconPath))

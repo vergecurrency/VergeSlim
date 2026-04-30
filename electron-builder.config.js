@@ -28,8 +28,8 @@ module.exports = {
   ],
   extraResources: [
     {
-      from: 'dist_electron/icons/icon.ico',
-      to: 'icon.ico'
+      from: 'dist_electron/icons/icon.png',
+      to: 'icon.png'
     }
   ],
   mac: {
