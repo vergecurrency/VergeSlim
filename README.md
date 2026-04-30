@@ -1,5 +1,5 @@
 <p align="center">
-  <a href="https://github.com/vergecurrency/MyVergies/actions" target="_blank"><img src="https://github.com/vergecurrency/MyVergies/actions/workflows/ci.yml/badge.svg"></a>
+  <a href="https://github.com/vergecurrency/VergeSlim/actions" target="_blank"><img src="https://github.com/vergecurrency/VergeSlim/actions/workflows/ci.yml/badge.svg"></a>
   <img src="https://img.shields.io/badge/status-beta-orange.svg">
   <img src="https://img.shields.io/badge/macOS-15+-blue.svg">
   <img src="https://img.shields.io/badge/Windows-^10-lightblue.svg">

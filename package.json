@@ -10,12 +10,12 @@
     "url": "https://github.com/swenvanzanten"
   },
   "bugs": {
-    "url": "https://github.com/vergecurrency/MyVergies/issues"
+    "url": "https://github.com/vergecurrency/VergeSlim/issues"
   },
   "homepage": "https://myvergies.app",
   "repository": {
     "type": "git",
-    "url": "https://github.com/vergecurrency/MyVergies.git"
+    "url": "https://github.com/vergecurrency/VergeSlim.git"
   },
   "scripts": {
     "test": "npm run test:unit:ci",

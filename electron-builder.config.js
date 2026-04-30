@@ -16,7 +16,7 @@ module.exports = {
     {
       provider: 'github',
       owner: 'vergecurrency',
-      repo: 'MyVergies'
+      repo: 'VergeSlim'
     }
   ],
   asar: true,
