@@ -87,6 +87,7 @@
         "eslint-plugin-vue": "^7.1.0",
         "jest": "26.6.3",
         "jimp": "^1.6.1",
+        "png2icons": "^2.0.1",
         "rimraf": "^6.0.1",
         "sass": "^1.32.8",
         "sass-loader": "^10.1.1",
@@ -24033,6 +24034,16 @@
         "node": ">=4.0"
       }
     },
+    "node_modules/png2icons": {
+      "version": "2.0.1",
+      "resolved": "https://registry.npmjs.org/png2icons/-/png2icons-2.0.1.tgz",
+      "integrity": "sha512-GDEQJr8OG4e6JMp7mABtXFSEpgJa1CCpbQiAR+EjhkHJHnUL9zPPtbOrjsMD8gUbikgv3j7x404b0YJsV3aVFA==",
+      "dev": true,
+      "license": "MIT",
+      "bin": {
+        "png2icons": "png2icons-cli.js"
+      }
+    },
     "node_modules/pngjs": {
       "version": "7.0.0",
       "resolved": "https://registry.npmjs.org/pngjs/-/pngjs-7.0.0.tgz",
@@ -47764,6 +47775,12 @@
           "optional": true
         }
       }
+    },
+    "png2icons": {
+      "version": "2.0.1",
+      "resolved": "https://registry.npmjs.org/png2icons/-/png2icons-2.0.1.tgz",
+      "integrity": "sha512-GDEQJr8OG4e6JMp7mABtXFSEpgJa1CCpbQiAR+EjhkHJHnUL9zPPtbOrjsMD8gUbikgv3j7x404b0YJsV3aVFA==",
+      "dev": true
     },
     "pngjs": {
       "version": "7.0.0",

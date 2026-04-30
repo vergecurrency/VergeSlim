@@ -38,7 +38,7 @@ module.exports = {
     gatekeeperAssess: false,
     entitlements: 'dist_electron/entitlements.mac.plist',
     entitlementsInherit: 'dist_electron/entitlements.mac.plist',
-    icon: 'dist_electron/icons/icon.icns'
+    icon: 'dist_electron/icons/Icon.icns'
   },
   win: {
     icon: 'dist_electron/icons/icon.ico',

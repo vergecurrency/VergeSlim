@@ -11,9 +11,6 @@
 
     <div class="columns">
       <div class="column welcome-header">
-        <div class="header-logo">
-          <img src="@/assets/headers/logo@2x.png"/>
-        </div>
         <div class="welcome-copy">
           <div class="welcome-title-stack">
             <h1 class="welcome-title welcome-title-foreground is-family-display">
@@ -286,14 +283,7 @@ export default {
     display: flex;
     justify-content: flex-start;
     align-items: center;
-    gap: 2rem;
     margin-bottom: 0.75rem;
-  }
-
-  .header-logo > img {
-    width: 256px;
-    filter: drop-shadow(0 0 28px rgba(83, 243, 255, 0.18));
-    animation: rv-drift 9s ease-in-out infinite;
   }
 
   .welcome-copy {
@@ -311,11 +301,12 @@ export default {
     display: block;
     font-size: 3.5rem;
     font-weight: 800;
-    letter-spacing: 0.08em;
+    letter-spacing: 0.1em;
     text-transform: uppercase;
     line-height: 0.95;
     color: var(--rv-text);
     text-wrap: balance;
+    text-align: left;
   }
 
   .welcome-title-foreground {
