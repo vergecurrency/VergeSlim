@@ -1,5 +1,3 @@
-<p align="center"><img src="https://raw.githubusercontent.com/vergecurrency/MyVergies/main/readme-header.png" alt="Verge Slim Logo"></p>
-
 <p align="center">
   <a href="https://github.com/vergecurrency/MyVergies/actions" target="_blank"><img src="https://github.com/vergecurrency/MyVergies/actions/workflows/ci.yml/badge.svg"></a>
   <img src="https://img.shields.io/badge/status-beta-orange.svg">
