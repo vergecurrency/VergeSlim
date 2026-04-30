@@ -10,8 +10,8 @@
   <img src="https://img.shields.io/badge/node.js-24-blue.svg">
 </p>
 
-#  Verge Slim
-## created by: Swen Van Zanten
+##  V E R G E   S L i M
+### based on MyVergies, originally created by: Swen Van Zanten
 
 This desktop wallet provides an easy and secure wallet on your personal computer. With **Tor** integrated you can be sure your http communication is private. Sending and receiving XVG in a secure and easy to use wallet will actually change the way you use Verge Currency. 💪
 
