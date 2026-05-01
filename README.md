@@ -14,7 +14,7 @@
 
 ### based on MyVergies, originally created by: Swen Van Zanten
 
-This desktop wallet provides an easy and secure wallet on your personal computer. With **Tor** integrated you can be sure your wallet communication is private. 💪
+Verge Slim is an easy-to-use, secure, light-weight wallet for your Windows/Linux/macOS computer. With **Tor** integrated you can be sure your wallet communication is private! 💪
 
 ## Features:
 
