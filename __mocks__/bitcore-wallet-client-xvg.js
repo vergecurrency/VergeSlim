@@ -1,6 +1,10 @@
 'use strict'
 
-const Client = jest.genMockFromModule('bitcore-wallet-client-xvg')
+const Client = jest.fn()
+
+Client.prototype.request = {}
+
+Client.prototype.seedFromMnemonic = () => undefined
 
 Client.prototype.openWallet = (callback) => {
   callback(undefined, {

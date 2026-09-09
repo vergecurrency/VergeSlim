@@ -55,21 +55,21 @@ module.exports = {
   },
   linux: {
     icon: 'dist_electron/icons',
-    artifactName: 'VergeSlim-v' + releaseVersion + '.${ext}'
+    artifactName: `VergeSlim-v${releaseVersion}.\${ext}`
   },
   nsis: {
     oneClick: false,
     allowToChangeInstallationDirectory: true,
-    artifactName: 'VergeSlim-Setup-v' + releaseVersion + '.${ext}'
+    artifactName: `VergeSlim-Setup-v${releaseVersion}.\${ext}`
   },
   portable: {
-    artifactName: 'VergeSlim-v' + releaseVersion + '.${ext}'
+    artifactName: `VergeSlim-v${releaseVersion}.\${ext}`
   },
   dmg: {
     sign: false,
     icon: null,
     background: 'dist_electron/icons/background.png',
-    artifactName: 'VergeSlim-v' + releaseVersion + '.${ext}',
+    artifactName: `VergeSlim-v${releaseVersion}.\${ext}`,
     contents: [
       {
         x: 410,

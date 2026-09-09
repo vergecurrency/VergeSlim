@@ -227,12 +227,12 @@ const getCountryName = (countryCode: string) => {
 
   try {
     // Prefer a readable country name, but fall back to the ISO code if unsupported.
-    const displayNamesCtor = (Intl as any).DisplayNames
-    if (!displayNamesCtor) {
+    const DisplayNamesCtor = (Intl as any).DisplayNames
+    if (!DisplayNamesCtor) {
       return countryCode
     }
 
-    const displayNames = new displayNamesCtor(['en'], { type: 'region' })
+    const displayNames = new DisplayNamesCtor(['en'], { type: 'region' })
     return displayNames.of(countryCode) || countryCode
   } catch (_error) {
     return countryCode

@@ -1,9 +1,9 @@
-// @ts-ignore
-import Client from 'bitcore-wallet-client-xvg'
 import axios from 'axios'
 import Log from 'electron-log'
-import Wallet from '@/walletManager/Wallet'
 import ElectrumXWallet from '@/walletManager/ElectrumXWallet'
+import Wallet from '@/walletManager/Wallet'
+// @ts-ignore
+import Client from 'bitcore-wallet-client-xvg'
 import ManagerConfig, { WalletConfigItem } from '@/walletManager/ManagerConfig'
 import Keytar from '@/utils/keytar'
 import { resolveVwsApiUrl } from '@/utils/vwsApi'
@@ -44,7 +44,7 @@ export default class WalletManager {
         const wallet = await this.initializeWallet(walletConfig)
         this.wallets.push(wallet)
       } catch (e) {
-        Log.error(e.toString())
+        Log.error(String(e))
       }
     }
 
@@ -237,10 +237,10 @@ export default class WalletManager {
             Promise.allSettled([
               wallet.fetchTxHistory(),
               wallet.getTxProposals()
-            ]).catch(error => Log.error(error.toString()))
+            ]).catch(error => Log.error(String(error)))
           }
         } catch (e) {
-          Log.error(e.toString())
+          Log.error(String(e))
         }
       }
 
