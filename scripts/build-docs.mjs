@@ -65,7 +65,7 @@ const copyIfExists = (source, destination) => {
 
 const buildHtml = () => {
   const githubUrl = pkg.repository.url.replace(/\.git$/, '')
-  const sponsorUrl = pkg.funding.find(item => item.type === 'github')?.url || githubUrl
+  const sponsorUrl = 'https://vergecurrency.com/donate'
 
   return `<!DOCTYPE html>
 <html lang="en">
