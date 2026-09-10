@@ -2,6 +2,8 @@ name: Deploy Docs Website
 
 on:
   push:
+    branches:
+      - '**'
     tags:
       - '*'
 
