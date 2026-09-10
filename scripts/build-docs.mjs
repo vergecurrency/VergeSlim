@@ -66,7 +66,6 @@ const copyIfExists = (source, destination) => {
 const buildHtml = () => {
   const githubUrl = pkg.repository.url.replace(/\.git$/, '')
   const sponsorUrl = pkg.funding.find(item => item.type === 'github')?.url || githubUrl
-  const xvgAddress = pkg.funding.find(item => item.type === 'xvg')?.url || ''
 
   return `<!DOCTYPE html>
 <html lang="en">
@@ -411,19 +410,16 @@ const buildHtml = () => {
 
       <section class="footer">
         <div>
-          <strong>${pkg.name}</strong> by <a href="${pkg.author.url}">${pkg.author.name}</a>
-        </div>
-        <div>
-          XVG address: <strong>${xvgAddress}</strong>
+          <strong>Verge Slim</strong> is based on MyVergies by <a href="${pkg.author.url}">${pkg.author.name}</a>
         </div>
       </section>
     </main>
     <script>
       (function () {
-        const pkg = ${JSON.stringify(pkg)};
-        const githubUrl = pkg.repository.url.replace(/\\.git$/, '');
+        const release = ${JSON.stringify({ repositoryUrl: pkg.repository.url, version: pkg.version })};
+        const githubUrl = release.repositoryUrl.replace(/\\.git$/, '');
         const button = document.getElementById('downloadButton');
-        const version = pkg.version;
+        const version = release.version;
         const displayVersion = version.replace(/\\.0$/, '');
         const versionParts = version.split('.');
         const releaseVersion = Number(versionParts[2] || '0') > 0
