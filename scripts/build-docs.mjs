@@ -14,11 +14,12 @@ const [majorVersion = '0', minorVersion = '0', patchVersion = '0'] = pkg.version
 const releaseVersion = Number(patchVersion) > 0
   ? pkg.version
   : `${majorVersion}.${minorVersion}`
+const productName = 'VergeSlim'
 
 const features = [
   {
     title: 'Tor Built In',
-    description: 'Tor has been directly integrated into Verge Slim. No worries about your privacy.'
+    description: 'Tor has been directly integrated into VergeSlim. No worries about your privacy.'
   },
   {
     title: 'Multiple Wallets',
@@ -30,11 +31,11 @@ const features = [
   },
   {
     title: 'Import & Export',
-    description: 'Easily import and export your wallets into Verge Slim for some extra comfort.'
+    description: 'Easily import and export your wallets into VergeSlim for some extra comfort.'
   },
   {
     title: 'Multiple Languages',
-    description: 'Verge Slim supports many different languages translated by community users.'
+    description: 'VergeSlim supports many different languages translated by community users.'
   },
   {
     title: 'Familiar World Currencies',
@@ -42,7 +43,7 @@ const features = [
   },
   {
     title: 'Windows, macOS and Linux',
-    description: 'Install Verge Slim on Windows, macOS or Linux with the same privacy-first experience.'
+    description: 'Install VergeSlim on Windows, macOS or Linux with the same privacy-first experience.'
   },
   {
     title: 'Very Small',
@@ -72,7 +73,7 @@ const buildHtml = () => {
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>${pkg.name}</title>
+    <title>${productName}</title>
     <meta name="description" content="${pkg.description}">
     <link rel="icon" href="./favicon.ico">
     <style>
@@ -369,8 +370,8 @@ const buildHtml = () => {
     <main class="shell">
       <section class="nav">
         <div class="brand">
-          <img src="./assets/logo@2x.png" alt="${pkg.name}">
-          <span>${pkg.name}</span>
+          <img src="./assets/logo@2x.png" alt="${productName}">
+          <span>${productName}</span>
         </div>
         <div class="nav-actions">
           <a class="button button-secondary" href="${githubUrl}">GitHub</a>
@@ -381,7 +382,7 @@ const buildHtml = () => {
       <section class="hero">
         <div class="hero-copy">
           <div class="eyebrow">Privacy-first desktop wallet</div>
-          <h1>${pkg.name}</h1>
+          <h1>${productName}</h1>
           <p class="subtitle">${pkg.description}</p>
           <div class="hero-actions">
             <a id="downloadButton" class="button button-primary" href="${githubUrl}/releases">Browse releases</a>
@@ -392,7 +393,7 @@ const buildHtml = () => {
         <div class="hero-media">
           <picture>
             <source srcset="./assets/app-screenshot-dark.png" media="(prefers-color-scheme: dark)">
-            <img src="./assets/app-screenshot-light.png" alt="${pkg.name} screenshot">
+            <img src="./assets/app-screenshot-light.png" alt="${productName} screenshot">
           </picture>
         </div>
       </section>
@@ -410,7 +411,7 @@ const buildHtml = () => {
 
       <section class="footer">
         <div>
-          <strong>Verge Slim</strong> is based on MyVergies by <a href="${pkg.author.url}">${pkg.author.name}</a>
+          <strong>${productName}</strong> is based on MyVergies by <a href="${pkg.author.url}">${pkg.author.name}</a>
         </div>
       </section>
     </main>
