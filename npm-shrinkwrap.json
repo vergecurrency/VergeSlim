@@ -1,12 +1,12 @@
 {
   "name": "verge-slim",
-  "version": "26.7.0",
+  "version": "26.9.0",
   "lockfileVersion": 2,
   "requires": true,
   "packages": {
     "": {
       "name": "verge-slim",
-      "version": "26.7.0",
+      "version": "26.9.0",
       "funding": [
         {
           "type": "github",

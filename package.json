@@ -1,7 +1,7 @@
 {
   "name": "verge-slim",
   "description": "An electron-vue Verge Currency desktop wallet with Tor built in",
-  "version": "26.7.0",
+  "version": "26.9.0",
   "license": "MIT",
   "private": true,
   "author": {
