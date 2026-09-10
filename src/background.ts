@@ -585,6 +585,7 @@ const registerIpcHandlers = () => {
     if (shouldActivateTor) {
       await ensureTorStarted()
       await activateTorProxy(window)
+      await waitForTorCircuit(window)
     } else {
       await deactivateTorProxy(window)
     }

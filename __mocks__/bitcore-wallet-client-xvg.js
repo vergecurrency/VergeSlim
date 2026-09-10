@@ -4,9 +4,9 @@ const Client = jest.fn()
 
 Client.prototype.request = {}
 
-Client.prototype.seedFromMnemonic = () => undefined
+Client.prototype.seedFromMnemonic = jest.fn(() => undefined)
 
-Client.prototype.openWallet = (callback) => {
+Client.prototype.openWallet = jest.fn((callback) => {
   callback(undefined, {
     name: 'myWallet',
     balance: {
@@ -23,6 +23,6 @@ Client.prototype.openWallet = (callback) => {
       }]
     }
   })
-}
+})
 
 module.exports = Client

@@ -202,6 +202,10 @@ export default {
       return this.namePreferencesAreValid && this.apiEndpointValid
     },
     isElectrumxWallet () {
+      if (this.wallet && this.wallet.getWalletConfig) {
+        return this.wallet.getWalletConfig().backend === 'electrumx'
+      }
+
       return this.wallet && this.wallet.info && this.wallet.info.wallet && this.wallet.info.wallet.backend === 'electrumx'
     },
     displayMnemonic () {

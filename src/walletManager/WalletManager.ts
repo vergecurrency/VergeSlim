@@ -166,11 +166,14 @@ export default class WalletManager {
     const wallet = new Wallet(walletConfig.identifier, walletConfig.name, walletConfig.color, vwc)
 
     this.setClientTimeout(vwc, STARTUP_CLIENT_TIMEOUT_MS)
-    await this.warmWalletServiceRoute(walletConfig)
-
-    await this.retryStartupOperation(`connect wallet "${walletConfig.name}"`, () => wallet.open())
-
-    this.setClientTimeout(vwc, STEADY_STATE_CLIENT_TIMEOUT_MS)
+    this.warmWalletServiceRoute(walletConfig)
+      .then(() => this.retryStartupOperation(`connect wallet "${walletConfig.name}"`, () => wallet.open()))
+      .catch((error) => {
+        Log.warn(`VWS wallet "${walletConfig.name}" will stay queued for later sync: ${error}`)
+      })
+      .finally(() => {
+        this.setClientTimeout(vwc, STEADY_STATE_CLIENT_TIMEOUT_MS)
+      })
 
     return wallet
   }

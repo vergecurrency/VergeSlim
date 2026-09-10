@@ -91,7 +91,16 @@ export default {
       return isValidVwsApiUrl(this.server)
     },
     walletCount () {
-      return this.$walletManager.getWallets().length
+      return this.vwsWallets.length
+    },
+    vwsWallets () {
+      return this.$walletManager.getWallets().filter(wallet => {
+        if (wallet && wallet.getWalletConfig) {
+          return wallet.getWalletConfig().backend !== 'electrumx'
+        }
+
+        return !(wallet && wallet.info && wallet.info.wallet && wallet.info.wallet.backend === 'electrumx')
+      })
     }
   },
 
@@ -155,7 +164,7 @@ export default {
       this.applyingToWallets = true
 
       try {
-        for (const wallet of this.$walletManager.getWallets()) {
+        for (const wallet of this.vwsWallets) {
           wallet.setApiEndpoint(this.server)
           await this.$walletManager.updateWallet(wallet.identifier, wallet)
         }
